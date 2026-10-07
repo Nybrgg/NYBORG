@@ -104,7 +104,7 @@
     "designMode": {{ request.design_mode | json }},
     "options": {{ section.settings | json }},
     "blocks": [{% for block in section.blocks %}{"id": {{ block.id | json }}, "type": {{ block.type | json }}, "settings": {{ block.settings | json }}, "attributes": {{ block.shopify_attributes | json }}}{% unless forloop.last %},{% endunless %}{% endfor %}],
-    "worldModule": {{ 'pf-world.js' | asset_url | json }},
+    "worldModule": {{ 'pf-world-6B2FQJYY.js' | asset_url | json }},
     "assets": {
       "sunset.hdr": {{ 'sunset.hdr' | asset_url | json }},
       "manrope-800.woff": {{ 'manrope-800.woff' | asset_url | json }},

@@ -1,7 +1,8 @@
 # PureFitness Shopify-tema 2.0
 
 - `theme/` er Shopify-temaet. Det er det, der uploades (zip indholdet af mappen).
-- `universe/` er kildekoden til 3D-universet (Three.js r186), der bygges til `theme/assets/pf-world.js` og `theme/assets/pf-world-shared.js`.
+- Temaet bruger det oprindelige 3D-univers (`theme/assets/pf-world-6B2FQJYY.js` og `pf-world-K5HFMRHI.js`) med den nye brugerflade (`pf-universe-dom.css`).
+- `universe/` er kildekoden til en alternativ, nyskrevet 3D-verden (Three.js r186). Den indgår ikke i temaet; `node build.mjs` bygger den til `theme/assets/pf-world.js` og `pf-world-shared.js`, hvis man vil skifte (importerne i `theme/assets/pf-universe.js` og `worldModule` i `pf-universe.liquid` skal så pege på de nye filer).
 - `tools/` indeholder en lokal forhåndsvisning af temaet (liquidjs) og scripts til skærmbilleder.
 
 ## Byg 3D-universet
@@ -24,4 +25,4 @@ cd tools && node preview.mjs 4173
 ## Teksturer og lys
 
 Teksturerne er CC0-scanninger fra Poly Haven (se `theme/assets/sources.json`), og himlen ved solnedgang er `sunset.hdr`.
-Billederne af miljøerne på forsiden (`pf-env-*.webp`) og `next-universe.webp` er renderet fra 3D-verdenen med `tools/stills.mjs`.
+Billederne af miljøerne på forsiden (`pf-env-*.webp`) er renderet fra det oprindelige 3D-univers med `tools/old-stills.mjs`.
