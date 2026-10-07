@@ -1,0 +1,285 @@
+{% liquid
+  assign empty_button_url = section.settings.empty_button_url | default: routes.root_url
+  assign previous_label = section.settings.previous_label | escape
+  assign next_label = section.settings.next_label | escape
+  assign count_text = section.settings.count_many_text
+  if collection.products_count == 1
+    assign count_text = section.settings.count_one_text
+  endif
+%}
+<section class="commerce page-width" aria-labelledby="CollectionTitle-{{ section.id }}">
+  <div class="commerce-heading">
+    <div>
+      {% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+      <h1 id="CollectionTitle-{{ section.id }}">{{ collection.title | escape }}</h1>
+      {% if section.settings.show_description and collection.description != blank %}<div class="commerce-richtext commerce-collection-description">{{ collection.description }}</div>{% endif %}
+    </div>
+  </div>
+  {% paginate collection.products by section.settings.products_per_page %}
+    {% if section.settings.show_count or section.settings.show_sort %}
+      <div class="commerce-toolbar">
+        {% if section.settings.show_count %}<p>{{ count_text | escape | replace: '__COUNT__', collection.products_count }}</p>{% endif %}
+        {% if section.settings.show_sort %}
+          <form action="{{ collection.url }}" method="get" class="commerce-sort">
+            {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
+            <label for="Sort-{{ section.id }}">{{ section.settings.sort_label | escape }}</label>
+            <select id="Sort-{{ section.id }}" name="sort_by">
+              {% for option in collection.sort_options %}
+                {% liquid
+                  assign option_label = option.name
+                  case option.value
+                    when 'manual'
+                      assign option_label = section.settings.sort_manual_label | default: option.name
+                    when 'best-selling'
+                      assign option_label = section.settings.sort_best_selling_label | default: option.name
+                    when 'title-ascending'
+                      assign option_label = section.settings.sort_title_ascending_label | default: option.name
+                    when 'title-descending'
+                      assign option_label = section.settings.sort_title_descending_label | default: option.name
+                    when 'price-ascending'
+                      assign option_label = section.settings.sort_price_ascending_label | default: option.name
+                    when 'price-descending'
+                      assign option_label = section.settings.sort_price_descending_label | default: option.name
+                    when 'created-ascending'
+                      assign option_label = section.settings.sort_created_ascending_label | default: option.name
+                    when 'created-descending'
+                      assign option_label = section.settings.sort_created_descending_label | default: option.name
+                  endcase
+                %}
+                <option value="{{ option.value | escape }}" {% if option.value == sort_by %}selected{% endif %}>{{ option_label | escape }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit">{{ section.settings.apply_label | escape }}</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if collection.products_count > 0 %}
+      <div class="commerce-grid">
+        {% for product in collection.products %}
+          {% render 'pf-product-card', card_product: product, sold_out_label: section.settings.card_sold_out_label, from_price_label: section.settings.card_from_price_label, show_image: section.settings.card_show_image, show_price: section.settings.card_show_price, show_badge: section.settings.card_show_badge %}
+        {% endfor %}
+      </div>
+      {% if paginate.pages > 1 %}<nav class="commerce-pagination" aria-label="{{ section.settings.pagination_label | escape }}">{{ paginate | default_pagination: previous: previous_label, next: next_label }}</nav>{% endif %}
+    {% else %}
+      <div class="commerce-empty">
+        <h2>{{ section.settings.empty_title | escape }}</h2><p>{{ section.settings.empty_text | escape | newline_to_br }}</p>
+        {% if section.settings.show_empty_button %}<a href="{{ empty_button_url | escape }}" class="primary-action">{{ section.settings.empty_button_label | escape }}<span aria-hidden="true">↗</span></a>{% endif %}
+      </div>
+    {% endif %}
+  {% endpaginate %}
+</section>
+
+{% schema %}
+{
+  "name": "PureFitness kollektion",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Kollektion"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Lille overskrift",
+      "default": "Shop"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Vis kollektionsbeskrivelse",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Vis antal produkter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "count_one_text",
+      "label": "Antaltekst ved ét produkt",
+      "default": "__COUNT__ produkt",
+      "info": "Behold __COUNT__, hvor det aktuelle antal skal stå."
+    },
+    {
+      "type": "text",
+      "id": "count_many_text",
+      "label": "Antaltekst ved nul eller flere produkter",
+      "default": "__COUNT__ produkter",
+      "info": "Behold __COUNT__, hvor det aktuelle antal skal stå."
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Produkter pr. side",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Sortering"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Vis sortering",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sort_label",
+      "label": "Sorteringens tekst",
+      "default": "Sortér efter"
+    },
+    {
+      "type": "text",
+      "id": "apply_label",
+      "label": "Tekst på sorteringsknap",
+      "default": "Vis"
+    },
+    {
+      "type": "text",
+      "id": "sort_manual_label",
+      "label": "Valg: Fremhævede produkter",
+      "info": "Tomt felt bruger Shopifys tekst til dette sorteringsvalg."
+    },
+    {
+      "type": "text",
+      "id": "sort_best_selling_label",
+      "label": "Valg: Bedst sælgende",
+      "info": "Tomt felt bruger Shopifys tekst til dette sorteringsvalg."
+    },
+    {
+      "type": "text",
+      "id": "sort_title_ascending_label",
+      "label": "Valg: Titel, stigende",
+      "info": "Tomt felt bruger Shopifys tekst til dette sorteringsvalg."
+    },
+    {
+      "type": "text",
+      "id": "sort_title_descending_label",
+      "label": "Valg: Titel, faldende",
+      "info": "Tomt felt bruger Shopifys tekst til dette sorteringsvalg."
+    },
+    {
+      "type": "text",
+      "id": "sort_price_ascending_label",
+      "label": "Valg: Pris, stigende",
+      "info": "Tomt felt bruger Shopifys tekst til dette sorteringsvalg."
+    },
+    {
+      "type": "text",
+      "id": "sort_price_descending_label",
+      "label": "Valg: Pris, faldende",
+      "info": "Tomt felt bruger Shopifys tekst til dette sorteringsvalg."
+    },
+    {
+      "type": "text",
+      "id": "sort_created_ascending_label",
+      "label": "Valg: Dato, ældste først",
+      "info": "Tomt felt bruger Shopifys tekst til dette sorteringsvalg."
+    },
+    {
+      "type": "text",
+      "id": "sort_created_descending_label",
+      "label": "Valg: Dato, nyeste først",
+      "info": "Tomt felt bruger Shopifys tekst til dette sorteringsvalg."
+    },
+    {
+      "type": "header",
+      "content": "Produktkort"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_show_image",
+      "label": "Vis produktbilleder",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "card_show_price",
+      "label": "Vis priser",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "card_show_badge",
+      "label": "Vis udsolgtmærke",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "card_sold_out_label",
+      "label": "Tekst ved udsolgt",
+      "default": "Udsolgt"
+    },
+    {
+      "type": "text",
+      "id": "card_from_price_label",
+      "label": "Tekst ved forskellige priser",
+      "default": "Fra __PRICE__",
+      "info": "Behold __PRICE__, hvor produktets aktuelle pris skal stå."
+    },
+    {
+      "type": "header",
+      "content": "Sidenavigation"
+    },
+    {
+      "type": "text",
+      "id": "pagination_label",
+      "label": "Tilgængelig tekst til navigation",
+      "default": "Sidenavigation"
+    },
+    {
+      "type": "text",
+      "id": "previous_label",
+      "label": "Forrige side",
+      "default": "←"
+    },
+    {
+      "type": "text",
+      "id": "next_label",
+      "label": "Næste side",
+      "default": "→"
+    },
+    {
+      "type": "header",
+      "content": "Tom kollektion"
+    },
+    {
+      "type": "text",
+      "id": "empty_title",
+      "label": "Overskrift",
+      "default": "Nye muligheder er på vej."
+    },
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Beskrivelse",
+      "default": "Der er endnu ingen produkter i denne kollektion. Gå på opdagelse i resten af PureFitness."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_empty_button",
+      "label": "Vis knap",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "empty_button_label",
+      "label": "Tekst på knap",
+      "default": "Til forsiden"
+    },
+    {
+      "type": "url",
+      "id": "empty_button_url",
+      "label": "Link på knap",
+      "info": "Tomt felt bruger butikkens forside."
+    }
+  ]
+}
+{% endschema %}

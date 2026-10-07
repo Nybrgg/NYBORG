@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Universe dev</title>
+<style>html,body{margin:0;background:#111;height:100%;overflow:hidden}#host{position:fixed;inset:0}#hud{position:fixed;left:8px;top:8px;color:#fff;font:12px monospace;z-index:2}</style>
+</head>
+<body>
+<div id="host"></div><div id="journey" data-distance="1000"></div><div id="hud"></div>
+<script type="module">
+const names = ['sunset.hdr','higgsfield-concrete.webp','manrope-800.woff','manrope-500.woff', ...['concrete_wall_006','oak_veneer_01','rubber_tiles','brown_leather','marble_01','dark_marble','concrete_floor_02','grass_ground','asphalt_02'].flatMap(b => [`${b}_diff_1k.webp`, `${b}_nor_gl_1k.webp`, b === 'asphalt_02' ? 'asphalt_02_rough_1k.jpg' : `${b}_rough_1k.webp`])];
+window.__pfUniverseAssets = Object.fromEntries(names.map(n => [n, `/assets/${n}`]));
+const params = new URLSearchParams(location.search);
+const t = Number(params.get('t') || 0);
+const { createUniverse } = await import(params.get('prod') ? '/assets/pf-world.js' : '/dev/world.js');
+const started = performance.now();
+window.__state = 'loading';
+const world = createUniverse(document.getElementById('host'), document.getElementById('journey'), {
+  onReady: () => { window.__state = 'ready'; document.getElementById('hud').textContent = `ready ${(performance.now() - started) | 0}ms`; },
+  onError: () => { window.__state = 'error'; },
+  onProgress: () => {},
+  debug: true,
+});
+window.__world = world;
+if (params.get('day')) world.setLightMode(true);
+window.__seek = v => window.dispatchEvent(new CustomEvent('pf-seek', { detail: v }));
+window.__seek(t);
+</script>
+</body>
+</html>

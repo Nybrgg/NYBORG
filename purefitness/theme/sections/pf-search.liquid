@@ -1,0 +1,241 @@
+{% liquid
+  assign previous_label = section.settings.previous_label | escape
+  assign next_label = section.settings.next_label | escape
+  assign escaped_terms = search.terms | escape
+  assign count_text = section.settings.count_many_text
+  if search.results_count == 1
+    assign count_text = section.settings.count_one_text
+  endif
+%}
+<section class="commerce page-width" aria-labelledby="SearchTitle-{{ section.id }}">
+  <div class="commerce-heading"><div>{% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}<h1 id="SearchTitle-{{ section.id }}">{{ section.settings.title | escape }}</h1></div></div>
+  <form action="{{ routes.search_url }}" method="get" role="search" class="commerce-search-form"><label for="SearchInput-{{ section.id }}" class="commerce-visually-hidden">{{ section.settings.search_label | escape }}</label><input id="SearchInput-{{ section.id }}" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ section.settings.placeholder | escape }}" required><input type="hidden" name="options[prefix]" value="last"><button class="primary-action" type="submit">{{ section.settings.submit_label | escape }}<span aria-hidden="true">↗</span></button></form>
+  {% if search.performed %}
+    {% paginate search.results by section.settings.results_per_page %}
+      {% if section.settings.show_result_count %}<p class="commerce-result-count">{{ count_text | escape | replace: '__COUNT__', search.results_count | replace: '__TERMS__', escaped_terms }}</p>{% endif %}
+      {% if search.results_count > 0 %}
+        <div class="commerce-grid">
+          {% for result in search.results %}
+            {% if result.object_type == 'product' %}
+              {% render 'pf-product-card', card_product: result, sold_out_label: section.settings.card_sold_out_label, from_price_label: section.settings.card_from_price_label, show_image: section.settings.card_show_image, show_price: section.settings.card_show_price, show_badge: section.settings.card_show_badge %}
+            {% else %}
+              {% assign read_more_url = section.settings.read_more_url | default: result.url %}
+              <article class="commerce-search-card">
+                {% if section.settings.show_result_type %}<p class="eyebrow">{% if result.object_type == 'article' %}{{ section.settings.article_label | escape }}{% else %}{{ section.settings.page_label | escape }}{% endif %}</p>{% endif %}
+                <h2><a href="{{ result.url }}">{{ result.title | escape }}</a></h2>
+                {% if section.settings.show_excerpt %}<p>{{ result.content | strip_html | truncatewords: section.settings.excerpt_length | escape }}</p>{% endif %}
+                {% if section.settings.show_read_more %}<a class="line-action" href="{{ read_more_url | escape }}">{{ section.settings.read_more_label | escape }}<span aria-hidden="true">↗</span></a>{% endif %}
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% if paginate.pages > 1 %}<nav class="commerce-pagination" aria-label="{{ section.settings.pagination_label | escape }}">{{ paginate | default_pagination: previous: previous_label, next: next_label }}</nav>{% endif %}
+      {% else %}
+        <div class="commerce-empty"><h2>{{ section.settings.empty_title | escape }}</h2><p>{{ section.settings.empty_text | escape | newline_to_br }}</p></div>
+      {% endif %}
+    {% endpaginate %}
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "PureFitness søgning",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Overskrift og søgning"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Lille overskrift",
+      "default": "Shop"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Sidens overskrift",
+      "default": "Find det, du søger."
+    },
+    {
+      "type": "text",
+      "id": "search_label",
+      "label": "Søgefeltets tilgængelige tekst",
+      "default": "Søg på hjemmesiden"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Søgefeltets hjælpetekst",
+      "default": "Søg efter produkter og information"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Tekst på søgeknap",
+      "default": "Søg"
+    },
+    {
+      "type": "header",
+      "content": "Søgeresultater"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_result_count",
+      "label": "Vis antal resultater",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "count_one_text",
+      "label": "Antaltekst ved ét resultat",
+      "default": "__COUNT__ resultat for “__TERMS__”",
+      "info": "Behold __COUNT__ for antallet og __TERMS__ for søgeordet."
+    },
+    {
+      "type": "text",
+      "id": "count_many_text",
+      "label": "Antaltekst ved nul eller flere resultater",
+      "default": "__COUNT__ resultater for “__TERMS__”",
+      "info": "Behold __COUNT__ for antallet og __TERMS__ for søgeordet."
+    },
+    {
+      "type": "range",
+      "id": "results_per_page",
+      "label": "Resultater pr. side",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Produktkort"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_show_image",
+      "label": "Vis produktbilleder",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "card_show_price",
+      "label": "Vis priser",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "card_show_badge",
+      "label": "Vis udsolgtmærke",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "card_sold_out_label",
+      "label": "Tekst ved udsolgt",
+      "default": "Udsolgt"
+    },
+    {
+      "type": "text",
+      "id": "card_from_price_label",
+      "label": "Tekst ved forskellige priser",
+      "default": "Fra __PRICE__",
+      "info": "Behold __PRICE__, hvor produktets aktuelle pris skal stå."
+    },
+    {
+      "type": "header",
+      "content": "Artikel- og sidekort"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_result_type",
+      "label": "Vis indholdstype",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "article_label",
+      "label": "Tekst til artikel",
+      "default": "Artikel"
+    },
+    {
+      "type": "text",
+      "id": "page_label",
+      "label": "Tekst til side",
+      "default": "Side"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Vis uddrag",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "excerpt_length",
+      "label": "Ord i uddrag",
+      "min": 5,
+      "max": 60,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "show_read_more",
+      "label": "Vis læs mere-link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "read_more_label",
+      "label": "Tekst på læs mere-link",
+      "default": "Læs mere"
+    },
+    {
+      "type": "url",
+      "id": "read_more_url",
+      "label": "Link på læs mere",
+      "info": "Tomt felt åbner den fundne artikel eller side."
+    },
+    {
+      "type": "header",
+      "content": "Sidenavigation"
+    },
+    {
+      "type": "text",
+      "id": "pagination_label",
+      "label": "Tilgængelig tekst til navigation",
+      "default": "Sidenavigation"
+    },
+    {
+      "type": "text",
+      "id": "previous_label",
+      "label": "Forrige side",
+      "default": "←"
+    },
+    {
+      "type": "text",
+      "id": "next_label",
+      "label": "Næste side",
+      "default": "→"
+    },
+    {
+      "type": "header",
+      "content": "Ingen søgeresultater"
+    },
+    {
+      "type": "text",
+      "id": "empty_title",
+      "label": "Overskrift",
+      "default": "Ingen resultater denne gang."
+    },
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Beskrivelse",
+      "default": "Prøv et andet søgeord, eller søg mere generelt."
+    }
+  ]
+}
+{% endschema %}

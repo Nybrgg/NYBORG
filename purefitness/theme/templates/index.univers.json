@@ -1,0 +1,103 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "universe": {
+      "type": "pf-universe",
+      "settings": {
+        "hud_glass_blur": 20,
+        "menu_glass_blur": 30,
+        "drawer_glass_blur": 28
+      },
+      "blocks": {
+        "ui_navigation": {
+          "type": "ui_navigation",
+          "settings": {}
+        },
+        "ui_reading": {
+          "type": "ui_reading",
+          "settings": {}
+        },
+        "ui_equipment": {
+          "type": "ui_equipment",
+          "settings": {}
+        },
+        "ui_overview": {
+          "type": "ui_overview",
+          "settings": {}
+        },
+        "ui_accessibility": {
+          "type": "ui_accessibility",
+          "settings": {}
+        },
+        "environment_fitness": {
+          "type": "environment_fitness",
+          "settings": {}
+        },
+        "environment_hoteller": {
+          "type": "environment_hoteller",
+          "settings": {}
+        },
+        "environment_erhverv": {
+          "type": "environment_erhverv",
+          "settings": {}
+        },
+        "environment_foreninger": {
+          "type": "environment_foreninger",
+          "settings": {}
+        },
+        "environment_service": {
+          "type": "environment_service",
+          "settings": {}
+        },
+        "links_fitness": {
+          "type": "links_fitness",
+          "settings": {}
+        },
+        "links_hoteller": {
+          "type": "links_hoteller",
+          "settings": {}
+        },
+        "links_erhverv": {
+          "type": "links_erhverv",
+          "settings": {}
+        },
+        "links_foreninger": {
+          "type": "links_foreninger",
+          "settings": {}
+        },
+        "links_service": {
+          "type": "links_service",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "ui_navigation",
+        "ui_reading",
+        "ui_equipment",
+        "ui_overview",
+        "ui_accessibility",
+        "environment_fitness",
+        "environment_hoteller",
+        "environment_erhverv",
+        "environment_foreninger",
+        "environment_service",
+        "links_fitness",
+        "links_hoteller",
+        "links_erhverv",
+        "links_foreninger",
+        "links_service"
+      ]
+    }
+  },
+  "order": [
+    "universe"
+  ]
+}

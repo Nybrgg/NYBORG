@@ -1,0 +1,193 @@
+<section class="equipment-section page-width" id="udstyr" aria-labelledby="equipment-title-{{ section.id }}">
+  <div class="section-heading"><div>{% if section.settings.show_eyebrow %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}<h2 id="equipment-title-{{ section.id }}">{{ section.settings.heading_line_1 | escape }}<br>{{ section.settings.heading_line_2 | escape }}</h2></div>
+    {% if section.settings.show_catalog_button %}{% if section.settings.catalog_url != blank %}<a class="line-action" href="{{ section.settings.catalog_url | escape }}">{{ section.settings.catalog_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 19 %}</a>{% else %}<button type="button" class="line-action" data-pf-contact="{{ section.settings.catalog_kind | escape }}">{{ section.settings.catalog_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 19 %}</button>{% endif %}{% endif %}
+  </div>
+  <div class="equipment-listing">{% for block in section.blocks %}
+    <details name="equipment-{{ section.id }}" {% if forloop.first and section.settings.open_first %}open{% endif %} {{ block.shopify_attributes }}>
+      <summary><small>{% if section.settings.show_numbers %}{% if block.settings.number != blank %}{{ block.settings.number | escape }}{% else %}{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}{% endif %}{% endif %}</small><h3>{{ block.settings.title | escape }}</h3><span>{{ block.settings.subtitle | escape }}</span>{% render 'pf-icon', name: 'plus', size: 22 %}</summary>
+      <div><p>{{ block.settings.description | escape | newline_to_br }}</p>{% if block.settings.show_button %}{% if block.settings.button_url != blank %}<a class="line-action" href="{{ block.settings.button_url | escape }}">{{ block.settings.button_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 18 %}</a>{% else %}<button type="button" class="line-action" data-pf-contact="{{ block.settings.inquiry_kind | escape }}">{{ block.settings.button_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 18 %}</button>{% endif %}{% endif %}</div>
+    </details>{% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Purefitness · Udstyr",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Overlinje",
+      "default": "03 / Udstyr & indretning"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Overskrift, linje 1",
+      "default": "Valgt med omtanke."
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Overskrift, linje 2",
+      "default": "Klar til at blive brugt."
+    },
+    {
+      "type": "text",
+      "id": "catalog_label",
+      "label": "Katalogknap",
+      "default": "Få et katalog"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Vis overlinje",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_catalog_button",
+      "label": "Vis katalogknap",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "catalog_url",
+      "label": "Katalogknappens link (tom = kontaktformular)"
+    },
+    {
+      "type": "select",
+      "id": "catalog_kind",
+      "label": "Katalogknappens kontaktformular",
+      "options": [
+        {
+          "value": "projekt",
+          "label": "Projekt"
+        },
+        {
+          "value": "service",
+          "label": "Service"
+        },
+        {
+          "value": "katalog",
+          "label": "Katalog"
+        }
+      ],
+      "default": "katalog"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Vis kategorinumre",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Åbn første kategori fra start",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · Udstyr",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Styrke",
+            "subtitle": "Maskiner · Kabeltræk · Stativer",
+            "description": "En gennemtænkt sammensætning af styrkeudstyr. Til jeres rum, jeres brugere og de mål, de træner mod."
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Kondition",
+            "subtitle": "Løbebånd · Cykler · Romaskiner",
+            "description": "Plads til den korte pause og den længere træning. Konditionsudstyr sammensat til jeres hverdag."
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Frie vægte",
+            "subtitle": "Håndvægte · Vægtstænger · Tilbehør",
+            "description": "Fleksible muligheder for mange niveauer. Frie vægte og funktionelt tilbehør til et rum i bevægelse."
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Udstyrskategori",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Styrke"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Underlinje",
+          "default": "Maskiner · Kabeltræk · Stativer"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Beskrivelse",
+          "default": "En gennemtænkt sammensætning af styrkeudstyr. Til jeres rum, jeres brugere og de mål, de træner mod."
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Eget nummer (tom = rækkefølge)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_button",
+          "label": "Vis kategoriknap",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Denne kategoris knaptekst",
+          "default": "Find det rette udstyr"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Denne kategoris link (tom = kontaktformular)"
+        },
+        {
+          "type": "select",
+          "id": "inquiry_kind",
+          "label": "Denne kategoris kontaktformular",
+          "options": [
+            {
+              "value": "projekt",
+              "label": "Projekt"
+            },
+            {
+              "value": "service",
+              "label": "Service"
+            },
+            {
+              "value": "katalog",
+              "label": "Katalog"
+            }
+          ],
+          "default": "katalog"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

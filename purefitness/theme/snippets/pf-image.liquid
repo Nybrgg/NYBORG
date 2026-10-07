@@ -1,0 +1,36 @@
+{% doc %}
+Renders a responsive editable image with a bundled illustration fallback.
+@param {image} [image] - Desktop image selected in the theme editor.
+@param {string} asset - Bundled fallback image filename.
+@param {image} [mobile_image] - Portrait image selected in the theme editor.
+@param {string} [mobile_asset] - Bundled portrait fallback filename.
+@param {string} [class] - Picture element class.
+@param {string} [alt] - Accessible image description.
+@param {string} [loading] - eager or lazy.
+@param {string} [fetchpriority] - high, low or auto.
+@param {string} [sizes] - Responsive image sizes.
+@param {number} [width] - Bundled fallback width.
+@param {number} [height] - Bundled fallback height.
+{% enddoc %}
+{% liquid
+  assign image_loading = loading | default: 'lazy'
+  assign image_priority = fetchpriority | default: 'auto'
+  assign image_sizes = sizes | default: '100vw'
+  assign image_width = width | default: 1672
+  assign image_height = height | default: 941
+  assign small_asset = asset | replace: '.webp', '-1280.webp'
+%}
+<picture{% if class != blank %} class="{{ class | escape }}"{% endif %}>
+  {% if mobile_image != blank %}
+    <source media="(max-width:700px)" srcset="{{ mobile_image | image_url: width: 1100 }}">
+  {% elsif image != blank %}
+    <source media="(max-width:700px)" srcset="{{ image | image_url: width: 1100 }}">
+  {% elsif mobile_asset != blank %}
+    <source media="(max-width:700px)" srcset="{{ mobile_asset | asset_url }}">
+  {% endif %}
+  {% if image != blank %}
+    {{ image | image_url: width: 2400 | image_tag: widths: '640, 960, 1280, 1672, 2400', sizes: image_sizes, alt: alt, loading: image_loading, fetchpriority: image_priority }}
+  {% else %}
+    <img src="{{ asset | asset_url }}" srcset="{{ small_asset | asset_url }} 1280w, {{ asset | asset_url }} 1672w" sizes="{{ image_sizes | escape }}" width="{{ image_width }}" height="{{ image_height }}" loading="{{ image_loading }}" fetchpriority="{{ image_priority }}" decoding="async" alt="{{ alt | escape }}">
+  {% endif %}
+</picture>

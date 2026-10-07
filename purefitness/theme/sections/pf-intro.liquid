@@ -1,0 +1,331 @@
+{% if section.settings.show_section != false %}
+{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
+<section id="intro-{{ section.id }}" data-pf-anchor="intro" class="pf-simple-section pf-simple-intro pf-editable-section page-width"{% if section.settings.show_heading != false and section.settings.heading != blank %} aria-labelledby="intro-title-{{ section.id }}"{% endif %} data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-surface:{{ section.settings.background_color | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;">
+  {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
+  <div class="pf-simple-intro-copy">
+    {% if section.settings.show_eyebrow != false and section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+    {% if section.settings.show_heading != false and section.settings.heading != blank %}<h2 id="intro-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{% endif %}
+    {% if section.settings.show_description_1 != false and section.settings.description_1 != blank %}<p>{{ section.settings.description_1 | escape | newline_to_br }}</p>{% endif %}
+    {% if section.settings.show_description_2 != false and section.settings.description_2 != blank %}<p>{{ section.settings.description_2 | escape | newline_to_br }}</p>{% endif %}
+    {% capture intro_actions %}
+      {% for block in section.blocks %}
+        {% if block.settings.visible != false and block.settings.label != blank %}
+          {% liquid
+            assign action_class = 'primary-action'
+            if block.settings.style == 'link'
+              assign action_class = 'line-action'
+            endif
+          %}
+          {% if block.settings.url != blank %}
+            <a class="{{ action_class }}" href="{{ block.settings.url | escape }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }} {% render 'pf-icon', name: 'move-up-right', size: 19 %}</a>
+          {% elsif block.settings.action_kind != 'link' %}
+            <button type="button" class="{{ action_class }}" data-pf-contact="{{ block.settings.action_kind | escape }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }} {% render 'pf-icon', name: 'move-up-right', size: 19 %}</button>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endcapture %}
+    {% assign intro_actions = intro_actions | strip %}
+    {% if intro_actions != blank %}<div class="pf-editor-actions">{{ intro_actions }}</div>{% endif %}
+  </div>
+  {% if section.settings.show_image != false %}
+    <figure class="pf-blended-image" style="--pf-image-blend:{{ section.settings.image_blend }}%;">
+      {% if section.settings.image_url != blank %}<a href="{{ section.settings.image_url | escape }}">{% endif %}
+      {% render 'pf-image', image: section.settings.image, mobile_image: section.settings.mobile_image, asset: 'premium-interior.webp', alt: section.settings.image_alt, loading: 'lazy', sizes: '(max-width:760px) 100vw, 40vw', width: 1672, height: 941 %}
+      {% if section.settings.image_url != blank %}</a>{% endif %}
+    </figure>
+  {% endif %}
+</section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Purefitness · Partner",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Vis sektionen",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Indhold"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Vis overlinje",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Vis overskrift",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description_1",
+      "label": "Vis første afsnit",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description_2",
+      "label": "Vis andet afsnit",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Overlinje",
+      "default": "Udstyr · Indretning · Service"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Overskrift",
+      "default": "Én partner til hele træningsmiljøet."
+    },
+    {
+      "type": "textarea",
+      "id": "description_1",
+      "label": "Første afsnit",
+      "default": "Et godt træningsrum starter med at forstå dem, der skal bruge det. Hvem er rummet til, hvad skal det kunne, og hvordan skal det fungere i hverdagen?"
+    },
+    {
+      "type": "textarea",
+      "id": "description_2",
+      "label": "Andet afsnit",
+      "default": "PureFitness hjælper med at samle udstyr, indretning og service i en løsning, der passer til jeres rammer og ambitioner. Her kan I udforske mulighederne og tage den første samtale om jeres projekt."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Træningsmiljø"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Billedbeskrivelse",
+      "default": "Illustrativt premium træningsmiljø med sort styrkeudstyr, træpaneler og store glaspartier"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Vis billede",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Træningsmiljø på mobil"
+    },
+    {
+      "type": "url",
+      "id": "image_url",
+      "label": "Billedets link"
+    },
+    {
+      "type": "range",
+      "id": "image_blend",
+      "label": "Blød overgang ved billedets kant",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Farver"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Baggrund",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Tekst",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Sekundær tekst",
+      "default": "#b2bbae"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent og knapper",
+      "default": "#d4ed72"
+    },
+    {
+      "type": "header",
+      "content": "Afstand"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Afstand over på computer",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Afstand under på computer",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Afstand over på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Afstand under på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Glas og bevægelse"
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_enabled",
+      "label": "Glasbaggrund",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_opacity",
+      "label": "Baggrundsopacitet",
+      "min": 60,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 86
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Sløring",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_flow_enabled",
+      "label": "Bløde lysbølger ved scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_flow_strength",
+      "label": "Lysbølgernes styrke",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · Partner"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Knap",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis knappen",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Knaptekst",
+          "default": "Kontakt PureFitness"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link",
+          "info": "Et udfyldt link bruges før kontaktmuligheden."
+        },
+        {
+          "type": "select",
+          "id": "action_kind",
+          "label": "Kontaktmulighed",
+          "options": [
+            {
+              "value": "projekt",
+              "label": "Projekt"
+            },
+            {
+              "value": "katalog",
+              "label": "Katalog"
+            },
+            {
+              "value": "service",
+              "label": "Service"
+            },
+            {
+              "value": "link",
+              "label": "Kun link"
+            }
+          ],
+          "default": "projekt"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Knappens udseende",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Fyldt knap"
+            },
+            {
+              "value": "link",
+              "label": "Tekstlink"
+            }
+          ],
+          "default": "primary"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

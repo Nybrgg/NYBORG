@@ -1,0 +1,251 @@
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  if current_variant.available == false and product.available
+    assign current_variant = product.variants | where: 'available', true | first
+  endif
+  assign product_form_id = 'ProductForm-' | append: section.id
+  assign home_url = section.settings.home_url | default: routes.root_url
+  assign shop_url = section.settings.shop_url | default: routes.all_products_collection_url
+  assign back_url = section.settings.back_url | default: routes.all_products_collection_url
+%}
+<section class="commerce commerce-product page-width" aria-labelledby="ProductTitle-{{ section.id }}">
+  {% if section.settings.show_breadcrumb %}
+    <nav class="commerce-breadcrumb" aria-label="{{ section.settings.breadcrumb_label | escape }}">
+      <a href="{{ home_url | escape }}">{{ section.settings.home_label | escape }}</a><span aria-hidden="true">/</span><a href="{{ shop_url | escape }}">{{ section.settings.shop_label | escape }}</a>
+    </nav>
+  {% endif %}
+  <div class="commerce-product-layout"{% unless section.settings.show_gallery %} style="grid-template-columns: minmax(0, 1fr)"{% endunless %}>
+    {% if section.settings.show_gallery %}
+      <div class="commerce-gallery">
+        {% for product_image in product.images %}
+          {% assign image_alt = product_image.alt | default: product.title %}
+          {% if forloop.first %}
+            {{ product_image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '480, 800, 1200, 1600', sizes: '(max-width: 760px) 100vw, 58vw', alt: image_alt }}
+          {% elsif section.settings.show_extra_images %}
+            {{ product_image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '480, 800, 1200', sizes: '(max-width: 760px) 100vw, 58vw', alt: image_alt }}
+          {% endif %}
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'commerce-placeholder' }}
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="commerce-product-info">
+      {% if section.settings.show_vendor and product.vendor != blank %}<p class="eyebrow">{{ product.vendor | escape }}</p>{% endif %}
+      <h1 id="ProductTitle-{{ section.id }}">{{ product.title | escape }}</h1>
+      {% if section.settings.show_price %}<p class="commerce-product-price" data-product-price aria-live="polite" aria-atomic="true">{{ current_variant.price | money_with_currency }}{% if section.settings.show_compare_price %} <s data-product-compare {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}>{{ current_variant.compare_at_price | money_with_currency }}</s>{% endif %}</p>{% endif %}
+      {% form 'product', product, id: product_form_id, class: 'commerce-product-form' %}
+        {% if form.errors %}<div class="commerce-message commerce-message-error" role="alert">{{ form.errors | default_errors }}</div>{% endif %}
+        {% if product.has_only_default_variant %}
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+        {% else %}
+          <label for="Variant-{{ section.id }}">{{ section.settings.variant_label | escape }}</label>
+          <select id="Variant-{{ section.id }}" name="id" class="commerce-variant">
+            {% for variant in product.variants %}
+              <option value="{{ variant.id }}" data-price="{{ variant.price | money_with_currency | strip_html | escape }}" data-compare="{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money_with_currency | strip_html | escape }}{% endif %}" data-quantity-min="{{ variant.quantity_rule.min }}" data-quantity-step="{{ variant.quantity_rule.increment }}" data-quantity-max="{{ variant.quantity_rule.max }}" {% if variant.id == current_variant.id %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                {{ variant.title | escape }}{% if section.settings.show_price %} — {{ variant.price | money_with_currency | strip_html }}{% endif %}{% unless variant.available %} — {{ section.settings.sold_out_label | escape }}{% endunless %}
+              </option>
+            {% endfor %}
+          </select>
+        {% endif %}
+        {% if section.settings.show_quantity %}
+          <label for="Quantity-{{ section.id }}">{{ section.settings.quantity_label | escape }}</label>
+          <input id="Quantity-{{ section.id }}" type="number" name="quantity" value="{{ current_variant.quantity_rule.min | default: 1 }}" min="{{ current_variant.quantity_rule.min | default: 1 }}" step="{{ current_variant.quantity_rule.increment | default: 1 }}" {% if current_variant.quantity_rule.max != null %}max="{{ current_variant.quantity_rule.max }}"{% endif %} inputmode="numeric" required>
+        {% else %}
+          <input type="hidden" name="quantity" value="{{ current_variant.quantity_rule.min | default: 1 }}">
+        {% endif %}
+        {% if section.settings.show_add_to_cart %}
+          <button class="primary-action commerce-add" type="submit" name="add" {% unless product.available %}disabled{% endunless %}>
+            {% if product.available %}{{ section.settings.add_to_cart_label | escape }}{% else %}{{ section.settings.sold_out_label | escape }}{% endif %}<span aria-hidden="true">↗</span>
+          </button>
+        {% endif %}
+        {% if product.available and section.settings.show_dynamic_checkout %}{{ form | payment_button }}{% endif %}
+      {% endform %}
+      {% if section.settings.show_description and product.description != blank %}<div class="commerce-richtext commerce-product-description">{{ product.description }}</div>{% endif %}
+      {% if section.settings.show_back_link %}<a class="line-action" href="{{ back_url | escape }}">{{ section.settings.back_label | escape }}<span aria-hidden="true">↗</span></a>{% endif %}
+    </div>
+  </div>
+</section>
+<script type="application/ld+json">{{ product | structured_data }}</script>
+{% javascript %}
+  document.addEventListener('change', function (event) {
+    if (!event.target.matches('.commerce-variant')) return;
+    var option = event.target.selectedOptions[0];
+    var panel = event.target.closest('.commerce-product-info');
+    var price = panel.querySelector('[data-product-price]');
+    var compare = panel.querySelector('[data-product-compare]');
+    if (price) price.firstChild.textContent = option.dataset.price + ' ';
+    if (compare) {
+      compare.textContent = option.dataset.compare;
+      compare.hidden = !option.dataset.compare;
+    }
+    var quantity = panel.querySelector('[name="quantity"]');
+    quantity.min = option.dataset.quantityMin || '1';
+    quantity.step = option.dataset.quantityStep || '1';
+    quantity.value = quantity.min;
+    if (option.dataset.quantityMax) quantity.max = option.dataset.quantityMax;
+    else quantity.removeAttribute('max');
+    var url = new URL(window.location.href);
+    url.searchParams.set('variant', option.value);
+    window.history.replaceState({}, '', url);
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "PureFitness produkt",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Vis brødkrummesti",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_label",
+      "label": "Tilgængelig tekst til brødkrummesti",
+      "default": "Brødkrummesti"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Tekst til forside",
+      "default": "Forside"
+    },
+    {
+      "type": "url",
+      "id": "home_url",
+      "label": "Link til forside",
+      "info": "Tomt felt bruger butikkens forside."
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Tekst til shop",
+      "default": "Shop"
+    },
+    {
+      "type": "url",
+      "id": "shop_url",
+      "label": "Link til shop",
+      "info": "Tomt felt bruger alle produkter."
+    },
+    {
+      "type": "header",
+      "content": "Produktindhold"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gallery",
+      "label": "Vis produktbilleder",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_extra_images",
+      "label": "Vis alle produktbilleder",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Vis leverandør",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Vis pris",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare_price",
+      "label": "Vis førpris",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Vis produktbeskrivelse",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Købsformular"
+    },
+    {
+      "type": "text",
+      "id": "variant_label",
+      "label": "Variantvælgerens tekst",
+      "default": "Vælg variant"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "Vis antalvælger",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "quantity_label",
+      "label": "Antalvælgerens tekst",
+      "default": "Antal"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_to_cart",
+      "label": "Vis knap til kurv",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_label",
+      "label": "Tekst på kurvknap",
+      "default": "Læg i kurven"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Tekst ved udsolgt",
+      "default": "Udsolgt"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Vis hurtig betaling",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "Produktdata og hurtig betaling administreres af Shopify."
+    },
+    {
+      "type": "header",
+      "content": "Link efter produktet"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_back_link",
+      "label": "Vis link til shop",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Tekst på link",
+      "default": "Se alle produkter"
+    },
+    {
+      "type": "url",
+      "id": "back_url",
+      "label": "Linkdestination",
+      "info": "Tomt felt bruger alle produkter."
+    }
+  ]
+}
+{% endschema %}

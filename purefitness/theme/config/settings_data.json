@@ -1,0 +1,177 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "brand_name": "PUREFITNESS",
+    "color_accent": "#d4ed72",
+    "color_ink": "#191e1c",
+    "color_paper": "#fafbf7",
+    "home_title": "Purefitness — Stærke rum. Større muligheder.",
+    "home_description": "Purefitness skaber komplette træningsmiljøer for fitnesscentre, hoteller, virksomheder og foreninger. Udstyr, indretning, installation og service.",
+    "sections": {
+      "pf-contact-project": {
+        "type": "pf-contact-project",
+        "settings": {
+          "dialog_background": "#202722",
+          "dialog_text": "#edf0e8",
+          "dialog_muted": "#b2bbae",
+          "button_background": "#d4ed72",
+          "button_text": "#191e1c",
+          "company_background": "#29322b",
+          "name_background": "#29322b",
+          "email_background": "#29322b",
+          "phone_background": "#29322b",
+          "message_background": "#29322b",
+          "company_text": "#edf0e8",
+          "name_text": "#edf0e8",
+          "email_text": "#edf0e8",
+          "phone_text": "#edf0e8",
+          "message_text": "#edf0e8",
+          "glass_blur": 28,
+          "glass_flow_enabled": true,
+          "glass_flow_strength": 8,
+          "glass_opacity": 81
+        }
+      },
+      "pf-contact-service": {
+        "type": "pf-contact-service",
+        "settings": {
+          "dialog_background": "#202722",
+          "dialog_text": "#edf0e8",
+          "dialog_muted": "#b2bbae",
+          "button_background": "#d4ed72",
+          "button_text": "#191e1c",
+          "company_background": "#29322b",
+          "name_background": "#29322b",
+          "email_background": "#29322b",
+          "phone_background": "#29322b",
+          "message_background": "#29322b",
+          "company_text": "#edf0e8",
+          "name_text": "#edf0e8",
+          "email_text": "#edf0e8",
+          "phone_text": "#edf0e8",
+          "message_text": "#edf0e8",
+          "glass_blur": 28,
+          "glass_flow_enabled": true,
+          "glass_flow_strength": 8,
+          "glass_opacity": 81
+        }
+      },
+      "pf-contact-catalogue": {
+        "type": "pf-contact-catalogue",
+        "settings": {
+          "dialog_background": "#202722",
+          "dialog_text": "#edf0e8",
+          "dialog_muted": "#b2bbae",
+          "button_background": "#d4ed72",
+          "button_text": "#191e1c",
+          "company_background": "#29322b",
+          "name_background": "#29322b",
+          "email_background": "#29322b",
+          "phone_background": "#29322b",
+          "message_background": "#29322b",
+          "company_text": "#edf0e8",
+          "name_text": "#edf0e8",
+          "email_text": "#edf0e8",
+          "phone_text": "#edf0e8",
+          "message_text": "#edf0e8",
+          "glass_blur": 28,
+          "glass_flow_enabled": true,
+          "glass_flow_strength": 8,
+          "glass_opacity": 81
+        }
+      }
+    }
+  },
+  "presets": {
+    "PureFitness": {
+      "brand_name": "PUREFITNESS",
+      "color_accent": "#d4ed72",
+      "color_ink": "#191e1c",
+      "color_paper": "#fafbf7",
+      "home_title": "Purefitness — Stærke rum. Større muligheder.",
+      "home_description": "Purefitness skaber komplette træningsmiljøer for fitnesscentre, hoteller, virksomheder og foreninger. Udstyr, indretning, installation og service.",
+      "sections": {
+        "pf-contact-project": {
+          "type": "pf-contact-project",
+          "settings": {
+            "dialog_background": "#202722",
+            "dialog_text": "#edf0e8",
+            "dialog_muted": "#b2bbae",
+            "button_background": "#d4ed72",
+            "button_text": "#191e1c",
+            "company_background": "#29322b",
+            "name_background": "#29322b",
+            "email_background": "#29322b",
+            "phone_background": "#29322b",
+            "message_background": "#29322b",
+            "company_text": "#edf0e8",
+            "name_text": "#edf0e8",
+            "email_text": "#edf0e8",
+            "phone_text": "#edf0e8",
+            "message_text": "#edf0e8",
+            "glass_blur": 28,
+            "glass_flow_enabled": true,
+            "glass_flow_strength": 8,
+            "glass_opacity": 81
+          }
+        },
+        "pf-contact-service": {
+          "type": "pf-contact-service",
+          "settings": {
+            "dialog_background": "#202722",
+            "dialog_text": "#edf0e8",
+            "dialog_muted": "#b2bbae",
+            "button_background": "#d4ed72",
+            "button_text": "#191e1c",
+            "company_background": "#29322b",
+            "name_background": "#29322b",
+            "email_background": "#29322b",
+            "phone_background": "#29322b",
+            "message_background": "#29322b",
+            "company_text": "#edf0e8",
+            "name_text": "#edf0e8",
+            "email_text": "#edf0e8",
+            "phone_text": "#edf0e8",
+            "message_text": "#edf0e8",
+            "glass_blur": 28,
+            "glass_flow_enabled": true,
+            "glass_flow_strength": 8,
+            "glass_opacity": 81
+          }
+        },
+        "pf-contact-catalogue": {
+          "type": "pf-contact-catalogue",
+          "settings": {
+            "dialog_background": "#202722",
+            "dialog_text": "#edf0e8",
+            "dialog_muted": "#b2bbae",
+            "button_background": "#d4ed72",
+            "button_text": "#191e1c",
+            "company_background": "#29322b",
+            "name_background": "#29322b",
+            "email_background": "#29322b",
+            "phone_background": "#29322b",
+            "message_background": "#29322b",
+            "company_text": "#edf0e8",
+            "name_text": "#edf0e8",
+            "email_text": "#edf0e8",
+            "phone_text": "#edf0e8",
+            "message_text": "#edf0e8",
+            "glass_blur": 28,
+            "glass_flow_enabled": true,
+            "glass_flow_strength": 8,
+            "glass_opacity": 81
+          }
+        }
+      }
+    }
+  }
+}

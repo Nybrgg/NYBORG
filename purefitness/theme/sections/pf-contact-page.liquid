@@ -1,0 +1,260 @@
+{% assign contact_form_id = 'ContactForm-' | append: section.id %}
+<section class="commerce page-width pf-contact-page" aria-labelledby="ContactTitle-{{ section.id }}">
+  <div class="commerce-contact-layout">
+    <div>{% if section.settings.show_eyebrow %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}<h1 id="ContactTitle-{{ section.id }}">{% if section.settings.use_page_title and page.title != blank %}{{ page.title | escape }}{% else %}{{ section.settings.heading | escape }}{% endif %}</h1>{% if section.settings.show_page_content and page.content != blank %}<div class="commerce-richtext">{{ page.content }}</div>{% elsif section.settings.show_intro %}<p class="commerce-contact-intro">{{ section.settings.intro | escape | newline_to_br }}</p>{% endif %}</div>
+    {% form 'contact', id: contact_form_id, class: 'commerce-contact-form', return_to: 'back' %}
+      {% if form.posted_successfully? %}<div class="commerce-message" role="status" tabindex="-1">{{ section.settings.success_message | escape }}</div>{% endif %}
+      {% if form.errors %}<div class="commerce-message commerce-message-error" role="alert" tabindex="-1">{% if section.settings.error_heading != blank %}<p>{{ section.settings.error_heading | escape }}</p>{% endif %}{{ form.errors | default_errors }}</div>{% endif %}
+      <input type="hidden" name="contact[Henvendelse]" value="{{ section.settings.inquiry_subject | escape }}">
+      <div class="commerce-contact-pair">{% if section.settings.show_name %}<div><label for="ContactName-{{ section.id }}">{{ section.settings.name_label | escape }}</label><input id="ContactName-{{ section.id }}" name="contact[name]" type="text" value="{{ form.name | default: customer.name | escape }}" placeholder="{{ section.settings.name_placeholder | escape }}" autocomplete="name" {% if section.settings.name_required %}required{% endif %}></div>{% endif %}<div><label for="ContactEmail-{{ section.id }}">{{ section.settings.email_label | escape }}</label><input id="ContactEmail-{{ section.id }}" name="contact[email]" type="email" value="{{ form.email | default: customer.email | escape }}" placeholder="{{ section.settings.email_placeholder | escape }}" autocomplete="email" autocapitalize="off" {% if form.errors contains 'email' %}aria-invalid="true"{% endif %} required></div></div>
+      {% if section.settings.show_company or section.settings.show_phone %}<div class="commerce-contact-pair">{% if section.settings.show_company %}<div><label for="ContactCompany-{{ section.id }}">{{ section.settings.company_label | escape }}</label><input id="ContactCompany-{{ section.id }}" name="contact[company]" type="text" placeholder="{{ section.settings.company_placeholder | escape }}" autocomplete="organization" {% if section.settings.company_required %}required{% endif %}></div>{% endif %}{% if section.settings.show_phone %}<div><label for="ContactPhone-{{ section.id }}">{{ section.settings.phone_label | escape }}</label><input id="ContactPhone-{{ section.id }}" name="contact[phone]" type="tel" value="{{ customer.phone | escape }}" placeholder="{{ section.settings.phone_placeholder | escape }}" autocomplete="tel" {% if section.settings.phone_required %}required{% endif %}></div>{% endif %}</div>{% endif %}
+      <div><label for="ContactBody-{{ section.id }}">{{ section.settings.message_label | escape }}</label><textarea id="ContactBody-{{ section.id }}" name="contact[body]" rows="{{ section.settings.message_rows }}" placeholder="{{ section.settings.message_placeholder | escape }}" {% if section.settings.message_required %}required{% endif %}>{{ form.body | escape }}</textarea></div>
+      {% for block in section.blocks %}{% if block.settings.visible %}{% assign field_key = block.settings.label | handleize | append: '-' | append: block.id %}<div {{ block.shopify_attributes }}><label for="ContactExtra-{{ section.id }}-{{ block.id }}">{{ block.settings.label | escape }}</label>{% if block.settings.field_type == 'textarea' %}<textarea id="ContactExtra-{{ section.id }}-{{ block.id }}" name="contact[{{ field_key }}]" rows="3" placeholder="{{ block.settings.placeholder | escape }}" {% if block.settings.required %}required{% endif %}></textarea>{% else %}<input id="ContactExtra-{{ section.id }}-{{ block.id }}" name="contact[{{ field_key }}]" type="{{ block.settings.field_type | escape }}" placeholder="{{ block.settings.placeholder | escape }}" {% if block.settings.required %}required{% endif %}>{% endif %}</div>{% endif %}{% endfor %}
+      <button class="primary-action" type="submit">{{ section.settings.submit_label | escape }}<span aria-hidden="true">↗</span></button>
+      {% if section.settings.show_note %}<p class="commerce-tax-note">{{ section.settings.note | escape | newline_to_br }}</p>{% endif %}
+    {% endform %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "PureFitness kontakt",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "use_page_title",
+      "label": "Brug titlen fra Shopify-siden",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Overskrift når sidetitel ikke bruges",
+      "default": "Lad os skabe dit næste træningsmiljø."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Vis overlinje",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Overlinje",
+      "default": "Kontakt PureFitness"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_page_content",
+      "label": "Vis indhold fra Shopify-siden",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_intro",
+      "label": "Vis introduktion når sideindhold mangler",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Introduktion",
+      "default": "Fortæl os om dine ønsker, dit rum og dine ambitioner. Vi hjælper dig med at finde den rigtige løsning."
+    },
+    {
+      "type": "text",
+      "id": "inquiry_subject",
+      "label": "Emne i kontaktbeskeden",
+      "default": "Et nyt træningsmiljø"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_name",
+      "label": "Vis navnefelt",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "name_label",
+      "label": "Navn: label",
+      "default": "Navn"
+    },
+    {
+      "type": "text",
+      "id": "name_placeholder",
+      "label": "Navn: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "name_required",
+      "label": "Navn: obligatorisk",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "E-mail: label",
+      "default": "E-mail"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "E-mail: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_company",
+      "label": "Vis virksomheds-/foreningsfelt",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "company_label",
+      "label": "Virksomhed: label",
+      "default": "Virksomhed (valgfrit)"
+    },
+    {
+      "type": "text",
+      "id": "company_placeholder",
+      "label": "Virksomhed: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "company_required",
+      "label": "Virksomhed: obligatorisk",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Vis telefonfelt",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Telefon: label",
+      "default": "Telefon (valgfrit)"
+    },
+    {
+      "type": "text",
+      "id": "phone_placeholder",
+      "label": "Telefon: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "phone_required",
+      "label": "Telefon: obligatorisk",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "Besked: label",
+      "default": "Fortæl os om dit projekt"
+    },
+    {
+      "type": "textarea",
+      "id": "message_placeholder",
+      "label": "Besked: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "message_required",
+      "label": "Besked: obligatorisk",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "message_rows",
+      "label": "Besked: antal synlige linjer",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Send-knappens tekst",
+      "default": "Send besked"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Kvittering efter afsendelse",
+      "default": "Tak for din besked. Vi vender tilbage til dig hurtigst muligt."
+    },
+    {
+      "type": "text",
+      "id": "error_heading",
+      "label": "Overskrift over formularfejl"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_note",
+      "label": "Vis note under formularen",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Note under formularen",
+      "default": "Din besked sendes direkte til PureFitness."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "field",
+      "name": "Ekstra formularfelt",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Feltets label",
+          "default": "Flere oplysninger"
+        },
+        {
+          "type": "select",
+          "id": "field_type",
+          "label": "Felttype",
+          "options": [
+            {
+              "value": "text",
+              "label": "Kort tekst"
+            },
+            {
+              "value": "textarea",
+              "label": "Lang tekst"
+            },
+            {
+              "value": "tel",
+              "label": "Telefon"
+            }
+          ],
+          "default": "text"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Eksempeltekst"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Obligatorisk",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis feltet",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

@@ -1,0 +1,59 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "pf-footer",
+      "settings": {
+        "glass_blur": 26,
+        "glass_enabled": true,
+        "glass_flow_enabled": true,
+        "glass_flow_strength": 8,
+        "glass_opacity": 86
+      },
+      "blocks": {
+        "solutions": {
+          "type": "link",
+          "settings": {
+            "label": "Løsninger",
+            "fallback": "loesninger",
+            "visible": true
+          }
+        },
+        "service": {
+          "type": "link",
+          "settings": {
+            "label": "Service",
+            "fallback": "forloeb",
+            "visible": true
+          }
+        },
+        "contact": {
+          "type": "link",
+          "settings": {
+            "label": "Kontakt",
+            "fallback": "kontakt",
+            "visible": true
+          }
+        }
+      },
+      "block_order": [
+        "solutions",
+        "service",
+        "contact"
+      ]
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

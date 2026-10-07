@@ -1,0 +1,37 @@
+{% doc %}
+Renders a native Shopify product card with image, availability and price.
+@param {product} card_product - Shopify product to display
+@param {string} [sold_out_label] - Sold out badge text for this section.
+@param {string} [from_price_label] - Minimum price text with an __PRICE__ placeholder.
+@param {boolean} [show_image] - Whether to display the product image.
+@param {boolean} [show_price] - Whether to display the product price.
+@param {boolean} [show_badge] - Whether to display availability badges.
+@example
+{% render 'pf-product-card', card_product: product %}
+{% enddoc %}
+
+<article class="commerce-card">
+  {% unless show_image == false %}
+  <a class="commerce-card-image" href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
+    {% if card_product.featured_image %}
+      {% assign card_image_alt = card_product.featured_image.alt | default: card_product.title %}
+      {{ card_product.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw', alt: card_image_alt }}
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag: 'commerce-placeholder' }}
+    {% endif %}
+    {% unless card_product.available or show_badge == false %}<span class="commerce-badge">{% if sold_out_label != blank %}{{ sold_out_label | escape }}{% else %}{{ 'commerce.product.sold_out' | t }}{% endif %}</span>{% endunless %}
+  </a>
+  {% endunless %}
+  <div class="commerce-card-meta">
+    <h2><a href="{{ card_product.url }}">{{ card_product.title | escape }}</a></h2>
+    {% unless show_price == false %}<p class="commerce-price">
+      {% if card_product.price_varies %}
+        {% assign card_price = card_product.price_min | money_with_currency %}
+        {% if from_price_label != blank %}{{ from_price_label | escape | replace: '__PRICE__', card_price }}{% else %}{{ 'commerce.product.from_price' | t: price: card_price }}{% endif %}
+      {% else %}
+        {{ card_product.price | money_with_currency }}
+      {% endif %}
+      {% if card_product.compare_at_price > card_product.price and card_product.price_varies == false %}<s>{{ card_product.compare_at_price | money }}</s>{% endif %}
+    </p>{% endunless %}
+  </div>
+</article>

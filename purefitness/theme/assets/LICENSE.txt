@@ -1,0 +1,5 @@
+Material maps and HDR sky by Poly Haven and ambientCG. CC0 1.0 Universal.
+https://polyhaven.com/license
+https://docs.ambientcg.com/license/
+Source URLs and original filenames: sources.json
+JPEG maps converted to WebP for web delivery. No scene photographs used.

@@ -1,0 +1,283 @@
+{% liquid
+  assign brand = section.settings.brand_name | default: settings.brand_name
+  assign brand_url = section.settings.brand_url | default: routes.root_url
+  assign simplified_home = false
+  if template.name == 'index' and template.suffix == blank
+    assign simplified_home = true
+  endif
+  if simplified_home
+    assign show_footer_links = section.settings.show_links
+  else
+    assign show_footer_links = section.settings.show_inner_links
+  endif
+%}
+{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
+<footer class="landing-footer{% if simplified_home %} pf-simple-footer{% endif %} pf-editable-footer" data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-surface:{{ section.settings.background | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-footer-background:{{ section.settings.background }};--pf-footer-text:{{ section.settings.text_color }};--pf-footer-muted:{{ section.settings.muted_color }};padding-top:{{ section.settings.padding_top }}px;padding-bottom:{{ section.settings.padding_bottom }}px">
+  {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
+  <div class="{% if simplified_home %}pf-simple-footer-main{% else %}footer-top{% endif %} page-width">
+    <a class="brand" href="{{ brand_url }}">{% if section.settings.logo != blank %}{{ section.settings.logo | image_url: width: 500 | image_tag: class: 'pf-logo', alt: brand }}{% else %}{{ brand | escape }}<span class="brand-dot" aria-hidden="true"></span>{% endif %}</a>
+    {% if show_footer_links %}
+      <nav aria-label="{{ section.settings.nav_label | escape }}">
+        {% for block in section.blocks %}{% if block.settings.visible %}
+          {% if block.settings.fallback == 'home' %}{% assign default_url = routes.root_url %}{% else %}{% assign default_url = routes.root_url | append: '#' | append: block.settings.fallback %}{% endif %}
+          <a href="{{ block.settings.url | default: default_url }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>
+        {% endif %}{% endfor %}
+      </nav>
+    {% endif %}
+    {% unless simplified_home %}{% if section.settings.show_top %}<a href="{{ section.settings.top_url | default: '#indhold' }}">{{ section.settings.top_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</a>{% endif %}{% endunless %}
+  </div>
+  {% if simplified_home %}
+    {% if section.settings.show_home_disclosure %}<p class="pf-simple-footer-note page-width">{{ section.settings.disclosure | escape }}</p>{% endif %}
+  {% else %}
+    <div class="footer-bottom page-width">{% if section.settings.show_inner_scope %}<p>{{ section.settings.scope | escape }}</p>{% endif %}{% if section.settings.show_inner_disclosure %}<small>{{ section.settings.disclosure | escape }}</small>{% endif %}</div>
+  {% endif %}
+  {% if section.settings.show_policy_links %}<nav class="pf-policies page-width" aria-label="{{ section.settings.policies_label | escape }}">{% for policy in shop.policies %}{% if policy.body != blank %}<a href="{{ policy.url }}">{{ policy.title | escape }}</a>{% endif %}{% endfor %}</nav>{% endif %}
+</footer>
+{% schema %}
+{
+  "name": "Purefitness · Footer",
+  "limit": 1,
+  "enabled_on": {
+    "groups": [
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Navn her (tom = temaets navn)"
+    },
+    {
+      "type": "url",
+      "id": "brand_url",
+      "label": "Logoets destination (tom = forsiden)"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo her (valgfrit)"
+    },
+    {
+      "type": "text",
+      "id": "scope",
+      "label": "Virksomhedens områder",
+      "default": "Udstyr · Indretning · Installation · Service"
+    },
+    {
+      "type": "text",
+      "id": "disclosure",
+      "label": "Billedtekst",
+      "default": "Billeder og 3D-miljøer er illustrative visualiseringer."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_home_disclosure",
+      "label": "Vis billednote på forsiden",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_inner_disclosure",
+      "label": "Vis billednote på undersider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_inner_scope",
+      "label": "Vis områder på undersider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_links",
+      "label": "Vis links på forsiden",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_inner_links",
+      "label": "Vis links på undersider",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "label": "Linkgruppens tilgængelige navn",
+      "default": "Footernavigation"
+    },
+    {
+      "type": "text",
+      "id": "top_label",
+      "label": "Til top-knappens tekst",
+      "default": "Til toppen"
+    },
+    {
+      "type": "url",
+      "id": "top_url",
+      "label": "Til top-knappens destination (tom = toppen)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top",
+      "label": "Vis til top-knap på undersider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policy_links",
+      "label": "Vis butikkens politikker",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "policies_label",
+      "label": "Politiklinks tilgængelige navn",
+      "default": "Politikker"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Baggrundsfarve",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Tekstfarve",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Sekundær tekstfarve",
+      "default": "#b2bbae"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Ekstra afstand øverst",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Ekstra afstand nederst",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Glas og bevægelse"
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_enabled",
+      "label": "Glasbaggrund",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_opacity",
+      "label": "Baggrundsopacitet",
+      "min": 60,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 86
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Sløring",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_flow_enabled",
+      "label": "Bløde lysbølger ved scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_flow_strength",
+      "label": "Lysbølgernes styrke",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Footerlink",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Linktekst",
+          "default": "Løsninger"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Linkdestination"
+        },
+        {
+          "type": "select",
+          "id": "fallback",
+          "label": "Standarddestination ved tomt link",
+          "options": [
+            {
+              "value": "loesninger",
+              "label": "Løsninger"
+            },
+            {
+              "value": "forloeb",
+              "label": "Forløb"
+            },
+            {
+              "value": "kontakt",
+              "label": "Kontakt"
+            },
+            {
+              "value": "faq",
+              "label": "FAQ"
+            },
+            {
+              "value": "home",
+              "label": "Forside"
+            }
+          ],
+          "default": "loesninger"
+        },
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis link",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "max_blocks": 15,
+  "presets": [
+    {
+      "name": "Purefitness · Footer"
+    }
+  ]
+}
+{% endschema %}

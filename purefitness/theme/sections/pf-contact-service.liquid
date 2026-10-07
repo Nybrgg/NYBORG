@@ -1,0 +1,426 @@
+{% render 'pf-contact-dialog', dialog_settings: section.settings, dialog_kind: 'service', dialog_id: section.id, dialog_blocks: section.blocks %}
+{% schema %}
+{
+  "name": "Kontakt · Service",
+  "class": "pf-contact-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_text",
+      "label": "Navn øverst",
+      "default": "PUREFITNESS"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand",
+      "label": "Vis navn øverst",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "close_label",
+      "label": "Luk-knappens tilgængelige tekst",
+      "default": "Luk kontakt"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Overlinje",
+      "default": "Virksomheder & foreninger"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Vis overlinje",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Overskrift",
+      "default": "Lad os passe på jeres udstyr."
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Introduktion",
+      "default": "Fortæl os om maskinerne og jeres behov. Tidspunkt, omfang og eventuelle reparationer aftales med jer."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_intro",
+      "label": "Vis introduktion",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "inquiry_subject",
+      "label": "Emne i kontaktbeskeden",
+      "default": "Service på vores træningsmaskiner"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_company",
+      "label": "Vis virksomheds-/foreningsfelt",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "company_label",
+      "label": "Virksomhed: label",
+      "default": "Virksomhed / forening"
+    },
+    {
+      "type": "text",
+      "id": "company_placeholder",
+      "label": "Virksomhed: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "company_required",
+      "label": "Virksomhed: obligatorisk",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_name",
+      "label": "Vis navnefelt",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "name_label",
+      "label": "Navn: label",
+      "default": "Dit navn"
+    },
+    {
+      "type": "text",
+      "id": "name_placeholder",
+      "label": "Navn: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "name_required",
+      "label": "Navn: obligatorisk",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "E-mail: label",
+      "default": "Din e-mail"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "E-mail: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Vis telefonfelt",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Telefon: label",
+      "default": "Telefon"
+    },
+    {
+      "type": "text",
+      "id": "phone_placeholder",
+      "label": "Telefon: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "phone_required",
+      "label": "Telefon: obligatorisk",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "Besked: label",
+      "default": "Maskiner og behov"
+    },
+    {
+      "type": "textarea",
+      "id": "message_placeholder",
+      "label": "Besked: eksempeltekst"
+    },
+    {
+      "type": "checkbox",
+      "id": "message_required",
+      "label": "Besked: obligatorisk",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "message_rows",
+      "label": "Besked: antal synlige linjer",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "message_limit",
+      "label": "Besked: maksimalt antal tegn",
+      "min": 500,
+      "max": 5000,
+      "step": 100,
+      "default": 1800
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Send-knappens tekst",
+      "default": "Send besked"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Kvittering efter afsendelse",
+      "default": "Tak for din besked. Vi vender tilbage til dig hurtigst muligt."
+    },
+    {
+      "type": "text",
+      "id": "error_heading",
+      "label": "Overskrift over formularfejl"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_note",
+      "label": "Vis note under send-knappen",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Note under send-knappen",
+      "default": "Din besked sendes direkte til PureFitness."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_direct_contact",
+      "label": "Vis direkte e-mailkontakt",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "direct_email",
+      "label": "Direkte e-mailadresse",
+      "default": "support@purefitness.dk"
+    },
+    {
+      "type": "text",
+      "id": "direct_label",
+      "label": "E-maillinkets tekst (tom = adressen)"
+    },
+    {
+      "type": "color",
+      "id": "dialog_background",
+      "label": "Dialogens baggrund",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "dialog_text",
+      "label": "Dialogens tekstfarve",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "dialog_muted",
+      "label": "Dialogens hjælpetekst",
+      "default": "#b2bbae"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Send-knappens baggrund",
+      "default": "#d4ed72"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Send-knappens tekstfarve",
+      "default": "#191e1c"
+    },
+    {
+      "type": "color",
+      "id": "company_background",
+      "label": "Virksomhed: feltbaggrund",
+      "default": "#29322b"
+    },
+    {
+      "type": "color",
+      "id": "name_background",
+      "label": "Navn: feltbaggrund",
+      "default": "#29322b"
+    },
+    {
+      "type": "color",
+      "id": "email_background",
+      "label": "E-mail: feltbaggrund",
+      "default": "#29322b"
+    },
+    {
+      "type": "color",
+      "id": "phone_background",
+      "label": "Telefon: feltbaggrund",
+      "default": "#29322b"
+    },
+    {
+      "type": "color",
+      "id": "message_background",
+      "label": "Besked: feltbaggrund",
+      "default": "#29322b"
+    },
+    {
+      "type": "color",
+      "id": "company_text",
+      "label": "Virksomhed: tekstfarve",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "name_text",
+      "label": "Navn: tekstfarve",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "email_text",
+      "label": "E-mail: tekstfarve",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "phone_text",
+      "label": "Telefon: tekstfarve",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "message_text",
+      "label": "Besked: tekstfarve",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "header",
+      "content": "Glas · denne formular"
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_enabled",
+      "label": "Aktivér glaseffekt",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Sløring bag glasset",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "glass_opacity",
+      "label": "Baggrundens opacitet",
+      "min": 55,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 81,
+      "info": "Lavere værdi viser mere af baggrunden. Teksten forbliver dækkende."
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_flow_enabled",
+      "label": "Aktivér diskret glasbevægelse",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_flow_strength",
+      "label": "Bevægelsens styrke",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 8,
+      "info": "Refleksioner bevæger sig diskret. Tekst og indhold står stille."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "field",
+      "name": "Ekstra formularfelt",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Feltets label",
+          "default": "Flere oplysninger"
+        },
+        {
+          "type": "select",
+          "id": "field_type",
+          "label": "Felttype",
+          "options": [
+            {
+              "value": "text",
+              "label": "Kort tekst"
+            },
+            {
+              "value": "textarea",
+              "label": "Lang tekst"
+            },
+            {
+              "value": "tel",
+              "label": "Telefon"
+            }
+          ],
+          "default": "text"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Eksempeltekst"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Obligatorisk",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis feltet",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "field_background",
+          "label": "Feltets baggrund",
+          "default": "#29322b"
+        },
+        {
+          "type": "color",
+          "id": "field_text",
+          "label": "Feltets tekstfarve",
+          "default": "#edf0e8"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10
+}
+{% endschema %}

@@ -1,0 +1,449 @@
+{% liquid
+  assign universe_url = routes.root_url | append: '?view=univers'
+  if settings.universe_url_override != blank
+    assign universe_url = settings.universe_url_override
+  endif
+%}
+{% if section.settings.show_section %}
+{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
+<section id="loesninger-{{ section.id }}" class="pf-simple-section pf-simple-solutions page-width pf-editable-section" data-pf-anchor="loesninger" {% if section.settings.show_heading and section.settings.heading != blank %}aria-labelledby="solutions-title-{{ section.id }}"{% endif %} data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-base:{{ '#202722' | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-surface:{{ section.settings.background_color | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;--pf-solutions-fade-top:{{ section.settings.fade_top }}px;--pf-solutions-fade-bottom:{{ section.settings.fade_bottom }}px;--pf-solutions-fade-top-mobile:{{ section.settings.fade_top_mobile }}px;--pf-solutions-fade-bottom-mobile:{{ section.settings.fade_bottom_mobile }}px;">
+  {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
+  {% if section.settings.show_heading and section.settings.heading != blank %}<h2 id="solutions-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{% endif %}
+  {% if section.settings.show_description and section.settings.description != blank %}<p class="pf-simple-section-lead">{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
+  {% if section.settings.show_rows %}<div class="pf-simple-solution-list">
+    {% assign visible_index = 0 %}
+    {% for block in section.blocks %}
+      {% if block.settings.visible and block.settings.label != blank %}
+        {% assign visible_index = visible_index | plus: 1 %}
+        {% assign row_universe_url = block.settings.universe_url %}
+        {% if row_universe_url == blank %}{% capture row_universe_url %}{{ universe_url }}#{{ block.settings.scene_id | handleize }}{% endcapture %}{% endif %}
+        <details class="pf-simple-disclosure pf-simple-solution{% if section.settings.show_numbers == false or block.settings.show_number == false %} pf-without-number{% endif %}{% if block.settings.show_summary == false or block.settings.summary == blank %} pf-without-summary{% endif %}" name="solutions-{{ section.id }}" {{ block.shopify_attributes }}>
+          <summary>
+            {% if section.settings.show_numbers and block.settings.show_number %}<span class="pf-simple-number">{% if block.settings.number != blank %}{{ block.settings.number | escape }}{% else %}{% if visible_index < 10 %}0{% endif %}{{ visible_index }}{% endif %}</span>{% endif %}
+            <span class="pf-simple-solution-title">{{ block.settings.label | escape }}</span>
+            {% if block.settings.show_summary and block.settings.summary != blank %}<span class="pf-simple-solution-summary">{{ block.settings.summary | escape | newline_to_br }}</span>{% endif %}
+            {% render 'pf-disclosure-icon' %}
+          </summary>
+          <div class="pf-simple-solution-more">
+            {% if block.settings.show_description and block.settings.description != blank %}<p>{{ block.settings.description | escape | newline_to_br }}</p>{% endif %}
+            {% capture contact_action %}{% if block.settings.show_contact and block.settings.contact_label != blank %}{% if block.settings.contact_url != blank %}<a class="line-action" href="{{ block.settings.contact_url | escape }}">{{ block.settings.contact_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</a>{% else %}<button type="button" class="line-action" data-pf-contact="{{ block.settings.contact_kind | escape }}">{{ block.settings.contact_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</button>{% endif %}{% endif %}{% endcapture %}
+            {% capture universe_action %}{% if block.settings.show_universe and block.settings.universe_label != blank %}<a class="line-action" href="{{ row_universe_url | escape }}">{{ block.settings.universe_label | escape }} {% render 'pf-icon', name: 'arrow-right', size: 17 %}</a>{% endif %}{% endcapture %}
+            {% if contact_action != blank or universe_action != blank %}<div class="pf-simple-solution-actions">{% if block.settings.action_order == 'universe_first' %}{{ universe_action }}{{ contact_action }}{% else %}{{ contact_action }}{{ universe_action }}{% endif %}</div>{% endif %}
+          </div>
+        </details>
+      {% endif %}
+    {% endfor %}
+  </div>{% endif %}
+</section>
+{% endif %}
+{% javascript %}
+  document.addEventListener('shopify:block:select', function(event) {
+    const disclosure = event.target.closest('.pf-simple-solutions .pf-simple-disclosure');
+    if (disclosure) disclosure.open = true;
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Purefitness · Løsninger",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Vis sektionen",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Overskrift",
+      "default": "Hvilket rum skal vi skabe?"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Introduktion",
+      "default": "Forskellige brugere stiller forskellige krav. Find det miljø, der passer til jer."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Vis overskriften",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Vis introduktionen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Vis rækkenumre",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rows",
+      "label": "Vis løsninger",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Farver og afstande"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Baggrund",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Overskrifter og tekst",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Brødtekst",
+      "default": "#b2bbae"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent og knapper",
+      "default": "#d4ed72"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Afstand over indhold",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Afstand under indhold",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Afstand over indhold på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Afstand under indhold på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Bløde baggrundsovergange"
+    },
+    {
+      "type": "range",
+      "id": "fade_top",
+      "label": "Overgang øverst, computer",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80,
+      "info": "0 giver en skarp kant. Overgangen begrænses til 45 % af sektionens højde."
+    },
+    {
+      "type": "range",
+      "id": "fade_bottom",
+      "label": "Overgang nederst, computer",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80,
+      "info": "0 giver en skarp kant. Overgangen begrænses til 45 % af sektionens højde."
+    },
+    {
+      "type": "range",
+      "id": "fade_top_mobile",
+      "label": "Overgang øverst, mobil",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 56,
+      "info": "0 giver en skarp kant. Overgangen begrænses til 45 % af sektionens højde."
+    },
+    {
+      "type": "range",
+      "id": "fade_bottom_mobile",
+      "label": "Overgang nederst, mobil",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 56,
+      "info": "0 giver en skarp kant. Overgangen begrænses til 45 % af sektionens højde."
+    },
+    {
+      "type": "header",
+      "content": "Glas og bevægelse"
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_enabled",
+      "label": "Glasbaggrund",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_opacity",
+      "label": "Baggrundsopacitet",
+      "min": 60,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 86
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Sløring",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_flow_enabled",
+      "label": "Bløde lysbølger ved scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_flow_strength",
+      "label": "Lysbølgernes styrke",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · Løsninger",
+      "blocks": [
+        {
+          "type": "environment",
+          "settings": {
+            "scene_id": "fitness",
+            "label": "Fitnesscentre",
+            "summary": "Plads til forskellige træningsformer, et naturligt flow og udstyr, der passer til medlemmernes behov. Se mulighederne for både nye centre og eksisterende faciliteter.",
+            "description": "Styrke, kondition og frie vægte. Vi hjælper med valg af udstyr, indretning og installation."
+          }
+        },
+        {
+          "type": "environment",
+          "settings": {
+            "scene_id": "hoteller",
+            "label": "Hoteller",
+            "summary": "Et træningsrum som en naturlig del af opholdet. Indretningen skal være indbydende, let at bruge og tilpasset den plads, hotellet har til rådighed.",
+            "description": "Materialer, plads og udstyr tænkes sammen med hotellets udtryk. En løsning, der passer til gæsternes behov."
+          }
+        },
+        {
+          "type": "environment",
+          "settings": {
+            "scene_id": "erhverv",
+            "label": "Erhverv",
+            "summary": "Træning tættere på arbejdsdagen. Et funktionelt rum kan give medarbejderne mulighed for bevægelse før, under eller efter arbejdet.",
+            "description": "Fra en mindre træningszone til et helt motionsrum. Vi tilpasser indretningen til jeres arbejdsplads."
+          }
+        },
+        {
+          "type": "environment",
+          "settings": {
+            "scene_id": "foreninger",
+            "label": "Foreninger",
+            "summary": "Fælles faciliteter til forskellige brugere og aktiviteter. Find en indretning og et udvalg af udstyr, der passer til foreningens hverdag.",
+            "description": "Fleksible arealer, der fungerer til fællestræning og individuelle programmer. Vi hjælper jer med at udnytte pladsen."
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "environment",
+      "name": "Træningsmiljø",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis dette træningsmiljø",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Titel",
+          "default": "Fitnesscentre"
+        },
+        {
+          "type": "textarea",
+          "id": "summary",
+          "label": "Altid synlig beskrivelse",
+          "default": "Plads til forskellige træningsformer, et naturligt flow og udstyr, der passer til medlemmernes behov. Se mulighederne for både nye centre og eksisterende faciliteter."
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Flere oplysninger",
+          "default": "Styrke, kondition og frie vægte. Vi hjælper med valg af udstyr, indretning og installation."
+        },
+        {
+          "type": "select",
+          "id": "scene_id",
+          "label": "Tilsvarende 3D-miljø",
+          "options": [
+            {
+              "value": "fitness",
+              "label": "Fitnesscentre"
+            },
+            {
+              "value": "hoteller",
+              "label": "Hoteller"
+            },
+            {
+              "value": "erhverv",
+              "label": "Erhverv"
+            },
+            {
+              "value": "foreninger",
+              "label": "Foreninger"
+            }
+          ],
+          "default": "fitness"
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Eget rækkenummer (valgfrit)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_summary",
+          "label": "Vis den korte beskrivelse",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description",
+          "label": "Vis flere oplysninger",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_contact",
+          "label": "Vis kontaktknappen",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "contact_label",
+          "label": "Kontaktknappens tekst",
+          "default": "Tal om jeres løsning"
+        },
+        {
+          "type": "url",
+          "id": "contact_url",
+          "label": "Kontaktknappens egen destination"
+        },
+        {
+          "type": "select",
+          "id": "contact_kind",
+          "label": "Kontaktformular uden egen destination",
+          "options": [
+            {
+              "value": "projekt",
+              "label": "Projekt"
+            },
+            {
+              "value": "katalog",
+              "label": "Katalog"
+            },
+            {
+              "value": "service",
+              "label": "Service"
+            }
+          ],
+          "default": "projekt"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_universe",
+          "label": "Vis universknappen",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "universe_label",
+          "label": "Universknappens tekst",
+          "default": "Oplev miljøet"
+        },
+        {
+          "type": "url",
+          "id": "universe_url",
+          "label": "Universknappens egen destination"
+        },
+        {
+          "type": "select",
+          "id": "action_order",
+          "label": "Knappernes rækkefølge",
+          "options": [
+            {
+              "value": "contact_first",
+              "label": "Kontakt først"
+            },
+            {
+              "value": "universe_first",
+              "label": "Univers først"
+            }
+          ],
+          "default": "contact_first"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_number",
+          "label": "Vis dette rækkenummer",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

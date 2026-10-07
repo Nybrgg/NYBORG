@@ -1,0 +1,116 @@
+{% liquid
+  assign universe_url = section.settings.universe_url
+  if universe_url == blank
+    assign universe_url = settings.universe_url_override
+  endif
+  if universe_url == blank
+    assign universe_url = routes.root_url | append: '?view=univers'
+  endif
+%}
+<section class="universe-invitation" aria-labelledby="universe-title-{{ section.id }}">
+  {% if section.settings.image != blank %}{% render 'pf-image', image: section.settings.image, mobile_image: section.settings.mobile_image, asset: 'next-universe.webp', class: 'invitation-image', alt: section.settings.image_alt, loading: 'lazy', sizes: '100vw', width: 1440, height: 900 %}{% else %}<picture class="invitation-image">{% if section.settings.mobile_image != blank %}<source media="(max-width:700px)" srcset="{{ section.settings.mobile_image | image_url: width: 1100 }}">{% endif %}<img src="{{ 'next-universe.webp' | asset_url }}" width="1440" height="900" loading="lazy" decoding="async" alt="{{ section.settings.image_alt | escape }}"></picture>{% endif %}
+  <div class="universe-invitation-content page-width">{% if section.settings.show_eyebrow %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}<h2 id="universe-title-{{ section.id }}">{{ section.settings.heading_line_1 | escape }}<br><span>{{ section.settings.heading_line_2 | escape }}</span></h2>{% if section.settings.show_description %}<p>{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
+    {% if section.settings.show_button %}<a class="primary-action" href="{{ universe_url | escape }}">{{ section.settings.universe_label | escape }}{% render 'pf-icon', name: 'move-up-right', size: 21 %}</a>{% endif %}
+    {% if section.settings.show_caption %}<div class="universe-caption"><span class="detail-dot"></span>{{ section.settings.caption | escape }}</div>{% endif %}
+  </div>{% if section.settings.show_mark %}<span class="invitation-mark" aria-hidden="true">{% render 'pf-icon', name: 'move-up-right', size: 60 %}</span>{% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Purefitness · Univers",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Baggrundsbillede"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Overlinje",
+      "default": "05 / Et nyt perspektiv"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Overskrift, linje 1",
+      "default": "Se mulighederne."
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Overskrift, linje 2",
+      "default": "Mærk rummet."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Beskrivelse",
+      "default": "Træd ind i Purefitness-universet. Bevæg dig mellem fem miljøer, kom tæt på udstyret og oplev helheden. Du styrer tempoet."
+    },
+    {
+      "type": "text",
+      "id": "universe_label",
+      "label": "Universknap",
+      "default": "Oplev universet"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Billedtekst",
+      "default": "Fem miljøer. Én sammenhængende 3D-oplevelse."
+    },
+    {
+      "type": "url",
+      "id": "universe_url",
+      "label": "Denne knaps universlink (tom = indbygget univers)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Vis universknap",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Vis overlinje",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Vis beskrivelse",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption",
+      "label": "Vis billedtekst",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mark",
+      "label": "Vis dekorativ pil",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Billedbeskrivelse (tom = dekorativt billede)"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Baggrundsbillede på mobil (valgfrit)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · Univers"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,82 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "PureFitness Universe",
+    "theme_author": "PureFitness",
+    "theme_version": "1.9.0",
+    "theme_documentation_url": "https://help.shopify.com/da/manual/online-store/themes",
+    "theme_support_url": "https://purefitness.dk"
+  },
+  {
+    "name": "Identitet",
+    "settings": [
+      {
+        "type": "text",
+        "id": "brand_name",
+        "label": "Navn i navigationen",
+        "default": "PUREFITNESS"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo (valgfrit)"
+      },
+      {
+        "type": "url",
+        "id": "universe_url_override",
+        "label": "Universlink (tom = indbygget 3D-univers)"
+      }
+    ]
+  },
+  {
+    "name": "Farver",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accentfarve",
+        "default": "#d4ed72"
+      },
+      {
+        "type": "color",
+        "id": "color_ink",
+        "label": "Tekstfarve",
+        "default": "#191e1c"
+      },
+      {
+        "type": "color",
+        "id": "color_paper",
+        "label": "Sidebaggrund",
+        "default": "#fafbf7"
+      }
+    ]
+  },
+  {
+    "name": "Forsidens søgemaskinetekst",
+    "settings": [
+      {
+        "type": "text",
+        "id": "home_title",
+        "label": "Sidetitel",
+        "default": "Purefitness — Stærke rum. Større muligheder."
+      },
+      {
+        "type": "textarea",
+        "id": "home_description",
+        "label": "Beskrivelse",
+        "default": "Purefitness skaber komplette træningsmiljøer for fitnesscentre, hoteller, virksomheder og foreninger. Udstyr, indretning, installation og service."
+      }
+    ]
+  },
+  {
+    "name": "Fælles tilgængelighed",
+    "settings": [
+      {
+        "type": "text",
+        "id": "skip_label",
+        "label": "Spring til indhold-knap",
+        "default": "Gå til indhold"
+      }
+    ]
+  }
+]

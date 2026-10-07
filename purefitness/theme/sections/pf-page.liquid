@@ -1,0 +1,139 @@
+{% assign back_url = section.settings.back_url | default: routes.root_url %}
+<section class="commerce commerce-page page-width" {% if section.settings.show_title or request.page_type == '404' %}aria-labelledby="PageTitle-{{ section.id }}"{% endif %}>
+  {% if request.page_type == '404' %}
+    <div class="commerce-empty">{% if section.settings.show_error_code %}<p class="eyebrow">{{ section.settings.error_code | escape }}</p>{% endif %}<h1 id="PageTitle-{{ section.id }}">{{ section.settings.error_heading | escape }}</h1><p>{{ section.settings.error_description | escape | newline_to_br }}</p>{% if section.settings.show_back_link %}<a class="primary-action" href="{{ back_url | escape }}">{{ section.settings.back_label | escape }}<span aria-hidden="true">↗</span></a>{% endif %}</div>
+  {% else %}
+    {% if section.settings.show_title %}<div class="commerce-heading"><h1 id="PageTitle-{{ section.id }}">{% if section.settings.heading != blank %}{{ section.settings.heading | escape }}{% else %}{{ page.title | escape }}{% endif %}</h1></div>{% endif %}
+    {% if section.settings.content != blank %}<div class="commerce-richtext">{{ section.settings.content }}</div>{% elsif section.settings.show_page_content %}<div class="commerce-richtext">{{ page.content }}</div>{% endif %}
+  {% endif %}
+  {% for block in section.blocks %}<div class="commerce-richtext" {{ block.shopify_attributes }}>{% if block.settings.heading != blank %}<h2>{{ block.settings.heading | escape }}</h2>{% endif %}{{ block.settings.content }}{% if block.settings.action == 'link' and block.settings.url != blank %}<a class="line-action" href="{{ block.settings.url | escape }}">{{ block.settings.button_label | escape }}<span aria-hidden="true">↗</span></a>{% elsif block.settings.action != 'none' and block.settings.action != 'link' %}<button class="line-action" type="button" data-pf-contact="{{ block.settings.action | escape }}">{{ block.settings.button_label | escape }}<span aria-hidden="true">↗</span></button>{% endif %}</div>{% endfor %}
+</section>
+
+{% schema %}
+{
+  "name": "PureFitness side",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Vis sidens overskrift",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Overskrift (tom = Shopify-sidens titel)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_page_content",
+      "label": "Vis indhold fra Shopify-siden",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Eget sideindhold (tom = Shopify-side)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_error_code",
+      "label": "404: vis fejlkode",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "error_code",
+      "label": "404: fejlkode",
+      "default": "404"
+    },
+    {
+      "type": "text",
+      "id": "error_heading",
+      "label": "404: overskrift",
+      "default": "Siden blev ikke fundet."
+    },
+    {
+      "type": "textarea",
+      "id": "error_description",
+      "label": "404: beskrivelse",
+      "default": "Linket er måske flyttet. Fortsæt til forsiden og oplev PureFitness."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_back_link",
+      "label": "404: vis knap",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "404: knappens tekst",
+      "default": "Til forsiden"
+    },
+    {
+      "type": "url",
+      "id": "back_url",
+      "label": "404: destination (tom = forsiden)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "Indhold og knap",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Overskrift"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Tekst"
+        },
+        {
+          "type": "select",
+          "id": "action",
+          "label": "Knappens handling",
+          "options": [
+            {
+              "value": "none",
+              "label": "Ingen knap"
+            },
+            {
+              "value": "link",
+              "label": "Åbn link"
+            },
+            {
+              "value": "projekt",
+              "label": "Projektkontakt"
+            },
+            {
+              "value": "service",
+              "label": "Servicekontakt"
+            },
+            {
+              "value": "katalog",
+              "label": "Katalogkontakt"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Knappens tekst",
+          "default": "Kontakt PureFitness"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Knappens link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

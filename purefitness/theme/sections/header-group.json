@@ -1,0 +1,134 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Navigation",
+  "sections": {
+    "navigation": {
+      "type": "pf-header",
+      "blocks": {
+        "solutions": {
+          "type": "link",
+          "disabled": true,
+          "settings": {
+            "label": "Løsninger",
+            "url": "",
+            "fallback": "loesninger",
+            "show_desktop": true,
+            "menu_label": "Løsninger",
+            "menu_url": "",
+            "show_mobile": true
+          }
+        },
+        "link_GRHj6r": {
+          "type": "link",
+          "settings": {
+            "label": "Løsninger",
+            "url": "",
+            "fallback": "loesninger",
+            "show_desktop": true,
+            "menu_label": "Løsninger",
+            "menu_url": "",
+            "show_mobile": true
+          }
+        },
+        "process": {
+          "type": "link",
+          "settings": {
+            "label": "Sådan arbejder vi",
+            "url": "",
+            "fallback": "forloeb",
+            "show_desktop": true,
+            "menu_label": "Sådan arbejder vi",
+            "menu_url": "",
+            "show_mobile": true
+          }
+        },
+        "contact": {
+          "type": "link",
+          "settings": {
+            "label": "Kontakt",
+            "url": "",
+            "fallback": "kontakt",
+            "show_desktop": true,
+            "menu_label": "Kontakt",
+            "menu_url": "",
+            "show_mobile": true
+          }
+        },
+        "faq": {
+          "type": "link",
+          "settings": {
+            "label": "Godt at vide",
+            "url": "",
+            "fallback": "faq",
+            "show_desktop": false,
+            "menu_label": "Godt at vide",
+            "menu_url": "",
+            "show_mobile": true
+          }
+        },
+        "universe": {
+          "type": "link",
+          "settings": {
+            "label": "Oplev universet",
+            "url": "",
+            "fallback": "univers",
+            "show_desktop": false,
+            "menu_label": "Oplev universet",
+            "menu_url": "",
+            "show_mobile": true
+          }
+        }
+      },
+      "block_order": [
+        "solutions",
+        "link_GRHj6r",
+        "process",
+        "contact",
+        "faq",
+        "universe"
+      ],
+      "settings": {
+        "brand_name": "",
+        "home_url": "",
+        "home_label": "PureFitness forside",
+        "menu": "",
+        "mobile_menu": "",
+        "show_menu": true,
+        "open_menu_label": "Åbn menu",
+        "close_menu_label": "Luk menu",
+        "menu_heading": "Oplev Purefitness",
+        "menu_brand": "PUREFITNESS",
+        "nav_label": "Hovednavigation",
+        "mobile_nav_label": "Udvidet navigation",
+        "text_color": "#edf0e8",
+        "background_color": "#202722",
+        "menu_background": "#202722",
+        "menu_text": "#edf0e8",
+        "height_desktop": 82,
+        "height_mobile": 76,
+        "header_glass_enabled": true,
+        "header_glass_blur": 22,
+        "header_glass_opacity": 71,
+        "menu_glass_enabled": true,
+        "menu_glass_blur": 30,
+        "menu_glass_opacity": 73,
+        "header_glass_flow_enabled": true,
+        "header_glass_flow_strength": 8,
+        "menu_glass_flow_enabled": true,
+        "menu_glass_flow_strength": 8
+      }
+    }
+  },
+  "order": [
+    "navigation"
+  ]
+}

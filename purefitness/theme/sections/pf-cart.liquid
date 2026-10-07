@@ -1,0 +1,230 @@
+{% liquid
+  assign continue_url = section.settings.continue_url | default: routes.all_products_collection_url
+  assign empty_button_url = section.settings.empty_button_url | default: routes.all_products_collection_url
+%}
+<section class="commerce page-width" aria-labelledby="CartTitle-{{ section.id }}">
+  <div class="commerce-heading">
+    <div>{% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}<h1 id="CartTitle-{{ section.id }}">{{ section.settings.title | escape }}</h1></div>
+    {% if section.settings.show_continue %}<a class="line-action" href="{{ continue_url | escape }}">{{ section.settings.continue_label | escape }}<span aria-hidden="true">↗</span></a>{% endif %}
+  </div>
+  {% if cart.item_count > 0 %}
+    <form action="{{ routes.cart_url }}" method="post" class="commerce-cart-layout">
+      <div class="commerce-cart-items">
+        {% for item in cart.items %}
+          <article class="commerce-cart-item"{% unless section.settings.show_images %} style="grid-template-columns: minmax(0, 1fr) auto"{% endunless %}>
+            {% if section.settings.show_images %}<a class="commerce-cart-image" href="{{ item.url }}" aria-label="{{ item.product.title | escape }}">{% if item.image %}{% assign item_image_alt = item.image.alt | default: item.product.title %}{{ item.image | image_url: width: 400 | image_tag: loading: 'lazy', widths: '150, 250, 400', sizes: '150px', alt: item_image_alt }}{% else %}{{ 'product-1' | placeholder_svg_tag: 'commerce-placeholder' }}{% endif %}</a>{% endif %}
+            <div class="commerce-cart-details">
+              <h2><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h2>
+              {% if section.settings.show_variant %}{% unless item.product.has_only_default_variant %}<p>{{ item.variant.title | escape }}</p>{% endunless %}{% endif %}
+              {% if item.selling_plan_allocation %}<p>{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>{% endif %}
+              {% for property in item.properties %}{% assign first_character = property.first | slice: 0 %}{% assign property_url_prefix = property.last | slice: 0, 8 %}{% if property.last != blank and first_character != '_' %}<p>{{ property.first | escape }}: {% if property.last contains '/uploads/' and property_url_prefix == 'https://' %}<a href="{{ property.last | escape }}">{{ property.last | split: '/' | last | escape }}</a>{% else %}{{ property.last | escape }}{% endif %}</p>{% endif %}{% endfor %}
+              {% if section.settings.show_unit_price %}<p>{{ item.final_price | money_with_currency }}{% if item.original_price > item.final_price %} <s>{{ item.original_price | money }}</s>{% endif %}</p>{% endif %}
+              {% for discount in item.line_level_discount_allocations %}<p class="commerce-discount">{{ discount.discount_application.title | escape }} (−{{ discount.amount | money }})</p>{% endfor %}
+              <div class="commerce-cart-controls">
+                {% if section.settings.show_quantity %}<label class="commerce-visually-hidden" for="CartQuantity-{{ section.id }}-{{ forloop.index }}">{{ section.settings.quantity_label | escape }} {{ item.product.title | escape }}</label><input id="CartQuantity-{{ section.id }}-{{ forloop.index }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0" step="{{ item.variant.quantity_rule.increment | default: 1 }}" inputmode="numeric">{% else %}<input type="hidden" name="updates[]" value="{{ item.quantity }}">{% endif %}
+                <a href="{{ item.url_to_remove }}">{{ section.settings.remove_label | escape }}</a>
+              </div>
+            </div>
+            <p class="commerce-cart-line-total"{% unless section.settings.show_images %} style="grid-column: 2; grid-row: 1"{% endunless %}>{{ item.final_line_price | money_with_currency }}</p>
+          </article>
+        {% endfor %}
+        <button class="line-action" type="submit" name="update">{{ section.settings.update_label | escape }}<span aria-hidden="true">↗</span></button>
+      </div>
+      <aside class="commerce-cart-summary" aria-labelledby="CartSummary-{{ section.id }}">
+        <h2 id="CartSummary-{{ section.id }}">{{ section.settings.summary_title | escape }}</h2>
+        {% for discount in cart.cart_level_discount_applications %}<p class="commerce-summary-row"><span>{{ discount.title | escape }}</span><span>−{{ discount.total_allocated_amount | money }}</span></p>{% endfor %}
+        <p class="commerce-summary-row commerce-subtotal"><span>{{ section.settings.subtotal_label | escape }}</span><strong>{{ cart.total_price | money_with_currency }}</strong></p>
+        {% if section.settings.show_tax_note %}<p class="commerce-tax-note">{% if cart.taxes_included %}{{ section.settings.taxes_included_text | escape }}{% else %}{{ section.settings.taxes_at_checkout_text | escape }}{% endif %}</p>{% endif %}
+        {% if section.settings.show_note %}<label for="CartNote-{{ section.id }}">{{ section.settings.note_label | escape }}</label><textarea id="CartNote-{{ section.id }}" name="note" rows="3">{{ cart.note | escape }}</textarea>{% endif %}
+        <button type="submit" name="checkout" class="primary-action">{{ section.settings.checkout_label | escape }}<span aria-hidden="true">↗</span></button>
+      </aside>
+    </form>
+  {% else %}
+    <div class="commerce-empty">
+      <h2>{{ section.settings.empty_title | escape }}</h2><p>{{ section.settings.empty_text | escape | newline_to_br }}</p>
+      {% if section.settings.show_empty_button %}<a class="primary-action" href="{{ empty_button_url | escape }}">{{ section.settings.empty_button_label | escape }}<span aria-hidden="true">↗</span></a>{% endif %}
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "PureFitness kurv",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Overskrift"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Lille overskrift",
+      "default": "Shop"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Sidens overskrift",
+      "default": "Din kurv."
+    },
+    {
+      "type": "header",
+      "content": "Fortsæt med at shoppe"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_continue",
+      "label": "Vis link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "continue_label",
+      "label": "Tekst på link",
+      "default": "Fortsæt med at shoppe"
+    },
+    {
+      "type": "url",
+      "id": "continue_url",
+      "label": "Linkdestination",
+      "info": "Tomt felt bruger alle produkter."
+    },
+    {
+      "type": "header",
+      "content": "Kurvens produkter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_images",
+      "label": "Vis produktbilleder",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant",
+      "label": "Vis variantnavn",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_unit_price",
+      "label": "Vis pris pr. produkt",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "Vis antalvælger",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "quantity_label",
+      "label": "Antalvælgerens tekst før produktnavnet",
+      "default": "Antal af"
+    },
+    {
+      "type": "text",
+      "id": "remove_label",
+      "label": "Tekst på fjernlink",
+      "default": "Fjern"
+    },
+    {
+      "type": "text",
+      "id": "update_label",
+      "label": "Tekst på opdateringsknap",
+      "default": "Opdatér kurv"
+    },
+    {
+      "type": "header",
+      "content": "Bestillingsoversigt"
+    },
+    {
+      "type": "text",
+      "id": "summary_title",
+      "label": "Overskrift",
+      "default": "Din bestilling"
+    },
+    {
+      "type": "text",
+      "id": "subtotal_label",
+      "label": "Tekst til subtotal",
+      "default": "Subtotal"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tax_note",
+      "label": "Vis moms- og leveringsbesked",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "taxes_included_text",
+      "label": "Besked når moms er inkluderet",
+      "default": "Inkl. moms. Levering beregnes ved betaling."
+    },
+    {
+      "type": "textarea",
+      "id": "taxes_at_checkout_text",
+      "label": "Besked når moms beregnes ved betaling",
+      "default": "Moms og levering beregnes ved betaling."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_note",
+      "label": "Vis bemærkningsfelt",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "note_label",
+      "label": "Bemærkningsfeltets tekst",
+      "default": "Bemærkning til din bestilling"
+    },
+    {
+      "type": "text",
+      "id": "checkout_label",
+      "label": "Tekst på betalingsknap",
+      "default": "Gå til betaling"
+    },
+    {
+      "type": "paragraph",
+      "content": "Betalingsknappen sender bestillingen til Shopifys checkout."
+    },
+    {
+      "type": "header",
+      "content": "Tom kurv"
+    },
+    {
+      "type": "text",
+      "id": "empty_title",
+      "label": "Overskrift",
+      "default": "Din kurv er tom."
+    },
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Beskrivelse",
+      "default": "Find udstyr og løsninger, der passer til dit næste træningsmiljø."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_empty_button",
+      "label": "Vis knap",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "empty_button_label",
+      "label": "Tekst på knap",
+      "default": "Fortsæt med at shoppe"
+    },
+    {
+      "type": "url",
+      "id": "empty_button_url",
+      "label": "Link på knap",
+      "info": "Tomt felt bruger alle produkter."
+    }
+  ]
+}
+{% endschema %}

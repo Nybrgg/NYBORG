@@ -1,0 +1,347 @@
+{% liquid
+  assign universe_url = routes.root_url | append: '?view=univers'
+  if settings.universe_url_override != blank
+    assign universe_url = settings.universe_url_override
+  endif
+%}
+{% if section.settings.show_section %}
+{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
+<section id="kontakt-{{ section.id }}" class="pf-simple-section pf-simple-contact page-width pf-editable-section" data-pf-anchor="kontakt" {% if section.settings.show_heading and section.settings.heading != blank %}aria-labelledby="contact-title-{{ section.id }}"{% endif %} data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-surface:{{ section.settings.background_color | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;">
+  {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
+  {% if section.settings.show_heading and section.settings.heading != blank %}<h2 id="contact-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{% endif %}
+  {% if section.settings.show_description and section.settings.description != blank %}<p>{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
+  {% if section.settings.show_buttons and section.blocks.size > 0 %}<div class="pf-editor-actions">{% for block in section.blocks %}
+  {% if block.settings.visible and block.settings.label != blank %}
+    {% liquid
+      assign action_url = block.settings.url
+      assign native_contact = false
+      if action_url == blank
+        case block.settings.destination
+          when 'projekt', 'katalog', 'service'
+            assign native_contact = true
+          when 'universe'
+            assign action_url = universe_url
+          when 'solutions'
+            assign action_url = '#loesninger'
+          when 'contact'
+            assign action_url = '#kontakt'
+        endcase
+      endif
+      assign action_class = 'primary-action'
+      if block.settings.style == 'secondary'
+        assign action_class = 'hero-secondary'
+      elsif block.settings.style == 'line'
+        assign action_class = 'line-action'
+      endif
+    %}
+    {% capture action_style %}{% if block.settings.background_color != blank %}--pf-button-bg:{{ block.settings.background_color }};{% endif %}{% if block.settings.text_color != blank %}--pf-button-text:{{ block.settings.text_color }};{% endif %}{% endcapture %}
+    {% if native_contact %}
+      <button type="button" class="{{ action_class }} pf-editor-action{% if block.settings.background_color != blank %} pf-custom-button-bg{% endif %}" data-pf-contact="{{ block.settings.destination | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}{% if block.settings.icon != 'none' %}{% render 'pf-icon', name: block.settings.icon, size: block.settings.icon_size %}{% endif %}</button>
+    {% elsif action_url != blank %}
+      <a class="{{ action_class }} pf-editor-action{% if block.settings.background_color != blank %} pf-custom-button-bg{% endif %}" href="{{ action_url | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}{% if block.settings.icon != 'none' %}{% render 'pf-icon', name: block.settings.icon, size: block.settings.icon_size %}{% endif %}</a>
+    {% endif %}
+  {% endif %}
+{% endfor %}</div>{% endif %}
+</section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Purefitness · Kontakt",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Vis sektionen",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Overskrift",
+      "default": "Fortæl os om jeres projekt."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Introduktion",
+      "default": "Har I et nyt træningsrum i tankerne, eller vil I udvikle det, I allerede har?\nFortæl os om jeres behov, så kan vi tage den første samtale."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Vis overskriften",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Vis beskrivelsen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buttons",
+      "label": "Vis knapper",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Farver og afstande"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Baggrund",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Overskrifter og tekst",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Brødtekst",
+      "default": "#b2bbae"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent og knapper",
+      "default": "#d4ed72"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Afstand over indhold",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Afstand under indhold",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Afstand over indhold på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Afstand under indhold på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Glas og bevægelse"
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_enabled",
+      "label": "Glasbaggrund",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_opacity",
+      "label": "Baggrundsopacitet",
+      "min": 60,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 86
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Sløring",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_flow_enabled",
+      "label": "Bløde lysbølger ved scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_flow_strength",
+      "label": "Lysbølgernes styrke",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · Kontakt",
+      "blocks": [
+        {
+          "type": "button",
+          "settings": {
+            "label": "Kontakt PureFitness",
+            "destination": "projekt",
+            "style": "primary",
+            "icon": "move-up-right",
+            "icon_size": 18
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Knap eller link",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis knappen",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Knaptekst",
+          "default": "Kontakt PureFitness"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Egen destination (har førsteprioritet)"
+        },
+        {
+          "type": "select",
+          "id": "destination",
+          "label": "Handling uden egen destination",
+          "options": [
+            {
+              "value": "universe",
+              "label": "3D-universet"
+            },
+            {
+              "value": "solutions",
+              "label": "Løsninger på forsiden"
+            },
+            {
+              "value": "contact",
+              "label": "Kontakt på forsiden"
+            },
+            {
+              "value": "projekt",
+              "label": "Projektformular"
+            },
+            {
+              "value": "katalog",
+              "label": "Katalogformular"
+            },
+            {
+              "value": "service",
+              "label": "Serviceformular"
+            }
+          ],
+          "default": "projekt"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Udseende",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Fyldt knap"
+            },
+            {
+              "value": "secondary",
+              "label": "Understreget link"
+            },
+            {
+              "value": "line",
+              "label": "Enkelt tekstlink"
+            }
+          ],
+          "default": "primary"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Ikon",
+          "options": [
+            {
+              "value": "move-up-right",
+              "label": "Skrå pil"
+            },
+            {
+              "value": "arrow-up-right",
+              "label": "Pil op til højre"
+            },
+            {
+              "value": "arrow-down",
+              "label": "Pil ned"
+            },
+            {
+              "value": "arrow-right",
+              "label": "Pil mod højre"
+            },
+            {
+              "value": "none",
+              "label": "Intet ikon"
+            }
+          ],
+          "default": "move-up-right"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Egen knapbaggrund (valgfrit)"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Egen knaptekstfarve (valgfrit)"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Ikonstørrelse",
+          "min": 12,
+          "max": 28,
+          "step": 1,
+          "unit": "px",
+          "default": 18
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8
+}
+{% endschema %}

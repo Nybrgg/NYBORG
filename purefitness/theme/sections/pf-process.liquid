@@ -1,0 +1,316 @@
+{% if section.settings.show_section %}
+{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
+<section id="forloeb-{{ section.id }}" class="pf-simple-section pf-simple-process page-width pf-editable-section" data-pf-anchor="forloeb" {% if section.settings.show_heading and section.settings.heading != blank %}aria-labelledby="process-title-{{ section.id }}"{% endif %} data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-surface:{{ section.settings.background_color | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;">
+  {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
+  {% if section.settings.show_heading and section.settings.heading != blank %}<h2 id="process-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{% endif %}
+  <div class="pf-simple-process-grid{% if section.settings.show_description == false or section.settings.description == blank %} pf-process-without-intro{% endif %}{% unless section.settings.show_steps %} pf-process-without-steps{% endunless %}">
+    {% if section.settings.show_description and section.settings.description != blank %}<p>{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
+    {% if section.settings.show_steps %}<ol>
+      {% assign visible_index = 0 %}
+      {% for block in section.blocks %}
+        {% if block.settings.visible %}
+          {% assign visible_index = visible_index | plus: 1 %}
+          <li{% if section.settings.show_numbers == false or block.settings.show_number == false %} class="pf-without-number"{% endif %} {{ block.shopify_attributes }}>
+            {% if section.settings.show_numbers and block.settings.show_number %}<span class="pf-simple-number">{% if block.settings.number != blank %}{{ block.settings.number | escape }}{% else %}{% if visible_index < 10 %}0{% endif %}{{ visible_index }}{% endif %}</span>{% endif %}
+            <div>
+              {% if block.settings.show_title and block.settings.title != blank %}<h3>{{ block.settings.title | escape }}</h3>{% endif %}
+              {% if block.settings.show_description and block.settings.description != blank %}<p>{{ block.settings.description | escape | newline_to_br }}</p>{% endif %}
+              {% if block.settings.show_action and block.settings.action_label != blank %}{% if block.settings.action_url != blank %}<a class="line-action" href="{{ block.settings.action_url | escape }}">{{ block.settings.action_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</a>{% elsif block.settings.action_kind != 'none' %}<button type="button" class="line-action" data-pf-contact="{{ block.settings.action_kind | escape }}">{{ block.settings.action_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</button>{% endif %}{% endif %}
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ol>{% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Purefitness · Forløb",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Vis sektionen",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Overskrift",
+      "default": "Fra første idé til hverdagen, der følger."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Introduktion",
+      "default": "Et tydeligt forløb gør det lettere at træffe de rigtige valg.\nVi tager udgangspunkt i jeres behov og de rammer,\nI allerede har."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Vis overskriften",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Vis introduktionen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Vis trinnumre",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_steps",
+      "label": "Vis trinene",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Farver og afstande"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Baggrund",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Overskrifter og tekst",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Brødtekst",
+      "default": "#b2bbae"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent og knapper",
+      "default": "#d4ed72"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Afstand over indhold",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Afstand under indhold",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Afstand over indhold på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Afstand under indhold på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Glas og bevægelse"
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_enabled",
+      "label": "Glasbaggrund",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_opacity",
+      "label": "Baggrundsopacitet",
+      "min": 60,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 86
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Sløring",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_flow_enabled",
+      "label": "Bløde lysbølger ved scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_flow_strength",
+      "label": "Lysbølgernes styrke",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · Forløb",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Behov og rammer",
+            "description": "Vi taler om brugerne, pladsen og jeres ønsker."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Rum og udstyr",
+            "description": "Vi undersøger indretning og relevante træningsmuligheder."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Levering og opsætning",
+            "description": "De praktiske detaljer afklares som en del af projektet."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Service i hverdagen",
+            "description": "Vi tager en samtale om vedligeholdelse og det videre behov."
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Trin",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis dette trin",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Behov og rammer"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Beskrivelse",
+          "default": "Vi taler om brugerne, pladsen og jeres ønsker."
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Eget trinnummer (valgfrit)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_title",
+          "label": "Vis titlen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action",
+          "label": "Vis link eller kontaktmulighed",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "action_label",
+          "label": "Linkets tekst",
+          "default": "Læs mere"
+        },
+        {
+          "type": "url",
+          "id": "action_url",
+          "label": "Egen destination (har førsteprioritet)"
+        },
+        {
+          "type": "select",
+          "id": "action_kind",
+          "label": "Handling uden egen destination",
+          "options": [
+            {
+              "value": "none",
+              "label": "Intet link"
+            },
+            {
+              "value": "projekt",
+              "label": "Projektformular"
+            },
+            {
+              "value": "katalog",
+              "label": "Katalogformular"
+            },
+            {
+              "value": "service",
+              "label": "Serviceformular"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_number",
+          "label": "Vis dette rækkenummer",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

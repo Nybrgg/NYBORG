@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_ink }}">
+  <title>{% if template.suffix == 'univers' %}{{ 'pf.universe_title' | t }}{% elsif template.suffix == 'contact' %}{{ 'pf.contact_title' | t }}{% elsif template.name == 'index' %}{{ settings.home_title | escape }}{% else %}{{ page_title | escape }}{% unless page_title contains shop.name %} — {{ shop.name | escape }}{% endunless %}{% endif %}</title>
+  {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% elsif template.name == 'index' %}<meta name="description" content="{{ settings.home_description | escape }}">{% endif %}
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="icon" type="image/svg+xml" href="{{ 'favicon.svg' | asset_url }}">
+  {{ 'manrope-400.woff' | asset_url | preload_tag: as: 'font', type: 'font/woff' }}
+  {{ 'manrope-500.woff' | asset_url | preload_tag: as: 'font', type: 'font/woff' }}
+  {{ 'pf-base.css' | asset_url | stylesheet_tag }}
+  {{ 'pf-landing.css' | asset_url | stylesheet_tag }}
+  {{ 'pf-universe-premium.css' | asset_url | stylesheet_tag }}
+  {{ 'pf-theme.css' | asset_url | stylesheet_tag }}
+  {{ 'pf-commerce.css' | asset_url | stylesheet_tag }}
+  {{ 'pf-glass-flow.css' | asset_url | stylesheet_tag }}
+  {% style %}
+    @font-face{font-family:Manrope;font-style:normal;font-weight:400;font-display:swap;src:url({{ 'manrope-400.woff' | asset_url }}) format('woff')}
+    @font-face{font-family:Manrope;font-style:normal;font-weight:500;font-display:swap;src:url({{ 'manrope-500.woff' | asset_url }}) format('woff')}
+    @font-face{font-family:Manrope;font-style:normal;font-weight:800;font-display:swap;src:url({{ 'manrope-800.woff' | asset_url }}) format('woff')}
+    :root{--pf-accent:{{ settings.color_accent }};--pf-ink:{{ settings.color_ink }};--pf-paper:{{ settings.color_paper }};--pf-hero-image:url({{ 'premium-hero.webp' | asset_url }});--accent:{{ settings.color_accent }}}
+    .landing{--accent:var(--pf-accent);--ink:var(--pf-ink);--paper:var(--pf-paper)}
+    .landing h1 span,.universe-invitation h2 span{color:var(--pf-accent)}
+    .experience{--universe-lime:var(--pf-accent)}
+  {% endstyle %}
+  {{ content_for_header }}
+  <script src="{{ 'pf-theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'pf-glass-flow.js' | asset_url }}" defer></script>
+  {% if template.name == 'index' %}<script type="module" src="{{ 'pf-universe-entry.js' | asset_url }}"></script>{% endif %}
+</head>
+<body{% if template.suffix == 'univers' %} class="pf-universe-page"{% endif %}>
+  {% if template.suffix == 'univers' %}
+    {{ content_for_layout }}
+  {% else %}
+    <div class="landing{% unless template.name == 'index' and template.suffix == blank %} pf-inner-page{% endunless %}" data-pf-home-shell>
+      <a class="skip-link" href="#indhold">{{ settings.skip_label | escape }}</a>
+      {% sections 'header-group' %}
+      {% if template.name == 'index' and template.suffix == blank %}<div class="pf-glass-ambient" data-pf-glass-ambient aria-hidden="true"></div>{% endif %}
+      <main id="indhold">{{ content_for_layout }}</main>
+      {% sections 'footer-group' %}
+    </div>
+  {% endif %}
+  {% section 'pf-contact-project' %}
+  {% section 'pf-contact-service' %}
+  {% section 'pf-contact-catalogue' %}
+</body>
+</html>

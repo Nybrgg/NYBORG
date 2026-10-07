@@ -1,0 +1,360 @@
+{% liquid
+  assign simplified_home = false
+  assign header_flow_enabled = false
+  assign menu_flow_enabled = false
+  if section.settings.header_glass_enabled and section.settings.header_glass_flow_enabled
+    assign header_flow_enabled = true
+  endif
+  if section.settings.menu_glass_enabled and section.settings.menu_glass_flow_enabled
+    assign menu_flow_enabled = true
+  endif
+  if template.name == 'index' and template.suffix == blank
+    assign simplified_home = true
+  endif
+  assign home = section.settings.home_url | default: routes.root_url
+  assign brand = section.settings.brand_name | default: settings.brand_name
+  assign logo = section.settings.logo | default: settings.logo
+  assign universe = settings.universe_url_override
+  if universe == blank
+    assign universe = routes.root_url | append: '?view=univers'
+  endif
+%}
+<header class="landing-header{% if simplified_home %} pf-simple-header{% endif %}{% unless simplified_home %} is-scrolled{% endunless %}" data-pf-header data-pf-glass="{{ section.settings.header_glass_enabled }}" data-pf-glass-flow="{{ header_flow_enabled }}"{% unless simplified_home %} data-pf-solid{% endunless %} style="--pf-header-text:{{ section.settings.text_color }};--pf-header-background:{{ section.settings.background_color }};--pf-header-height:{{ section.settings.height_desktop }}px;--pf-header-mobile-height:{{ section.settings.height_mobile }}px;--pf-glass-opacity:{{ section.settings.header_glass_opacity }}%;--pf-glass-blur:{{ section.settings.header_glass_blur }}px;--pf-flow-amplitude:{{ section.settings.header_glass_flow_strength }}px;--pf-flow-enabled:{% if header_flow_enabled %}1{% else %}0{% endif %}">
+  <a class="brand" href="{{ home }}" aria-label="{{ section.settings.home_label | escape }}">{% if logo != blank %}{{ logo | image_url: width: 500 | image_tag: class: 'pf-logo', alt: brand }}{% else %}{{ brand | escape }}<span class="brand-dot" aria-hidden="true"></span>{% endif %}</a>
+  <nav class="landing-nav" aria-label="{{ section.settings.nav_label | escape }}">
+    {% if section.settings.menu != blank %}
+      {% for link in section.settings.menu.links %}{% assign lower_title = link.title | downcase %}{% unless lower_title contains 'webshop' %}<a href="{{ link.url }}">{{ link.title | escape }}</a>{% endunless %}{% endfor %}
+    {% else %}
+      {% for block in section.blocks %}
+        {% if block.settings.show_desktop %}
+          {% if block.settings.fallback == 'univers' %}{% assign default_url = universe %}{% elsif block.settings.fallback == 'home' %}{% assign default_url = routes.root_url %}{% else %}{% assign default_url = routes.root_url | append: '#' | append: block.settings.fallback %}{% endif %}
+          <a href="{{ block.settings.url | default: default_url }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </nav>
+  {% if section.settings.show_menu %}<div class="landing-header-actions"><button class="landing-menu" data-pf-menu-open aria-label="{{ section.settings.open_menu_label | escape }}" aria-expanded="false">{% render 'pf-icon', name: 'menu', size: 24 %}</button></div>{% endif %}
+</header>
+<dialog class="pf-drawer experience-sheet pf-menu-drawer" data-pf-menu data-pf-glass="{{ section.settings.menu_glass_enabled }}" data-pf-glass-flow="{{ menu_flow_enabled }}" aria-label="{{ section.settings.menu_heading | escape }}" style="--pf-menu-background:{{ section.settings.menu_background }};--pf-menu-text:{{ section.settings.menu_text }};--pf-glass-opacity:{{ section.settings.menu_glass_opacity }}%;--pf-glass-blur:{{ section.settings.menu_glass_blur }}px;--pf-flow-amplitude:{{ section.settings.menu_glass_flow_strength }}px;--pf-flow-enabled:{% if menu_flow_enabled %}1{% else %}0{% endif %}">
+  <div class="sheet-top"><span>{{ section.settings.menu_brand | escape }}</span><button class="sheet-close" data-pf-close aria-label="{{ section.settings.close_menu_label | escape }}">{% render 'pf-icon', name: 'close', size: 24 %}</button></div>
+  <div class="sheet-body"><h2 class="panel-title">{{ section.settings.menu_heading | escape }}</h2>
+    <nav class="landing-mobile-nav" aria-label="{{ section.settings.mobile_nav_label | escape }}">
+      {% if section.settings.mobile_menu != blank %}
+        {% for link in section.settings.mobile_menu.links %}{% assign lower_title = link.title | downcase %}{% unless lower_title contains 'webshop' %}<a href="{{ link.url }}">{{ link.title | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 22 %}</a>{% endunless %}{% endfor %}
+      {% else %}
+        {% for block in section.blocks %}
+          {% if block.settings.show_mobile %}
+            {% if block.settings.fallback == 'univers' %}{% assign default_url = universe %}{% elsif block.settings.fallback == 'home' %}{% assign default_url = routes.root_url %}{% else %}{% assign default_url = routes.root_url | append: '#' | append: block.settings.fallback %}{% endif %}
+            <a href="{{ block.settings.menu_url | default: default_url }}" {{ block.shopify_attributes }}>{{ block.settings.menu_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 22 %}</a>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </nav>
+  </div>
+</dialog>
+{% schema %}
+{
+  "name": "Purefitness · Navigation",
+  "limit": 1,
+  "enabled_on": {
+    "groups": [
+      "header"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Navn her (tom = temaets navn)"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo her (tom = temaets logo)"
+    },
+    {
+      "type": "url",
+      "id": "home_url",
+      "label": "Logoets destination (tom = forsiden)"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Logoets tilgængelige navn",
+      "default": "PureFitness forside"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Desktopmenu fra Shopify (valgfri)"
+    },
+    {
+      "type": "link_list",
+      "id": "mobile_menu",
+      "label": "Menu i menu-panel fra Shopify (valgfri)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_menu",
+      "label": "Vis menuknap",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "open_menu_label",
+      "label": "Menuknappens tilgængelige navn",
+      "default": "Åbn menu"
+    },
+    {
+      "type": "text",
+      "id": "close_menu_label",
+      "label": "Luk-knappens tilgængelige navn",
+      "default": "Luk menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_heading",
+      "label": "Menuens overskrift",
+      "default": "Oplev Purefitness"
+    },
+    {
+      "type": "text",
+      "id": "menu_brand",
+      "label": "Navn øverst i menuen",
+      "default": "PUREFITNESS"
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "label": "Desktopmenuens tilgængelige navn",
+      "default": "Hovednavigation"
+    },
+    {
+      "type": "text",
+      "id": "mobile_nav_label",
+      "label": "Menu-panelets tilgængelige navn",
+      "default": "Udvidet navigation"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Tekstfarve",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Navigationens baggrund",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "menu_background",
+      "label": "Menuens baggrund",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "menu_text",
+      "label": "Menuens tekstfarve",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "label": "Navigationshøjde, computer",
+      "min": 64,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 82
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Navigationshøjde, mobil",
+      "min": 60,
+      "max": 110,
+      "step": 2,
+      "unit": "px",
+      "default": 76
+    },
+    {
+      "type": "header",
+      "content": "Glas · navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_glass_enabled",
+      "label": "Aktivér glaseffekt",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "header_glass_blur",
+      "label": "Sløring bag glasset",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "header_glass_opacity",
+      "label": "Baggrundens opacitet",
+      "min": 55,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 71,
+      "info": "Lavere værdi viser mere af baggrunden. Teksten forbliver dækkende."
+    },
+    {
+      "type": "checkbox",
+      "id": "header_glass_flow_enabled",
+      "label": "Aktivér diskret glasbevægelse",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "header_glass_flow_strength",
+      "label": "Bevægelsens styrke",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 8,
+      "info": "Refleksioner bevæger sig diskret. Tekst og indhold står stille."
+    },
+    {
+      "type": "header",
+      "content": "Glas · menu-panel"
+    },
+    {
+      "type": "checkbox",
+      "id": "menu_glass_enabled",
+      "label": "Aktivér glaseffekt",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "menu_glass_blur",
+      "label": "Sløring bag glasset",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "menu_glass_opacity",
+      "label": "Baggrundens opacitet",
+      "min": 55,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 73,
+      "info": "Lavere værdi viser mere af baggrunden. Teksten forbliver dækkende."
+    },
+    {
+      "type": "checkbox",
+      "id": "menu_glass_flow_enabled",
+      "label": "Aktivér diskret glasbevægelse",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "menu_glass_flow_strength",
+      "label": "Bevægelsens styrke",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 8,
+      "info": "Refleksioner bevæger sig diskret. Tekst og indhold står stille."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Menupunkt",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Desktoptekst",
+          "default": "Løsninger"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Desktopdestination"
+        },
+        {
+          "type": "select",
+          "id": "fallback",
+          "label": "Standarddestination ved tomt link",
+          "options": [
+            {
+              "value": "loesninger",
+              "label": "Løsninger"
+            },
+            {
+              "value": "forloeb",
+              "label": "Forløb"
+            },
+            {
+              "value": "kontakt",
+              "label": "Kontakt"
+            },
+            {
+              "value": "faq",
+              "label": "FAQ"
+            },
+            {
+              "value": "univers",
+              "label": "3D-univers"
+            },
+            {
+              "value": "home",
+              "label": "Forside"
+            }
+          ],
+          "default": "loesninger"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_desktop",
+          "label": "Vis i desktopnavigation",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "menu_label",
+          "label": "Tekst i menu-panelet",
+          "default": "Løsninger"
+        },
+        {
+          "type": "url",
+          "id": "menu_url",
+          "label": "Destination i menu-panelet (tom = standarddestination)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_mobile",
+          "label": "Vis i menu-panelet",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "max_blocks": 15,
+  "presets": [
+    {
+      "name": "Purefitness · Navigation"
+    }
+  ]
+}
+{% endschema %}

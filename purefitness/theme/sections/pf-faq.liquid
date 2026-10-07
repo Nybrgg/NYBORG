@@ -1,0 +1,332 @@
+{% if section.settings.show_section != false %}
+{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
+<section id="faq-{{ section.id }}" data-pf-anchor="faq" class="pf-simple-section pf-simple-faq pf-editable-section page-width"{% if section.settings.show_heading != false and section.settings.heading != blank %} aria-labelledby="faq-title-{{ section.id }}"{% endif %} data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-surface:{{ section.settings.background_color | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;">
+  {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
+  {% if section.settings.show_heading != false and section.settings.heading != blank %}<h2 id="faq-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{% endif %}
+  {% if section.settings.show_rows != false %}
+    {% liquid
+      assign first_visible = true
+      assign explicit_open_index = 0
+      for block in section.blocks
+        if block.settings.visible != false and block.settings.question != blank and block.settings.open_on_load
+          assign explicit_open_index = forloop.index
+          break
+        endif
+      endfor
+    %}
+    <div class="pf-simple-faq-list">
+      {% for block in section.blocks %}
+        {% if block.settings.visible != false and block.settings.question != blank %}
+          {% liquid
+            assign question_open = false
+            assign inquiry_kind = block.settings.inquiry_kind | default: 'none'
+            if explicit_open_index > 0
+              if forloop.index == explicit_open_index
+                assign question_open = true
+              endif
+            elsif first_visible and section.settings.open_first
+              assign question_open = true
+            endif
+            assign first_visible = false
+          %}
+          <details id="faq-row-{{ section.id }}-{{ block.id }}" class="pf-simple-disclosure" name="faq-{{ section.id }}"{% if question_open %} open{% endif %} {{ block.shopify_attributes }}>
+            <summary id="faq-question-{{ section.id }}-{{ block.id }}"><span>{{ block.settings.question | escape }}</span>{% render 'pf-disclosure-icon' %}</summary>
+            {% capture faq_answer %}
+              {% if block.settings.show_answer != false and block.settings.answer != blank %}<p>{{ block.settings.answer | escape | newline_to_br }}</p>{% endif %}
+              {% if block.settings.show_action != false and block.settings.action_label != blank %}
+                {% if block.settings.action_url != blank %}
+                  <a class="line-action" href="{{ block.settings.action_url | escape }}">{{ block.settings.action_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</a>
+                {% elsif inquiry_kind != 'none' %}
+                  <button type="button" class="line-action" data-pf-contact="{{ inquiry_kind | escape }}">{{ block.settings.action_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</button>
+                {% endif %}
+              {% endif %}
+            {% endcapture %}
+            {% assign faq_answer = faq_answer | strip %}
+            {% if faq_answer != blank %}<div class="pf-simple-faq-answer">{{ faq_answer }}</div>{% endif %}
+          </details>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Purefitness · FAQ",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Vis sektionen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Vis overskrift",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rows",
+      "label": "Vis spørgsmål",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Overskrift",
+      "default": "Godt at vide."
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Åbn første spørgsmål fra start",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Farver"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Baggrund",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Tekst",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Sekundær tekst",
+      "default": "#b2bbae"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent og knapper",
+      "default": "#d4ed72"
+    },
+    {
+      "type": "header",
+      "content": "Afstand"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Afstand over på computer",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Afstand under på computer",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Afstand over på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Afstand under på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Glas og bevægelse"
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_enabled",
+      "label": "Glasbaggrund",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_opacity",
+      "label": "Baggrundsopacitet",
+      "min": 60,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 86
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Sløring",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "checkbox",
+      "id": "glass_flow_enabled",
+      "label": "Bløde lysbølger ved scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glass_flow_strength",
+      "label": "Lysbølgernes styrke",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · FAQ",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "question": "Kan I hjælpe med et eksisterende træningsrum?",
+            "answer": "Fortæl os om det rum og det udstyr, I har i dag. Så kan vi tage en samtale om, hvad der kan bevares, og hvilke muligheder der er for at udvikle faciliteterne.",
+            "inquiry_kind": "none",
+            "action_label": "Kontakt PureFitness"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Hvordan vælger vi det rigtige udstyr?",
+            "answer": "Vi tager udgangspunkt i jeres brugere, lokaler og behov. Sammen ser vi på relevante muligheder inden for styrke, kondition og frie vægte.",
+            "inquiry_kind": "katalog",
+            "action_label": "Få et katalog"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Hvad omfatter service?",
+            "answer": "Vi tilbyder erhvervskunder service på træningsmaskiner efter aftale — også på udstyr, I allerede har. Tidspunkt og omfang aftales med jer. Eventuelle reparationer og reservedele afklares med jer.",
+            "inquiry_kind": "service",
+            "action_label": "Tal om service"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Hvad skal vi have klar til den første samtale?",
+            "answer": "Fortæl om jeres lokaler, brugere og ønsker. Oplys gerne, hvilket udstyr I allerede har, og hvad I ønsker at ændre.",
+            "inquiry_kind": "none",
+            "action_label": "Kontakt PureFitness"
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Spørgsmål",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis spørgsmålet",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_answer",
+          "label": "Vis svaret",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action",
+          "label": "Vis kontaktlink",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "open_on_load",
+          "label": "Åbn dette spørgsmål fra start",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Spørgsmål",
+          "default": "Kan I hjælpe med et eksisterende træningsrum?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Svar",
+          "default": "Fortæl os om det rum og det udstyr, I har i dag. Så kan vi tage en samtale om, hvad der kan bevares, og hvilke muligheder der er for at udvikle faciliteterne."
+        },
+        {
+          "type": "select",
+          "id": "inquiry_kind",
+          "label": "Kontaktmulighed i svaret",
+          "options": [
+            {
+              "value": "none",
+              "label": "Ingen"
+            },
+            {
+              "value": "katalog",
+              "label": "Katalog"
+            },
+            {
+              "value": "service",
+              "label": "Service"
+            },
+            {
+              "value": "projekt",
+              "label": "Projekt"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "text",
+          "id": "action_label",
+          "label": "Kontaktlinkets tekst",
+          "default": "Kontakt PureFitness"
+        },
+        {
+          "type": "url",
+          "id": "action_url",
+          "label": "Kontaktlinkets destination",
+          "info": "Et udfyldt link bruges før kontaktmuligheden."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

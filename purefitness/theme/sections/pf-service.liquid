@@ -1,0 +1,210 @@
+<section class="service-section" id="service" aria-labelledby="service-title-{{ section.id }}">
+  <div class="service-top page-width" {% unless section.settings.show_image %}style="grid-template-columns:1fr"{% endunless %}>
+    {% if section.settings.show_image %}<figure>{% render 'pf-image', image: section.settings.image, mobile_image: section.settings.mobile_image, asset: 'premium-service.webp', alt: section.settings.image_alt, loading: 'lazy', sizes: '(max-width:760px) 100vw, 50vw', width: 1672, height: 941 %}{% if section.settings.show_caption %}<figcaption><span class="detail-dot"></span>{{ section.settings.image_caption | escape }}</figcaption>{% endif %}</figure>{% endif %}
+    <div class="service-copy">{% if section.settings.show_eyebrow %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}<h2 id="service-title-{{ section.id }}">{{ section.settings.heading_line_1 | escape }}<br>{{ section.settings.heading_line_2 | escape }}</h2><p>{{ section.settings.description_1 | escape | newline_to_br }}</p><p>{{ section.settings.description_2 | escape | newline_to_br }}</p>
+      {% if section.settings.show_contact_button %}{% if section.settings.contact_url != blank %}<a class="primary-action" href="{{ section.settings.contact_url | escape }}">{{ section.settings.contact_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 20 %}</a>{% else %}<button type="button" class="primary-action" data-pf-contact="{{ section.settings.inquiry_kind | escape }}">{{ section.settings.contact_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 20 %}</button>{% endif %}{% endif %}
+      {% if section.settings.show_scope %}<span class="service-scope">{% render 'pf-icon', name: 'check', size: 15 %}{{ section.settings.scope | escape }}</span>{% endif %}
+    </div>
+  </div>
+  {% if section.settings.show_process %}<ol class="service-process page-width">{% for block in section.blocks %}{% if block.settings.visible %}<li {{ block.shopify_attributes }}><span>{% if section.settings.show_numbers %}{% if block.settings.number != blank %}{{ block.settings.number | escape }}{% else %}{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}{% endif %}{% endif %}</span><div><h3>{{ block.settings.title | escape }}</h3><p>{{ block.settings.description | escape | newline_to_br }}</p></div></li>{% endif %}{% endfor %}</ol>{% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Purefitness · Service",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Servicebillede"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Billedbeskrivelse",
+      "default": "Illustration af en teknikers præcise arbejde med kabelmekanismen på en professionel træningsmaskine"
+    },
+    {
+      "type": "text",
+      "id": "image_caption",
+      "label": "Billedtekst",
+      "default": "Omtanke for hver eneste detalje"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Overlinje",
+      "default": "04 / Service & reparation"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Overskrift, linje 1",
+      "default": "Vi holder"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Overskrift, linje 2",
+      "default": "jer i bevægelse."
+    },
+    {
+      "type": "textarea",
+      "id": "description_1",
+      "label": "Beskrivelse, første afsnit",
+      "default": "Vi tilbyder erhvervskunder service på alle træningsmaskiner efter aftale. Også på udstyret, I allerede har."
+    },
+    {
+      "type": "textarea",
+      "id": "description_2",
+      "label": "Beskrivelse, andet afsnit",
+      "default": "Tidspunkt og omfang aftales med jer. Eventuelle reparationer og reservedele afklares med jer."
+    },
+    {
+      "type": "text",
+      "id": "contact_label",
+      "label": "Kontaktknap",
+      "default": "Tal om service"
+    },
+    {
+      "type": "text",
+      "id": "scope",
+      "label": "Målgruppe",
+      "default": "Til virksomheder og foreninger"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Vis servicebillede",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Servicebillede på mobil (valgfrit)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption",
+      "label": "Vis billedtekst",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Vis overlinje",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_button",
+      "label": "Vis kontaktknap",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "contact_url",
+      "label": "Kontaktknappens link (tom = formular)"
+    },
+    {
+      "type": "select",
+      "id": "inquiry_kind",
+      "label": "Kontaktknappens formular",
+      "options": [
+        {
+          "value": "projekt",
+          "label": "Projekt"
+        },
+        {
+          "value": "service",
+          "label": "Service"
+        },
+        {
+          "value": "katalog",
+          "label": "Katalog"
+        }
+      ],
+      "default": "service"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scope",
+      "label": "Vis serviceomfang",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_process",
+      "label": "Vis servicetrin",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Vis trinnumre",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · Service",
+      "blocks": [
+        {
+          "type": "stage",
+          "settings": {
+            "title": "En aftale, der passer jer",
+            "description": "Vi aftaler tidspunkt og omfang, så besøget passer til jeres behov og den daglige drift."
+          }
+        },
+        {
+          "type": "stage",
+          "settings": {
+            "title": "Et grundigt blik på udstyret",
+            "description": "Vi gennemgår maskinerne og udfører den service, vi har aftalt."
+          }
+        },
+        {
+          "type": "stage",
+          "settings": {
+            "title": "Klarhed om næste skridt",
+            "description": "Eventuelle reparationer og reservedele afklares med jer."
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stage",
+      "name": "Servicetrin",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "En aftale, der passer jer"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Beskrivelse",
+          "default": "Vi aftaler tidspunkt og omfang, så besøget passer til jeres behov og den daglige drift."
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Eget nummer (tom = rækkefølge)"
+        },
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis dette servicetrin",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

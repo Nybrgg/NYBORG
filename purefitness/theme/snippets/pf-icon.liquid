@@ -1,0 +1,26 @@
+{% doc %}
+Renders a decorative PureFitness interface icon.
+@param {string} name - Icon name.
+@param {number} [size] - Width and height in pixels.
+{% enddoc %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size | default: 20 }}" height="{{ size | default: 20 }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{% case name %}
+{% when 'move-up-right' %}<path d="M13 5h6v6M19 5 5 19"/>
+{% when 'arrow-up-right' %}<path d="M7 17 17 7M7 7h10v10"/>
+{% when 'arrow-down' %}<path d="M12 5v14m-7-7 7 7 7-7"/>
+{% when 'arrow-left' %}<path d="M19 12H5m7-7-7 7 7 7"/>
+{% when 'arrow-right' %}<path d="M5 12h14m-7-7 7 7-7 7"/>
+{% when 'menu' %}<path d="M4 6h16M4 12h16M4 18h16"/>
+{% when 'close' %}<path d="m6 6 12 12M6 18 18 6"/>
+{% when 'plus' %}<path d="M12 5v14M5 12h14"/>
+{% when 'pause' %}<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>
+{% when 'play' %}<path d="m8 5 12 7-12 7V5Z"/>
+{% when 'chevron-down' %}<path d="m6 9 6 6 6-6"/>
+{% when 'check' %}<path d="m20 6-11 11-5-5"/>
+{% when 'info' %}<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+{% when 'sun' %}<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2m-3.5-8.5-1.4 1.4m-12.2 12.2-1.4 1.4m0-15 1.4 1.4m12.2 12.2 1.4 1.4"/>
+{% when 'sunset' %}<path d="M12 2v2m5.7 1.3-1.4 1.4M2 14h2M20 14h2M2 18h20M2 22h20m-15.7-15.3-1.4-1.4M8 14a4 4 0 0 1 8 0"/>
+{% when 'cart' %}<path d="M3 3h2l2.4 11.4a2 2 0 0 0 2 1.6H19a2 2 0 0 0 2-1.6L23 6H6"/><circle cx="10" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+{% when 'search' %}<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+{% endcase %}
+</svg>

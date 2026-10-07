@@ -1,0 +1,2614 @@
+{%- liquid
+  assign pf_home_url = routes.root_url
+  assign pf_contact_url = routes.root_url | append: '?view=contact'
+  assign pf_embedded = false
+  if template.name == 'index' and template.suffix == blank
+    assign pf_embedded = true
+  endif
+-%}
+{% unless pf_embedded %}{{ 'pf-universe-dom.css' | asset_url | stylesheet_tag }}{% endunless %}
+{% style %}
+  body.pf-universe-page {
+    {% if section.settings.hud_glass_enabled %}
+      --pf-universe-hud-glass-surface: linear-gradient(135deg, #ffffff0e, #ffffff02), rgb(23 25 22 / {{ section.settings.hud_glass_opacity | divided_by: 100.0 }});
+      --pf-universe-hud-glass-blur: {{ section.settings.hud_glass_blur }}px;
+      --pf-universe-hud-glass-filter: blur(var(--pf-universe-hud-glass-blur)) saturate(115%);
+      --pf-universe-hud-glass-border: #ffffff2e;
+      --pf-universe-hud-glass-shadow: 0 10px 32px #00000020, inset 0 1px 0 #ffffff0c;
+      --pf-universe-hud-glass-radius: 0px;
+    {% else %}
+      --pf-universe-hud-glass-surface: initial;
+      --pf-universe-hud-glass-blur: 0px;
+      --pf-universe-hud-glass-filter: none;
+      --pf-universe-hud-glass-border: #ffffff24;
+      --pf-universe-hud-glass-shadow: none;
+      --pf-universe-hud-glass-radius: 0px;
+    {% endif %}
+    --pf-universe-hud-flow-amplitude: {{ section.settings.hud_flow_amplitude }}px;
+    {% if section.settings.hud_glass_enabled and section.settings.hud_flow_enabled %}
+      --pf-universe-hud-flow-enabled: 1;
+      --pf-universe-hud-flow-content: '';
+    {% else %}
+      --pf-universe-hud-flow-enabled: 0;
+      --pf-universe-hud-flow-content: none;
+    {% endif %}
+    {% if section.settings.menu_glass_enabled %}
+      --pf-universe-menu-glass-surface: linear-gradient(155deg, #ffffff04, #ffffff00 55%), rgb(24 29 24 / {{ section.settings.menu_glass_opacity | divided_by: 100.0 }});
+      --pf-universe-menu-glass-blur: {{ section.settings.menu_glass_blur }}px;
+      --pf-universe-menu-glass-filter: blur(var(--pf-universe-menu-glass-blur)) saturate(115%);
+      --pf-universe-menu-glass-border: #ffffff30;
+      --pf-universe-menu-glass-backdrop: #060a0766;
+    {% else %}
+      --pf-universe-menu-glass-surface: initial;
+      --pf-universe-menu-glass-blur: 0px;
+      --pf-universe-menu-glass-filter: none;
+      --pf-universe-menu-glass-border: #f2f0e82b;
+      --pf-universe-menu-glass-backdrop: #0008;
+    {% endif %}
+    --pf-universe-menu-flow-amplitude: {{ section.settings.menu_flow_amplitude }}px;
+    {% if section.settings.menu_glass_enabled and section.settings.menu_flow_enabled %}
+      --pf-universe-menu-flow-enabled: 1;
+      --pf-universe-menu-flow-content: '';
+    {% else %}
+      --pf-universe-menu-flow-enabled: 0;
+      --pf-universe-menu-flow-content: none;
+    {% endif %}
+    {% if section.settings.drawer_glass_enabled %}
+      --pf-universe-drawer-glass-surface: linear-gradient(155deg, #ffffff04, #ffffff00 60%), rgb(25 30 26 / {{ section.settings.drawer_glass_opacity | divided_by: 100.0 }});
+      --pf-universe-drawer-glass-blur: {{ section.settings.drawer_glass_blur }}px;
+      --pf-universe-drawer-glass-filter: blur(var(--pf-universe-drawer-glass-blur)) saturate(115%);
+      --pf-universe-drawer-glass-border: #ffffff2b;
+      --pf-universe-drawer-glass-backdrop: #060a076b;
+    {% else %}
+      --pf-universe-drawer-glass-surface: initial;
+      --pf-universe-drawer-glass-blur: 0px;
+      --pf-universe-drawer-glass-filter: none;
+      --pf-universe-drawer-glass-border: #f2f0e82b;
+      --pf-universe-drawer-glass-backdrop: #0008;
+    {% endif %}
+    --pf-universe-drawer-flow-amplitude: {{ section.settings.drawer_flow_amplitude }}px;
+    {% if section.settings.drawer_glass_enabled and section.settings.drawer_flow_enabled %}
+      --pf-universe-drawer-flow-enabled: 1;
+      --pf-universe-drawer-flow-content: '';
+    {% else %}
+      --pf-universe-drawer-flow-enabled: 0;
+      --pf-universe-drawer-flow-content: none;
+    {% endif %}
+  }
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    @media (prefers-reduced-transparency: no-preference) and (forced-colors: none) {
+      body.pf-universe-page {
+        {% if section.settings.hud_glass_enabled %}
+          --pf-universe-hud-glass-edge-border: #ffffff38;
+          --pf-universe-hud-glass-edge-shadow: 0 10px 32px #00000020, inset 0 1px 0 #ffffff14;
+          --pf-universe-hud-metadata-color: #ead4b3;
+        {% endif %}
+        {% if section.settings.menu_glass_enabled %}
+          --pf-universe-menu-glass-edge-border: #ffffff3a;
+          --pf-universe-menu-glass-edge-shadow: -20px 0 80px #00000036, inset 1px 0 0 #ffffff12;
+        {% endif %}
+        {% if section.settings.drawer_glass_enabled %}
+          --pf-universe-drawer-glass-edge-border: #ffffff35;
+          --pf-universe-drawer-glass-edge-shadow: -20px 0 80px #00000036, inset 1px 0 0 #ffffff12;
+        {% endif %}
+      }
+    }
+  }
+{% endstyle %}
+
+<section id="pf-universe-{{ section.id }}" data-pf-universe data-section-id="{{ section.id }}"{% if pf_embedded %} data-pf-universe-embedded data-pf-universe-module="{{ 'pf-universe.js' | asset_url }}" data-pf-universe-styles="{{ 'pf-universe-dom.css' | asset_url }}" data-pf-universe-title="{{ 'pf.universe_title' | t | escape }}" hidden{% endif %}>
+  <script type="application/json" data-pf-universe-config>
+  {
+    "homeUrl": {{ pf_home_url | json }},
+    "contactUrl": {{ pf_contact_url | json }},
+    "designMode": {{ request.design_mode | json }},
+    "options": {{ section.settings | json }},
+    "blocks": [{% for block in section.blocks %}{"id": {{ block.id | json }}, "type": {{ block.type | json }}, "settings": {{ block.settings | json }}, "attributes": {{ block.shopify_attributes | json }}}{% unless forloop.last %},{% endunless %}{% endfor %}],
+    "worldModule": {{ 'pf-world.js' | asset_url | json }},
+    "assets": {
+      "sunset.hdr": {{ 'sunset.hdr' | asset_url | json }},
+      "manrope-800.woff": {{ 'manrope-800.woff' | asset_url | json }},
+      "manrope-500.woff": {{ 'manrope-500.woff' | asset_url | json }},
+      "asphalt_02_rough_1k.jpg": {{ 'asphalt_02_rough_1k.jpg' | asset_url | json }},
+      "higgsfield-concrete.webp": {{ 'higgsfield-concrete.webp' | asset_url | json }},
+      "next-hero.webp": {% if section.settings.reading_image != blank %}{{ section.settings.reading_image | image_url: width: 1672 | json }}{% else %}{{ 'next-hero.webp' | asset_url | json }}{% endif %},
+      "next-hero-mobile.webp": {% if section.settings.reading_mobile_image != blank %}{{ section.settings.reading_mobile_image | image_url: width: 1100 | json }}{% elsif section.settings.reading_image != blank %}{{ section.settings.reading_image | image_url: width: 1100 | json }}{% else %}{{ 'next-hero-mobile.webp' | asset_url | json }}{% endif %},
+      "next-universe.webp": {% if section.settings.canvas_preview != blank %}{{ section.settings.canvas_preview | image_url: width: 1920 | json }}{% else %}{{ 'next-universe.webp' | asset_url | json }}{% endif %},
+      "dark_marble_diff_1k.webp": {{ 'dark_marble_diff_1k.webp' | asset_url | json }},
+      "dark_marble_nor_gl_1k.webp": {{ 'dark_marble_nor_gl_1k.webp' | asset_url | json }},
+      "dark_marble_rough_1k.webp": {{ 'dark_marble_rough_1k.webp' | asset_url | json }},
+      "concrete_floor_02_diff_1k.webp": {{ 'concrete_floor_02_diff_1k.webp' | asset_url | json }},
+      "concrete_floor_02_nor_gl_1k.webp": {{ 'concrete_floor_02_nor_gl_1k.webp' | asset_url | json }},
+      "concrete_floor_02_rough_1k.webp": {{ 'concrete_floor_02_rough_1k.webp' | asset_url | json }},
+      "grass_ground_diff_1k.webp": {{ 'grass_ground_diff_1k.webp' | asset_url | json }},
+      "grass_ground_nor_gl_1k.webp": {{ 'grass_ground_nor_gl_1k.webp' | asset_url | json }},
+      "grass_ground_rough_1k.webp": {{ 'grass_ground_rough_1k.webp' | asset_url | json }},
+      "concrete_wall_006_diff_1k.webp": {{ 'concrete_wall_006_diff_1k.webp' | asset_url | json }},
+      "concrete_wall_006_nor_gl_1k.webp": {{ 'concrete_wall_006_nor_gl_1k.webp' | asset_url | json }},
+      "concrete_wall_006_rough_1k.webp": {{ 'concrete_wall_006_rough_1k.webp' | asset_url | json }},
+      "oak_veneer_01_diff_1k.webp": {{ 'oak_veneer_01_diff_1k.webp' | asset_url | json }},
+      "oak_veneer_01_nor_gl_1k.webp": {{ 'oak_veneer_01_nor_gl_1k.webp' | asset_url | json }},
+      "oak_veneer_01_rough_1k.webp": {{ 'oak_veneer_01_rough_1k.webp' | asset_url | json }},
+      "asphalt_02_diff_1k.webp": {{ 'asphalt_02_diff_1k.webp' | asset_url | json }},
+      "asphalt_02_nor_gl_1k.webp": {{ 'asphalt_02_nor_gl_1k.webp' | asset_url | json }},
+      "asphalt_02_rough_1k.webp": {{ 'asphalt_02_rough_1k.jpg' | asset_url | json }},
+      "brown_leather_diff_1k.webp": {{ 'brown_leather_diff_1k.webp' | asset_url | json }},
+      "brown_leather_nor_gl_1k.webp": {{ 'brown_leather_nor_gl_1k.webp' | asset_url | json }},
+      "brown_leather_rough_1k.webp": {{ 'brown_leather_rough_1k.webp' | asset_url | json }},
+      "rubber_tiles_diff_1k.webp": {{ 'rubber_tiles_diff_1k.webp' | asset_url | json }},
+      "rubber_tiles_nor_gl_1k.webp": {{ 'rubber_tiles_nor_gl_1k.webp' | asset_url | json }},
+      "rubber_tiles_rough_1k.webp": {{ 'rubber_tiles_rough_1k.webp' | asset_url | json }},
+      "marble_01_diff_1k.webp": {{ 'marble_01_diff_1k.webp' | asset_url | json }},
+      "marble_01_nor_gl_1k.webp": {{ 'marble_01_nor_gl_1k.webp' | asset_url | json }},
+      "marble_01_rough_1k.webp": {{ 'marble_01_rough_1k.webp' | asset_url | json }}
+    },
+    "text": {
+      "menu": {{ 'pf_universe.menu' | t | json }},
+      "menu_open": {{ 'pf_universe.menu_open' | t | json }},
+      "menu_experience": {{ 'pf_universe.menu_experience' | t | json }},
+      "choose_environment": {{ 'pf_universe.choose_environment' | t | json }},
+      "go_environment": {{ 'pf_universe.go_environment' | t: environment: '__ENVIRONMENT__' | json }},
+      "about_environment": {{ 'pf_universe.about_environment' | t | json }},
+      "find_equipment": {{ 'pf_universe.find_equipment' | t | json }},
+      "contact_purefitness": {{ 'pf_universe.contact_purefitness' | t | json }},
+      "menu_stops": {{ 'pf_universe.menu_stops' | t | json }},
+      "stop_arrival": {{ 'pf_universe.stop_arrival' | t | json }},
+      "stop_room": {{ 'pf_universe.stop_room' | t | json }},
+      "stop_equipment": {{ 'pf_universe.stop_equipment' | t | json }},
+      "view_settings": {{ 'pf_universe.view_settings' | t | json }},
+      "lighting": {{ 'pf_universe.lighting' | t | json }},
+      "warm_light": {{ 'pf_universe.warm_light' | t | json }},
+      "daylight": {{ 'pf_universe.daylight' | t | json }},
+      "read_without": {{ 'pf_universe.read_without' | t | json }},
+      "experience_short": {{ 'pf_universe.experience_short' | t | json }},
+      "close": {{ 'pf_universe.close' | t | json }},
+      "footer": {{ 'pf_universe.footer' | t | json }},
+      "illustration_note": {{ 'pf_universe.illustration_note' | t | json }},
+      "back_tour": {{ 'pf_universe.back_tour' | t | json }},
+      "tour_hint": {{ 'pf_universe.tour_hint' | t | json }},
+      "next_stop_aria": {{ 'pf_universe.next_stop_aria' | t | json }},
+      "back_start": {{ 'pf_universe.back_start' | t | json }},
+      "read_environment": {{ 'pf_universe.read_environment' | t: environment: '__ENVIRONMENT__' | json }},
+      "reading_label": {{ 'pf_universe.reading_label' | t | json }},
+      "reading_image_alt": {{ 'pf_universe.reading_image_alt' | t | json }},
+      "reading_eyebrow": {{ 'pf_universe.reading_eyebrow' | t | json }},
+      "reading_title": {{ 'pf_universe.reading_title' | t | json }},
+      "reading_accent": {{ 'pf_universe.reading_accent' | t | json }},
+      "reading_intro": {{ 'pf_universe.reading_intro' | t | json }},
+      "failed_detail": {{ 'pf_universe.failed_detail' | t | json }},
+      "retry_3d": {{ 'pf_universe.retry_3d' | t | json }},
+      "experience_3d": {{ 'pf_universe.experience_3d' | t | json }},
+      "solutions": {{ 'pf_universe.solutions' | t | json }},
+      "talk_solution": {{ 'pf_universe.talk_solution' | t | json }},
+      "arrange_service": {{ 'pf_universe.arrange_service' | t | json }},
+      "visualization_note": {{ 'pf_universe.visualization_note' | t | json }},
+      "reading_contact_heading": {{ 'pf_universe.reading_contact_heading' | t | json }},
+      "reading_contact_description": {{ 'pf_universe.reading_contact_description' | t | json }},
+      "reading_contact_label": {{ 'pf_universe.reading_contact_label' | t | json }},
+      "equipment_layout": {{ 'pf_universe.equipment_layout' | t | json }},
+      "equipment_title": {{ 'pf_universe.equipment_title' | t | json }},
+      "equipment_accent": {{ 'pf_universe.equipment_accent' | t | json }},
+      "equipment_intro": {{ 'pf_universe.equipment_intro' | t | json }},
+      "equipment_1_title": {{ 'pf_universe.equipment_1_title' | t | json }},
+      "equipment_1_detail": {{ 'pf_universe.equipment_1_detail' | t | json }},
+      "equipment_2_title": {{ 'pf_universe.equipment_2_title' | t | json }},
+      "equipment_2_detail": {{ 'pf_universe.equipment_2_detail' | t | json }},
+      "equipment_3_title": {{ 'pf_universe.equipment_3_title' | t | json }},
+      "equipment_3_detail": {{ 'pf_universe.equipment_3_detail' | t | json }},
+      "equipment_inquiry_label": {{ 'pf_universe.equipment_inquiry_label' | t | json }},
+      "help_solution": {{ 'pf_universe.help_solution' | t | json }},
+      "overview_eyebrow": {{ 'pf_universe.overview_eyebrow' | t | json }},
+      "overview_title": {{ 'pf_universe.overview_title' | t | json }},
+      "overview_accent": {{ 'pf_universe.overview_accent' | t | json }},
+      "experience_environment": {{ 'pf_universe.experience_environment' | t: environment: '__ENVIRONMENT__' | json }},
+      "talk_purefitness": {{ 'pf_universe.talk_purefitness' | t | json }},
+      "skip": {{ 'pf_universe.skip' | t | json }},
+      "world_label": {{ 'pf_universe.world_label' | t | json }},
+      "home_aria": {{ 'pf_universe.home_aria' | t | json }},
+      "journey_label": {{ 'pf_universe.journey_label' | t | json }},
+      "universe_heading": {{ 'pf_universe.universe_heading' | t | json }},
+      "loading_title": {{ 'pf_universe.loading_title' | t | json }},
+      "loading_detail": {{ 'pf_universe.loading_detail' | t | json }},
+      "read_solutions": {{ 'pf_universe.read_solutions' | t | json }},
+      "no_script_title": {{ 'pf_universe.no_script_title' | t | json }},
+      "no_script_intro": {{ 'pf_universe.no_script_intro' | t | json }},
+      "no_script_service": {{ 'pf_universe.no_script_service' | t | json }},
+      "fitness_label": {{ 'pf_universe.fitness_label' | t | json }},
+      "fitness_summary": {{ 'pf_universe.fitness_summary' | t | json }},
+      "fitness_title_0": {{ 'pf_universe.fitness_title_0' | t | json }},
+      "fitness_accent_0": {{ 'pf_universe.fitness_accent_0' | t | json }},
+      "fitness_description_0": {{ 'pf_universe.fitness_description_0' | t | json }},
+      "fitness_action_0": {{ 'pf_universe.fitness_action_0' | t | json }},
+      "fitness_title_1": {{ 'pf_universe.fitness_title_1' | t | json }},
+      "fitness_accent_1": {{ 'pf_universe.fitness_accent_1' | t | json }},
+      "fitness_description_1": {{ 'pf_universe.fitness_description_1' | t | json }},
+      "fitness_action_1": {{ 'pf_universe.fitness_action_1' | t | json }},
+      "fitness_title_2": {{ 'pf_universe.fitness_title_2' | t | json }},
+      "fitness_accent_2": {{ 'pf_universe.fitness_accent_2' | t | json }},
+      "fitness_description_2": {{ 'pf_universe.fitness_description_2' | t | json }},
+      "fitness_action_2": {{ 'pf_universe.fitness_action_2' | t | json }},
+      "hoteller_label": {{ 'pf_universe.hoteller_label' | t | json }},
+      "hoteller_summary": {{ 'pf_universe.hoteller_summary' | t | json }},
+      "hoteller_title_0": {{ 'pf_universe.hoteller_title_0' | t | json }},
+      "hoteller_accent_0": {{ 'pf_universe.hoteller_accent_0' | t | json }},
+      "hoteller_description_0": {{ 'pf_universe.hoteller_description_0' | t | json }},
+      "hoteller_action_0": {{ 'pf_universe.hoteller_action_0' | t | json }},
+      "hoteller_title_1": {{ 'pf_universe.hoteller_title_1' | t | json }},
+      "hoteller_accent_1": {{ 'pf_universe.hoteller_accent_1' | t | json }},
+      "hoteller_description_1": {{ 'pf_universe.hoteller_description_1' | t | json }},
+      "hoteller_action_1": {{ 'pf_universe.hoteller_action_1' | t | json }},
+      "hoteller_title_2": {{ 'pf_universe.hoteller_title_2' | t | json }},
+      "hoteller_accent_2": {{ 'pf_universe.hoteller_accent_2' | t | json }},
+      "hoteller_description_2": {{ 'pf_universe.hoteller_description_2' | t | json }},
+      "hoteller_action_2": {{ 'pf_universe.hoteller_action_2' | t | json }},
+      "erhverv_label": {{ 'pf_universe.erhverv_label' | t | json }},
+      "erhverv_summary": {{ 'pf_universe.erhverv_summary' | t | json }},
+      "erhverv_title_0": {{ 'pf_universe.erhverv_title_0' | t | json }},
+      "erhverv_accent_0": {{ 'pf_universe.erhverv_accent_0' | t | json }},
+      "erhverv_description_0": {{ 'pf_universe.erhverv_description_0' | t | json }},
+      "erhverv_action_0": {{ 'pf_universe.erhverv_action_0' | t | json }},
+      "erhverv_title_1": {{ 'pf_universe.erhverv_title_1' | t | json }},
+      "erhverv_accent_1": {{ 'pf_universe.erhverv_accent_1' | t | json }},
+      "erhverv_description_1": {{ 'pf_universe.erhverv_description_1' | t | json }},
+      "erhverv_action_1": {{ 'pf_universe.erhverv_action_1' | t | json }},
+      "erhverv_title_2": {{ 'pf_universe.erhverv_title_2' | t | json }},
+      "erhverv_accent_2": {{ 'pf_universe.erhverv_accent_2' | t | json }},
+      "erhverv_description_2": {{ 'pf_universe.erhverv_description_2' | t | json }},
+      "erhverv_action_2": {{ 'pf_universe.erhverv_action_2' | t | json }},
+      "foreninger_label": {{ 'pf_universe.foreninger_label' | t | json }},
+      "foreninger_summary": {{ 'pf_universe.foreninger_summary' | t | json }},
+      "foreninger_title_0": {{ 'pf_universe.foreninger_title_0' | t | json }},
+      "foreninger_accent_0": {{ 'pf_universe.foreninger_accent_0' | t | json }},
+      "foreninger_description_0": {{ 'pf_universe.foreninger_description_0' | t | json }},
+      "foreninger_action_0": {{ 'pf_universe.foreninger_action_0' | t | json }},
+      "foreninger_title_1": {{ 'pf_universe.foreninger_title_1' | t | json }},
+      "foreninger_accent_1": {{ 'pf_universe.foreninger_accent_1' | t | json }},
+      "foreninger_description_1": {{ 'pf_universe.foreninger_description_1' | t | json }},
+      "foreninger_action_1": {{ 'pf_universe.foreninger_action_1' | t | json }},
+      "foreninger_title_2": {{ 'pf_universe.foreninger_title_2' | t | json }},
+      "foreninger_accent_2": {{ 'pf_universe.foreninger_accent_2' | t | json }},
+      "foreninger_description_2": {{ 'pf_universe.foreninger_description_2' | t | json }},
+      "foreninger_action_2": {{ 'pf_universe.foreninger_action_2' | t | json }},
+      "service_label": {{ 'pf_universe.service_label' | t | json }},
+      "service_summary": {{ 'pf_universe.service_summary' | t | json }},
+      "service_title_0": {{ 'pf_universe.service_title_0' | t | json }},
+      "service_accent_0": {{ 'pf_universe.service_accent_0' | t | json }},
+      "service_description_0": {{ 'pf_universe.service_description_0' | t | json }},
+      "service_action_0": {{ 'pf_universe.service_action_0' | t | json }},
+      "service_title_1": {{ 'pf_universe.service_title_1' | t | json }},
+      "service_accent_1": {{ 'pf_universe.service_accent_1' | t | json }},
+      "service_description_1": {{ 'pf_universe.service_description_1' | t | json }},
+      "service_action_1": {{ 'pf_universe.service_action_1' | t | json }},
+      "service_title_2": {{ 'pf_universe.service_title_2' | t | json }},
+      "service_accent_2": {{ 'pf_universe.service_accent_2' | t | json }},
+      "service_description_2": {{ 'pf_universe.service_description_2' | t | json }},
+      "service_action_2": {{ 'pf_universe.service_action_2' | t | json }},
+      "service_title_3": {{ 'pf_universe.service_title_3' | t | json }},
+      "service_accent_3": {{ 'pf_universe.service_accent_3' | t | json }},
+      "service_description_3": {{ 'pf_universe.service_description_3' | t | json }},
+      "service_action_3": {{ 'pf_universe.service_action_3' | t | json }}
+    }
+  }
+  </script>
+  <template data-icon="arrow-up-right">{% render 'pf-icon', name: 'arrow-up-right', size: 18 %}</template>
+  <template data-icon="arrow-down">{% render 'pf-icon', name: 'arrow-down', size: 18 %}</template>
+  <template data-icon="arrow-left">{% render 'pf-icon', name: 'arrow-left', size: 18 %}</template>
+  <template data-icon="arrow-right">{% render 'pf-icon', name: 'arrow-right', size: 18 %}</template>
+  <template data-icon="menu">{% render 'pf-icon', name: 'menu', size: 18 %}</template>
+  <template data-icon="close">{% render 'pf-icon', name: 'close', size: 18 %}</template>
+  <template data-icon="pause">{% render 'pf-icon', name: 'pause', size: 18 %}</template>
+  <template data-icon="play">{% render 'pf-icon', name: 'play', size: 18 %}</template>
+  <template data-icon="chevron-down">{% render 'pf-icon', name: 'chevron-down', size: 18 %}</template>
+  <template data-icon="info">{% render 'pf-icon', name: 'info', size: 18 %}</template>
+  <template data-icon="sun">{% render 'pf-icon', name: 'sun', size: 18 %}</template>
+  <template data-icon="sunset">{% render 'pf-icon', name: 'sunset', size: 18 %}</template>
+  {% if request.design_mode %}<div data-pf-universe-editor-blocks>{% for block in section.blocks %}<span hidden data-pf-editor-block data-block-id="{{ block.id | escape }}" {{ block.shopify_attributes }}></span>{% endfor %}</div>{% endif %}
+  <div data-pf-universe-host></div>
+  <noscript>
+    <div class="no-script">
+      {% liquid
+        assign fallback_title = 'pf_universe.no_script_title' | t
+        assign fallback_intro = 'pf_universe.no_script_intro' | t
+        assign fallback_service = 'pf_universe.no_script_service' | t
+        assign fallback_contact = 'pf_universe.contact_purefitness' | t
+        assign fallback_contact_url = pf_contact_url
+        assign show_fallback_contact = true
+        for block in section.blocks
+          if block.type == 'ui_accessibility'
+            assign fallback_title = block.settings.no_script_title
+            assign fallback_intro = block.settings.no_script_intro
+            assign fallback_service = block.settings.no_script_service
+            assign fallback_contact = block.settings.no_script_contact_label
+            assign fallback_contact_url = block.settings.no_script_contact_url | default: pf_contact_url
+            assign show_fallback_contact = block.settings.show_no_script_contact
+          endif
+        endfor
+      %}
+      <h1>{{ fallback_title | escape }}</h1>
+      <p>{{ fallback_intro | escape }}</p>
+      <p>{{ fallback_service | escape }}</p>
+      {% if show_fallback_contact and fallback_contact != blank %}<a href="{{ fallback_contact_url | escape }}">{{ fallback_contact | escape }}</a>{% endif %}
+    </div>
+  </noscript>
+</section>
+{% unless pf_embedded %}<script type="module" src="{{ 'pf-universe.js' | asset_url }}"></script>{% endunless %}
+{% schema %}
+{
+  "name": "Purefitness univers",
+  "tag": "div",
+  "class": "pf-universe-section",
+  "limit": 1,
+  "max_blocks": 15,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Identitet"
+    },
+    {
+      "type": "text",
+      "id": "header_brand",
+      "label": "Navn i forsidelinket",
+      "default": "PUREFITNESS"
+    },
+    {
+      "type": "text",
+      "id": "dialog_brand",
+      "label": "Navn i universets vinduer",
+      "default": "PUREFITNESS"
+    },
+    {
+      "type": "url",
+      "id": "home_url",
+      "label": "Eget link fra forsideknappen",
+      "info": "Tomt felt bruger hjemmesidens forside."
+    },
+    {
+      "type": "text",
+      "id": "reading_brand",
+      "label": "Navn i læsevisningens bund",
+      "default": "PUREFITNESS"
+    },
+    {
+      "type": "header",
+      "content": "Synlighed"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_captions",
+      "label": "Vis miljøtekster under turen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tour_hint",
+      "label": "Vis scroll-hjælp ved ankomst",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress",
+      "label": "Vis turens fremdrift",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reading_contact",
+      "label": "Vis kontaktfelt i læsevisning",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_equipment_help",
+      "label": "Vis ekstra hjælpeknap ved udstyr",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_menu_about",
+      "label": "Vis miljøinfo i menuen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_menu_equipment",
+      "label": "Vis udstyr i menuen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_menu_contact",
+      "label": "Vis kontakt i menuen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_menu_stops",
+      "label": "Vis stopvalg i menuen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_settings",
+      "label": "Vis visningsindstillinger",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_daylight_option",
+      "label": "Vis valg af belysning",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Glas · navigation i 3D"
+    },
+    {
+      "type": "checkbox",
+      "id": "hud_glass_enabled",
+      "label": "Aktivér frostet glas",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hud_glass_opacity",
+      "label": "Baggrundens opacitet",
+      "min": 55,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "hud_glass_blur",
+      "label": "Sløring bag glasset",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "hud_flow_enabled",
+      "label": "Lysbølge ved scroll",
+      "default": true,
+      "info": "En diskret lysbølge under teksten. Slås automatisk fra ved reduceret bevægelse eller gennemsigtighed."
+    },
+    {
+      "type": "range",
+      "id": "hud_flow_amplitude",
+      "label": "Lysbølgens bevægelse",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Glas · universets menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "menu_glass_enabled",
+      "label": "Aktivér frostet glas",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "menu_glass_opacity",
+      "label": "Baggrundens opacitet",
+      "min": 60,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 81
+    },
+    {
+      "type": "range",
+      "id": "menu_glass_blur",
+      "label": "Sløring bag glasset",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "menu_flow_enabled",
+      "label": "Lysbølge ved scroll",
+      "default": true,
+      "info": "En diskret lysbølge under teksten. Slås automatisk fra ved reduceret bevægelse eller gennemsigtighed."
+    },
+    {
+      "type": "range",
+      "id": "menu_flow_amplitude",
+      "label": "Lysbølgens bevægelse",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Glas · indholdsvinduer"
+    },
+    {
+      "type": "checkbox",
+      "id": "drawer_glass_enabled",
+      "label": "Aktivér frostet glas",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "drawer_glass_opacity",
+      "label": "Baggrundens opacitet",
+      "min": 65,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 81
+    },
+    {
+      "type": "range",
+      "id": "drawer_glass_blur",
+      "label": "Sløring bag glasset",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "checkbox",
+      "id": "drawer_flow_enabled",
+      "label": "Lysbølge ved scroll",
+      "default": true,
+      "info": "En diskret lysbølge under teksten. Slås automatisk fra ved reduceret bevægelse eller gennemsigtighed."
+    },
+    {
+      "type": "range",
+      "id": "drawer_flow_amplitude",
+      "label": "Lysbølgens bevægelse",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Billeder"
+    },
+    {
+      "type": "image_picker",
+      "id": "reading_image",
+      "label": "Billede i læsevisningen"
+    },
+    {
+      "type": "image_picker",
+      "id": "reading_mobile_image",
+      "label": "Mobilbillede i læsevisningen"
+    },
+    {
+      "type": "image_picker",
+      "id": "canvas_preview",
+      "label": "Preview før 3D er indlæst"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ui_navigation",
+      "name": "Menu og betjening",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu",
+          "label": "Menuknap",
+          "default": "Menu"
+        },
+        {
+          "type": "text",
+          "id": "menu_open",
+          "label": "Menuknap: tilgængeligt navn",
+          "default": "Åbn menu"
+        },
+        {
+          "type": "text",
+          "id": "menu_experience",
+          "label": "Menuoverskrift",
+          "default": "Oplev Purefitness"
+        },
+        {
+          "type": "text",
+          "id": "choose_environment",
+          "label": "Miljøvalg: tilgængeligt navn",
+          "default": "Vælg et miljø"
+        },
+        {
+          "type": "text",
+          "id": "go_environment",
+          "label": "Miljøknap: tilgængeligt navn",
+          "default": "Gå til __ENVIRONMENT__",
+          "info": "Bevar __ENVIRONMENT__ som pladsholder for miljønavnet."
+        },
+        {
+          "type": "text",
+          "id": "about_environment",
+          "label": "Knap: Om dette miljø",
+          "default": "Om dette miljø"
+        },
+        {
+          "type": "text",
+          "id": "find_equipment",
+          "label": "Knap: Find udstyr",
+          "default": "Find udstyr"
+        },
+        {
+          "type": "text",
+          "id": "contact_purefitness",
+          "label": "Knap: Kontakt",
+          "default": "Kontakt Purefitness"
+        },
+        {
+          "type": "text",
+          "id": "menu_stops",
+          "label": "Stopvalg: tilgængeligt navn",
+          "default": "Position i miljøet"
+        },
+        {
+          "type": "text",
+          "id": "stop_arrival",
+          "label": "Stopknap: Ankomst",
+          "default": "Ankomst"
+        },
+        {
+          "type": "text",
+          "id": "stop_room",
+          "label": "Stopknap: Rummet",
+          "default": "Rummet"
+        },
+        {
+          "type": "text",
+          "id": "stop_equipment",
+          "label": "Stopknap: Udstyret",
+          "default": "Udstyret"
+        },
+        {
+          "type": "text",
+          "id": "view_settings",
+          "label": "Visningsindstillinger",
+          "default": "Visningsindstillinger"
+        },
+        {
+          "type": "text",
+          "id": "lighting",
+          "label": "Belysning: tilgængeligt navn",
+          "default": "Belysning"
+        },
+        {
+          "type": "text",
+          "id": "warm_light",
+          "label": "Knap: Varmt lys",
+          "default": "Varmt lys"
+        },
+        {
+          "type": "text",
+          "id": "daylight",
+          "label": "Knap: Dagslys",
+          "default": "Dagslys"
+        },
+        {
+          "type": "text",
+          "id": "read_without",
+          "label": "Knap: Læs uden animation",
+          "default": "Læs uden animation"
+        },
+        {
+          "type": "text",
+          "id": "experience_short",
+          "label": "Knap: Oplev i 3D",
+          "default": "Oplev i 3D"
+        },
+        {
+          "type": "text",
+          "id": "close",
+          "label": "Lukkeknap: tilgængeligt navn",
+          "default": "Luk vindue"
+        },
+        {
+          "type": "text",
+          "id": "footer",
+          "label": "Menufod: tekst",
+          "default": "Purefitness · Rum til mere."
+        },
+        {
+          "type": "text",
+          "id": "illustration_note",
+          "label": "Menufod: billednote",
+          "default": "Miljøer og udstyr er illustrative 3D-modeller."
+        },
+        {
+          "type": "text",
+          "id": "back_tour",
+          "label": "Knap: Tilbage til turen",
+          "default": "Tilbage til turen"
+        },
+        {
+          "type": "text",
+          "id": "tour_hint",
+          "label": "Scroll-hjælp",
+          "default": "Scroll for at gå ind"
+        },
+        {
+          "type": "text",
+          "id": "next_stop_aria",
+          "label": "Næste-knap: tilgængeligt navn",
+          "default": "Næste stop"
+        },
+        {
+          "type": "text",
+          "id": "back_start",
+          "label": "Genstart-knap: tilgængeligt navn",
+          "default": "Tilbage til starten"
+        },
+        {
+          "type": "text",
+          "id": "read_environment",
+          "label": "Infoknap: tilgængeligt navn",
+          "default": "Læs om __ENVIRONMENT__",
+          "info": "Bevar __ENVIRONMENT__ som pladsholder for miljønavnet."
+        },
+        {
+          "type": "url",
+          "id": "about_url",
+          "label": "Eget link fra Om dette miljø",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "url",
+          "id": "equipment_url",
+          "label": "Eget link fra Find udstyr",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "url",
+          "id": "contact_url",
+          "label": "Eget kontaktlink i menuen",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "url",
+          "id": "about_overview_url",
+          "label": "Eget link fra informationspanelets oversigtsknap",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "url",
+          "id": "back_tour_url",
+          "label": "Eget link fra Tilbage til turen",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "text",
+          "id": "about_overview_label",
+          "label": "Informationspanelets oversigtsknap",
+          "default": "Læs om alle løsninger"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_about_overview",
+          "label": "Vis informationspanelets oversigtsknap",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_back_tour",
+          "label": "Vis Tilbage til turen",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "ui_reading",
+      "name": "Læsevisning",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "reading_label",
+          "label": "Læsevisning: tilgængeligt navn",
+          "default": "Alle løsninger uden animation"
+        },
+        {
+          "type": "text",
+          "id": "reading_image_alt",
+          "label": "Billedbeskrivelse",
+          "default": "Arkitektonisk visualisering af et Purefitness-træningsmiljø"
+        },
+        {
+          "type": "text",
+          "id": "reading_eyebrow",
+          "label": "Overlinje",
+          "default": "UDSTYR · INDRETNING · SERVICE"
+        },
+        {
+          "type": "text",
+          "id": "reading_title",
+          "label": "Overskrift, linje 1",
+          "default": "Rum til"
+        },
+        {
+          "type": "text",
+          "id": "reading_accent",
+          "label": "Overskrift, linje 2",
+          "default": "mere bevægelse."
+        },
+        {
+          "type": "textarea",
+          "id": "reading_intro",
+          "label": "Introduktion",
+          "default": "Træningsmiljøer til virksomheder og foreninger. Fra den første idé til udstyret er installeret — og service bagefter."
+        },
+        {
+          "type": "textarea",
+          "id": "failed_detail",
+          "label": "Tekst, hvis 3D fejler",
+          "default": "3D kunne ikke indlæses. Alle løsninger er tilgængelige her."
+        },
+        {
+          "type": "text",
+          "id": "retry_3d",
+          "label": "Knap: Prøv 3D igen",
+          "default": "Prøv 3D igen"
+        },
+        {
+          "type": "text",
+          "id": "experience_3d",
+          "label": "Knap: Oplev universet",
+          "default": "Oplev universet i 3D"
+        },
+        {
+          "type": "text",
+          "id": "solutions",
+          "label": "Løsningsnavn",
+          "default": "Løsninger"
+        },
+        {
+          "type": "text",
+          "id": "talk_solution",
+          "label": "Standardknap: Løsning",
+          "default": "Tal om jeres løsning"
+        },
+        {
+          "type": "text",
+          "id": "arrange_service",
+          "label": "Standardknap: Service",
+          "default": "Aftal service"
+        },
+        {
+          "type": "text",
+          "id": "visualization_note",
+          "label": "Billednote i bunden",
+          "default": "Miljøerne er illustrative visualiseringer."
+        },
+        {
+          "type": "text",
+          "id": "reading_contact_heading",
+          "label": "Kontaktfelt: overskrift",
+          "default": "Lad os skabe jeres næste rum."
+        },
+        {
+          "type": "textarea",
+          "id": "reading_contact_description",
+          "label": "Kontaktfelt: beskrivelse",
+          "default": "Fortæl os om jeres lokaler, brugere og ønsker. Vi hjælper med udstyr, indretning og service."
+        },
+        {
+          "type": "text",
+          "id": "reading_contact_label",
+          "label": "Kontaktfelt: knap",
+          "default": "Tal om jeres løsning"
+        },
+        {
+          "type": "url",
+          "id": "reading_contact_url",
+          "label": "Eget link fra kontaktkortet",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "url",
+          "id": "experience_3d_url",
+          "label": "Eget link fra Oplev universet i 3D",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "url",
+          "id": "retry_3d_url",
+          "label": "Eget link fra Prøv 3D igen",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_retry",
+          "label": "Vis Prøv 3D igen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_experience",
+          "label": "Vis Oplev universet i 3D",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_contact_action",
+          "label": "Vis kontaktkortets knap",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "ui_equipment",
+      "name": "Udstyr og kontakt",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "equipment_layout",
+          "label": "Overlinje",
+          "default": "Udstyr & indretning"
+        },
+        {
+          "type": "text",
+          "id": "equipment_title",
+          "label": "Overskrift, linje 1",
+          "default": "Det rette udstyr."
+        },
+        {
+          "type": "text",
+          "id": "equipment_accent",
+          "label": "Overskrift, linje 2",
+          "default": "På den rette plads."
+        },
+        {
+          "type": "textarea",
+          "id": "equipment_intro",
+          "label": "Introduktion",
+          "default": "Vi sammensætter udstyr efter jeres rum og brugere · og hjælper med indretning og installation. Service er til virksomheder og foreninger."
+        },
+        {
+          "type": "text",
+          "id": "equipment_1_title",
+          "label": "Styrke: overskrift",
+          "default": "Styrke"
+        },
+        {
+          "type": "textarea",
+          "id": "equipment_1_detail",
+          "label": "Styrke: beskrivelse",
+          "default": "Maskiner, kabeltræk og stativer."
+        },
+        {
+          "type": "text",
+          "id": "equipment_2_title",
+          "label": "Kondition: overskrift",
+          "default": "Kondition"
+        },
+        {
+          "type": "textarea",
+          "id": "equipment_2_detail",
+          "label": "Kondition: beskrivelse",
+          "default": "Løbebånd, cykler og romaskiner."
+        },
+        {
+          "type": "text",
+          "id": "equipment_3_title",
+          "label": "Frie vægte: overskrift",
+          "default": "Frie vægte & funktionel træning"
+        },
+        {
+          "type": "textarea",
+          "id": "equipment_3_detail",
+          "label": "Frie vægte: beskrivelse",
+          "default": "Vægte og tilbehør til en alsidig træning."
+        },
+        {
+          "type": "text",
+          "id": "equipment_inquiry_label",
+          "label": "Knap: Tal om udstyr",
+          "default": "Tal om det rette udstyr"
+        },
+        {
+          "type": "text",
+          "id": "help_solution",
+          "label": "Knap: Få hjælp",
+          "default": "Få hjælp til jeres løsning"
+        },
+        {
+          "type": "url",
+          "id": "equipment_inquiry_url",
+          "label": "Eget link fra udstyrets primære kontaktknap",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "url",
+          "id": "equipment_help_url",
+          "label": "Eget link fra udstyrets hjælpeknap",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_equipment_inquiry",
+          "label": "Vis udstyrets primære kontaktknap",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "ui_overview",
+      "name": "Alle løsninger",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "overview_eyebrow",
+          "label": "Overlinje",
+          "default": "Udstyr · Indretning · Installation · Service"
+        },
+        {
+          "type": "text",
+          "id": "overview_title",
+          "label": "Overskrift, linje 1",
+          "default": "Mulighederne."
+        },
+        {
+          "type": "text",
+          "id": "overview_accent",
+          "label": "Overskrift, linje 2",
+          "default": "Samlet ét sted."
+        },
+        {
+          "type": "text",
+          "id": "talk_purefitness",
+          "label": "Knap: Tal med os",
+          "default": "Tal med Purefitness"
+        },
+        {
+          "type": "url",
+          "id": "overview_contact_url",
+          "label": "Eget link fra oversigtens kontaktknap",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview_contact",
+          "label": "Vis oversigtens kontaktknap",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "ui_accessibility",
+      "name": "Tilgængelighed og opstart",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "skip",
+          "label": "Genvej til løsninger",
+          "default": "Læs om alle løsninger"
+        },
+        {
+          "type": "textarea",
+          "id": "world_label",
+          "label": "3D-scene: tilgængeligt navn",
+          "default": "Scroll gennem Purefitness’ 3D-univers med fitnesscentre, hoteller, erhverv, foreninger og service."
+        },
+        {
+          "type": "text",
+          "id": "home_aria",
+          "label": "Forsidelink: tilgængeligt navn",
+          "default": "Tilbage til forsiden"
+        },
+        {
+          "type": "text",
+          "id": "journey_label",
+          "label": "Rejse: tilgængeligt navn",
+          "default": "Rejsen gennem Purefitness"
+        },
+        {
+          "type": "text",
+          "id": "universe_heading",
+          "label": "Skjult hovedoverskrift",
+          "default": "Purefitness 3D-univers"
+        },
+        {
+          "type": "text",
+          "id": "loading_title",
+          "label": "Opstart: overskrift",
+          "default": "Træd ind i Purefitness"
+        },
+        {
+          "type": "textarea",
+          "id": "loading_detail",
+          "label": "Opstart: beskrivelse",
+          "default": "Forbereder lys, rum og materialer."
+        },
+        {
+          "type": "text",
+          "id": "read_solutions",
+          "label": "Opstart: læseknap",
+          "default": "Læs om løsningerne"
+        },
+        {
+          "type": "text",
+          "id": "no_script_title",
+          "label": "Uden JavaScript: overskrift",
+          "default": "Purefitness"
+        },
+        {
+          "type": "textarea",
+          "id": "no_script_intro",
+          "label": "Uden JavaScript: introduktion",
+          "default": "Træningsudstyr, indretning, installation og service til fitnesscentre, hoteller, virksomheder og foreninger."
+        },
+        {
+          "type": "textarea",
+          "id": "no_script_service",
+          "label": "Uden JavaScript: service",
+          "default": "Vi tilbyder erhvervskunder service på alle maskiner efter aftale. Tidspunkt, omfang, eventuelle reparationer og reservedele afklares med jer."
+        },
+        {
+          "type": "url",
+          "id": "skip_url",
+          "label": "Eget link fra Læs om alle løsninger",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "url",
+          "id": "read_solutions_url",
+          "label": "Eget link fra loading-skærmens læseknap",
+          "info": "Tomt felt bevarer knappens indbyggede funktion. Eget link bruger den valgte destination."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_skip",
+          "label": "Vis Læs om alle løsninger",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_loading_read",
+          "label": "Vis læseknap under loading",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "no_script_contact_label",
+          "label": "Kontaktknap uden JavaScript",
+          "default": "Kontakt Purefitness"
+        },
+        {
+          "type": "url",
+          "id": "no_script_contact_url",
+          "label": "Eget link fra kontaktknap uden JavaScript",
+          "info": "Tomt felt bruger hjemmesidens kontaktside."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_no_script_contact",
+          "label": "Vis kontaktknap uden JavaScript",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "environment_fitness",
+      "name": "Miljø: Fitnesscentre",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Miljøets 3D-model, placering og kamerarute bevares. Her redigeres kun tekster og synlighed i brugerfladen."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Navn i turens infoknap",
+          "default": "Fitnesscentre"
+        },
+        {
+          "type": "text",
+          "id": "menu_label",
+          "label": "Navn i menuen",
+          "default": "Fitnesscentre"
+        },
+        {
+          "type": "text",
+          "id": "reading_label",
+          "label": "Navn i læsevisningen",
+          "default": "Fitnesscentre"
+        },
+        {
+          "type": "text",
+          "id": "overview_label",
+          "label": "Navn i løsningsoversigten",
+          "default": "Fitnesscentre"
+        },
+        {
+          "type": "text",
+          "id": "reading_nav_label",
+          "label": "Knaptekst i læsevisningens navigation",
+          "default": "Fitnesscentre"
+        },
+        {
+          "type": "text",
+          "id": "overview_action",
+          "label": "Knaptekst fra oversigten til dette miljø",
+          "default": "Oplev fitnesscentre"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview_action",
+          "label": "Vis miljøets knap i oversigten",
+          "default": true
+        },
+        {
+          "type": "textarea",
+          "id": "summary",
+          "label": "Miljøets sammenfatning",
+          "default": "Fra den første indretning til den sidste installerede maskine. Et træningsmiljø bygget omkring jeres medlemmer."
+        },
+        {
+          "type": "text",
+          "id": "reading_action",
+          "label": "Kontaktknap i læsevisningen",
+          "default": "Tal om jeres løsning"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_in_menu",
+          "label": "Vis i menuen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading",
+          "label": "Vis i læsevisningen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview",
+          "label": "Vis i løsningsoversigten",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_action",
+          "label": "Vis læsevisningens kontaktknap",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Ankomst"
+        },
+        {
+          "type": "text",
+          "id": "title_0",
+          "label": "Overskrift, linje 1",
+          "default": "Plads til"
+        },
+        {
+          "type": "text",
+          "id": "accent_0",
+          "label": "Overskrift, linje 2",
+          "default": "større ambitioner."
+        },
+        {
+          "type": "textarea",
+          "id": "description_0",
+          "label": "Beskrivelse",
+          "default": "Oplev træningsmiljøer, der passer til jer. Vi hjælper med udstyr, indretning og service."
+        },
+        {
+          "type": "text",
+          "id": "action_0",
+          "label": "Knaptekst",
+          "default": "Træd indenfor"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_0",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_0",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Rummet"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Overskrift, linje 1",
+          "default": "Ambitioner kræver"
+        },
+        {
+          "type": "text",
+          "id": "accent_1",
+          "label": "Overskrift, linje 2",
+          "default": "de rette rammer."
+        },
+        {
+          "type": "textarea",
+          "id": "description_1",
+          "label": "Beskrivelse",
+          "default": "Tydelige træningszoner, god plads og et naturligt flow. Vi indretter efter jeres medlemmer og jeres ambitioner."
+        },
+        {
+          "type": "text",
+          "id": "action_1",
+          "label": "Knaptekst",
+          "default": "Tal om jeres fitnesscenter"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_1",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_1",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Udstyret"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Overskrift, linje 1",
+          "default": "Fra første idé"
+        },
+        {
+          "type": "text",
+          "id": "accent_2",
+          "label": "Overskrift, linje 2",
+          "default": "til første løft."
+        },
+        {
+          "type": "textarea",
+          "id": "description_2",
+          "label": "Beskrivelse",
+          "default": "Styrke, kondition og frie vægte. Vi hjælper med valg af udstyr, indretning og installation."
+        },
+        {
+          "type": "text",
+          "id": "action_2",
+          "label": "Knaptekst",
+          "default": "Find det rette udstyr"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_2",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_2",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_nav",
+          "label": "Vis miljøets knap i læsenavigationen",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "environment_hoteller",
+      "name": "Miljø: Hoteller",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Miljøets 3D-model, placering og kamerarute bevares. Her redigeres kun tekster og synlighed i brugerfladen."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Navn i turens infoknap",
+          "default": "Hoteller"
+        },
+        {
+          "type": "text",
+          "id": "menu_label",
+          "label": "Navn i menuen",
+          "default": "Hoteller"
+        },
+        {
+          "type": "text",
+          "id": "reading_label",
+          "label": "Navn i læsevisningen",
+          "default": "Hoteller"
+        },
+        {
+          "type": "text",
+          "id": "overview_label",
+          "label": "Navn i løsningsoversigten",
+          "default": "Hoteller"
+        },
+        {
+          "type": "text",
+          "id": "reading_nav_label",
+          "label": "Knaptekst i læsevisningens navigation",
+          "default": "Hoteller"
+        },
+        {
+          "type": "text",
+          "id": "overview_action",
+          "label": "Knaptekst fra oversigten til dette miljø",
+          "default": "Oplev hoteller"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview_action",
+          "label": "Vis miljøets knap i oversigten",
+          "default": true
+        },
+        {
+          "type": "textarea",
+          "id": "summary",
+          "label": "Miljøets sammenfatning",
+          "default": "Et trænings- og wellnessmiljø, der passer til hotellets arkitektur, atmosfære og gæster."
+        },
+        {
+          "type": "text",
+          "id": "reading_action",
+          "label": "Kontaktknap i læsevisningen",
+          "default": "Tal om jeres løsning"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_in_menu",
+          "label": "Vis i menuen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading",
+          "label": "Vis i læsevisningen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview",
+          "label": "Vis i løsningsoversigten",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_action",
+          "label": "Vis læsevisningens kontaktknap",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Ankomst"
+        },
+        {
+          "type": "text",
+          "id": "title_0",
+          "label": "Overskrift, linje 1",
+          "default": "En bedre"
+        },
+        {
+          "type": "text",
+          "id": "accent_0",
+          "label": "Overskrift, linje 2",
+          "default": "del af opholdet."
+        },
+        {
+          "type": "textarea",
+          "id": "description_0",
+          "label": "Beskrivelse",
+          "default": "Træningsmiljøer, der føles som en naturlig del af jeres hotel. Fra den rolige indretning til det velvalgte udstyr."
+        },
+        {
+          "type": "text",
+          "id": "action_0",
+          "label": "Knaptekst",
+          "default": "Tal om jeres hotel"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_0",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_0",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Rummet"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Overskrift, linje 1",
+          "default": "Samme omtanke."
+        },
+        {
+          "type": "text",
+          "id": "accent_1",
+          "label": "Overskrift, linje 2",
+          "default": "Hvert eneste rum."
+        },
+        {
+          "type": "textarea",
+          "id": "description_1",
+          "label": "Beskrivelse",
+          "default": "Materialer, plads og udstyr tænkes sammen med hotellets udtryk. En løsning, der passer til gæsternes behov."
+        },
+        {
+          "type": "text",
+          "id": "action_1",
+          "label": "Knaptekst",
+          "default": "Tal om indretning"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_1",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_1",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Udstyret"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Overskrift, linje 1",
+          "default": "Plads til"
+        },
+        {
+          "type": "text",
+          "id": "accent_2",
+          "label": "Overskrift, linje 2",
+          "default": "gode vaner."
+        },
+        {
+          "type": "textarea",
+          "id": "description_2",
+          "label": "Beskrivelse",
+          "default": "En komplet træning på færre kvadratmeter. Vi sammensætter konditionsudstyr, styrke og frie vægte til jeres rum."
+        },
+        {
+          "type": "text",
+          "id": "action_2",
+          "label": "Knaptekst",
+          "default": "Find det rette udstyr"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_2",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_2",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_nav",
+          "label": "Vis miljøets knap i læsenavigationen",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "environment_erhverv",
+      "name": "Miljø: Erhverv",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Miljøets 3D-model, placering og kamerarute bevares. Her redigeres kun tekster og synlighed i brugerfladen."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Navn i turens infoknap",
+          "default": "Erhverv"
+        },
+        {
+          "type": "text",
+          "id": "menu_label",
+          "label": "Navn i menuen",
+          "default": "Erhverv"
+        },
+        {
+          "type": "text",
+          "id": "reading_label",
+          "label": "Navn i læsevisningen",
+          "default": "Erhverv"
+        },
+        {
+          "type": "text",
+          "id": "overview_label",
+          "label": "Navn i løsningsoversigten",
+          "default": "Erhverv"
+        },
+        {
+          "type": "text",
+          "id": "reading_nav_label",
+          "label": "Knaptekst i læsevisningens navigation",
+          "default": "Erhverv"
+        },
+        {
+          "type": "text",
+          "id": "overview_action",
+          "label": "Knaptekst fra oversigten til dette miljø",
+          "default": "Oplev erhverv"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview_action",
+          "label": "Vis miljøets knap i oversigten",
+          "default": true
+        },
+        {
+          "type": "textarea",
+          "id": "summary",
+          "label": "Miljøets sammenfatning",
+          "default": "Træning tæt på arbejdsdagen. Tilpasset jeres lokaler, medarbejdere og hverdag."
+        },
+        {
+          "type": "text",
+          "id": "reading_action",
+          "label": "Kontaktknap i læsevisningen",
+          "default": "Tal om jeres løsning"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_in_menu",
+          "label": "Vis i menuen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading",
+          "label": "Vis i læsevisningen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview",
+          "label": "Vis i løsningsoversigten",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_action",
+          "label": "Vis læsevisningens kontaktknap",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Ankomst"
+        },
+        {
+          "type": "text",
+          "id": "title_0",
+          "label": "Overskrift, linje 1",
+          "default": "En arbejdsdag"
+        },
+        {
+          "type": "text",
+          "id": "accent_0",
+          "label": "Overskrift, linje 2",
+          "default": "med mere overskud."
+        },
+        {
+          "type": "textarea",
+          "id": "description_0",
+          "label": "Beskrivelse",
+          "default": "Giv medarbejderne plads til at bevæge sig. Et træningsmiljø, der er let at vælge til i hverdagen."
+        },
+        {
+          "type": "text",
+          "id": "action_0",
+          "label": "Knaptekst",
+          "default": "Tal om medarbejdertræning"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_0",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_0",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Rummet"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Overskrift, linje 1",
+          "default": "Tæt på arbejdet."
+        },
+        {
+          "type": "text",
+          "id": "accent_1",
+          "label": "Overskrift, linje 2",
+          "default": "Plads til en pause."
+        },
+        {
+          "type": "textarea",
+          "id": "description_1",
+          "label": "Beskrivelse",
+          "default": "Fra en mindre træningszone til et helt motionsrum. Vi tilpasser indretningen til jeres arbejdsplads."
+        },
+        {
+          "type": "text",
+          "id": "action_1",
+          "label": "Knaptekst",
+          "default": "Tal om jeres lokaler"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_1",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_1",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Udstyret"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Overskrift, linje 1",
+          "default": "En enkel vej"
+        },
+        {
+          "type": "text",
+          "id": "accent_2",
+          "label": "Overskrift, linje 2",
+          "default": "til mere bevægelse."
+        },
+        {
+          "type": "textarea",
+          "id": "description_2",
+          "label": "Beskrivelse",
+          "default": "Overskueligt udstyr til både den korte pause og en hel træning. Vi hjælper med indretning og installation."
+        },
+        {
+          "type": "text",
+          "id": "action_2",
+          "label": "Knaptekst",
+          "default": "Find det rette udstyr"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_2",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_2",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_nav",
+          "label": "Vis miljøets knap i læsenavigationen",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "environment_foreninger",
+      "name": "Miljø: Foreninger",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Miljøets 3D-model, placering og kamerarute bevares. Her redigeres kun tekster og synlighed i brugerfladen."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Navn i turens infoknap",
+          "default": "Foreninger"
+        },
+        {
+          "type": "text",
+          "id": "menu_label",
+          "label": "Navn i menuen",
+          "default": "Foreninger"
+        },
+        {
+          "type": "text",
+          "id": "reading_label",
+          "label": "Navn i læsevisningen",
+          "default": "Foreninger"
+        },
+        {
+          "type": "text",
+          "id": "overview_label",
+          "label": "Navn i løsningsoversigten",
+          "default": "Foreninger"
+        },
+        {
+          "type": "text",
+          "id": "reading_nav_label",
+          "label": "Knaptekst i læsevisningens navigation",
+          "default": "Foreninger"
+        },
+        {
+          "type": "text",
+          "id": "overview_action",
+          "label": "Knaptekst fra oversigten til dette miljø",
+          "default": "Oplev foreninger"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview_action",
+          "label": "Vis miljøets knap i oversigten",
+          "default": true
+        },
+        {
+          "type": "textarea",
+          "id": "summary",
+          "label": "Miljøets sammenfatning",
+          "default": "Robuste rammer for fællesskabet og den enkelte. Udstyr sammensat efter foreningens aktiviteter og behov."
+        },
+        {
+          "type": "text",
+          "id": "reading_action",
+          "label": "Kontaktknap i læsevisningen",
+          "default": "Tal om jeres løsning"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_in_menu",
+          "label": "Vis i menuen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading",
+          "label": "Vis i læsevisningen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview",
+          "label": "Vis i løsningsoversigten",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_action",
+          "label": "Vis læsevisningens kontaktknap",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Ankomst"
+        },
+        {
+          "type": "text",
+          "id": "title_0",
+          "label": "Overskrift, linje 1",
+          "default": "Fælles rum."
+        },
+        {
+          "type": "text",
+          "id": "accent_0",
+          "label": "Overskrift, linje 2",
+          "default": "Fælles styrke."
+        },
+        {
+          "type": "textarea",
+          "id": "description_0",
+          "label": "Beskrivelse",
+          "default": "Træningsmiljøer til foreninger. Med plads til mange niveauer og en fælles ambition."
+        },
+        {
+          "type": "text",
+          "id": "action_0",
+          "label": "Knaptekst",
+          "default": "Tal om jeres forening"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_0",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_0",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Rummet"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Overskrift, linje 1",
+          "default": "Til hele holdet."
+        },
+        {
+          "type": "text",
+          "id": "accent_1",
+          "label": "Overskrift, linje 2",
+          "default": "Og den enkelte."
+        },
+        {
+          "type": "textarea",
+          "id": "description_1",
+          "label": "Beskrivelse",
+          "default": "Fleksible arealer, der fungerer til fællestræning og individuelle programmer. Vi hjælper jer med at udnytte pladsen."
+        },
+        {
+          "type": "text",
+          "id": "action_1",
+          "label": "Knaptekst",
+          "default": "Tal om indretning"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_1",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_1",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Udstyret"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Overskrift, linje 1",
+          "default": "Klar til"
+        },
+        {
+          "type": "text",
+          "id": "accent_2",
+          "label": "Overskrift, linje 2",
+          "default": "endnu en sæson."
+        },
+        {
+          "type": "textarea",
+          "id": "description_2",
+          "label": "Beskrivelse",
+          "default": "Robuste maskiner, frie vægte og funktionelt udstyr. Valgt efter de aktiviteter, der samler jeres medlemmer."
+        },
+        {
+          "type": "text",
+          "id": "action_2",
+          "label": "Knaptekst",
+          "default": "Find det rette udstyr"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_2",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_2",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_nav",
+          "label": "Vis miljøets knap i læsenavigationen",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "environment_service",
+      "name": "Miljø: Service",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Miljøets 3D-model, placering og kamerarute bevares. Her redigeres kun tekster og synlighed i brugerfladen."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Navn i turens infoknap",
+          "default": "Service"
+        },
+        {
+          "type": "text",
+          "id": "menu_label",
+          "label": "Navn i menuen",
+          "default": "Service"
+        },
+        {
+          "type": "text",
+          "id": "reading_label",
+          "label": "Navn i læsevisningen",
+          "default": "Service"
+        },
+        {
+          "type": "text",
+          "id": "overview_label",
+          "label": "Navn i løsningsoversigten",
+          "default": "Service"
+        },
+        {
+          "type": "text",
+          "id": "reading_nav_label",
+          "label": "Knaptekst i læsevisningens navigation",
+          "default": "Service"
+        },
+        {
+          "type": "text",
+          "id": "overview_action",
+          "label": "Knaptekst fra oversigten til dette miljø",
+          "default": "Oplev service"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview_action",
+          "label": "Vis miljøets knap i oversigten",
+          "default": true
+        },
+        {
+          "type": "textarea",
+          "id": "summary",
+          "label": "Miljøets sammenfatning",
+          "default": "Vi tilbyder erhvervskunder service på alle maskiner efter aftale. Tidspunkt og omfang aftales med jer. Eventuelle reparationer og reservedele afklares."
+        },
+        {
+          "type": "text",
+          "id": "reading_action",
+          "label": "Kontaktknap i læsevisningen",
+          "default": "Aftal service"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_in_menu",
+          "label": "Vis i menuen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading",
+          "label": "Vis i læsevisningen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview",
+          "label": "Vis i løsningsoversigten",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_action",
+          "label": "Vis læsevisningens kontaktknap",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Ankomst"
+        },
+        {
+          "type": "text",
+          "id": "title_0",
+          "label": "Overskrift, linje 1",
+          "default": "God træning"
+        },
+        {
+          "type": "text",
+          "id": "accent_0",
+          "label": "Overskrift, linje 2",
+          "default": "kræver god service."
+        },
+        {
+          "type": "textarea",
+          "id": "description_0",
+          "label": "Beskrivelse",
+          "default": "Vi tilbyder erhvervskunder service på alle træningsmaskiner efter aftale. Også på udstyret, I allerede har."
+        },
+        {
+          "type": "text",
+          "id": "action_0",
+          "label": "Knaptekst",
+          "default": "Aftal service"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_0",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_0",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Rummet"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Overskrift, linje 1",
+          "default": "Jeres maskiner."
+        },
+        {
+          "type": "text",
+          "id": "accent_1",
+          "label": "Overskrift, linje 2",
+          "default": "Vores aftale."
+        },
+        {
+          "type": "textarea",
+          "id": "description_1",
+          "label": "Beskrivelse",
+          "default": "Vi aftaler tidspunkt og omfang med jer, så servicebesøget passer til jeres behov og den daglige drift."
+        },
+        {
+          "type": "text",
+          "id": "action_1",
+          "label": "Knaptekst",
+          "default": "Tal om en serviceaftale"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_1",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_1",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Udstyret"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Overskrift, linje 1",
+          "default": "Omtanke for"
+        },
+        {
+          "type": "text",
+          "id": "accent_2",
+          "label": "Overskrift, linje 2",
+          "default": "hver eneste detalje."
+        },
+        {
+          "type": "textarea",
+          "id": "description_2",
+          "label": "Beskrivelse",
+          "default": "Vi gennemgår maskinerne og udfører den aftalte service. Eventuelle reparationer og reservedele afklares med jer."
+        },
+        {
+          "type": "text",
+          "id": "action_2",
+          "label": "Knaptekst",
+          "default": "Aftal service"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_2",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_2",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Afslutning"
+        },
+        {
+          "type": "text",
+          "id": "title_3",
+          "label": "Overskrift, linje 1",
+          "default": "Lad os skabe"
+        },
+        {
+          "type": "text",
+          "id": "accent_3",
+          "label": "Overskrift, linje 2",
+          "default": "jeres næste rum."
+        },
+        {
+          "type": "textarea",
+          "id": "description_3",
+          "label": "Beskrivelse",
+          "default": "Et nyt træningsmiljø eller service på det, I allerede har. Vi tager udgangspunkt i jeres behov."
+        },
+        {
+          "type": "text",
+          "id": "action_3",
+          "label": "Knaptekst",
+          "default": "Start en samtale"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description_3",
+          "label": "Vis beskrivelsen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_action_3",
+          "label": "Vis knappen i miljøets infovindue",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_reading_nav",
+          "label": "Vis miljøets knap i læsenavigationen",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "links_fitness",
+      "name": "Fitnesscentre · knaplinks",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Disse links hører til det faste miljø. Tomme felter bevarer turens navigation eller den native kontaktformular. Knaptekst og visning redigeres i miljøets indholdsblok."
+        },
+        {
+          "type": "url",
+          "id": "menu_url",
+          "label": "Eget link fra miljøets menuknap"
+        },
+        {
+          "type": "url",
+          "id": "reading_nav_url",
+          "label": "Eget link fra miljøets læsenavigation"
+        },
+        {
+          "type": "url",
+          "id": "reading_url",
+          "label": "Eget link fra miljøets kontaktknap i læsevisning"
+        },
+        {
+          "type": "url",
+          "id": "overview_url",
+          "label": "Eget link fra miljøets oversigtsknap"
+        },
+        {
+          "type": "url",
+          "id": "action_url_0",
+          "label": "Eget link fra fortælling 1"
+        },
+        {
+          "type": "url",
+          "id": "action_url_1",
+          "label": "Eget link fra fortælling 2"
+        },
+        {
+          "type": "url",
+          "id": "action_url_2",
+          "label": "Eget link fra fortælling 3"
+        }
+      ]
+    },
+    {
+      "type": "links_hoteller",
+      "name": "Hoteller · knaplinks",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Disse links hører til det faste miljø. Tomme felter bevarer turens navigation eller den native kontaktformular. Knaptekst og visning redigeres i miljøets indholdsblok."
+        },
+        {
+          "type": "url",
+          "id": "menu_url",
+          "label": "Eget link fra miljøets menuknap"
+        },
+        {
+          "type": "url",
+          "id": "reading_nav_url",
+          "label": "Eget link fra miljøets læsenavigation"
+        },
+        {
+          "type": "url",
+          "id": "reading_url",
+          "label": "Eget link fra miljøets kontaktknap i læsevisning"
+        },
+        {
+          "type": "url",
+          "id": "overview_url",
+          "label": "Eget link fra miljøets oversigtsknap"
+        },
+        {
+          "type": "url",
+          "id": "action_url_0",
+          "label": "Eget link fra fortælling 1"
+        },
+        {
+          "type": "url",
+          "id": "action_url_1",
+          "label": "Eget link fra fortælling 2"
+        },
+        {
+          "type": "url",
+          "id": "action_url_2",
+          "label": "Eget link fra fortælling 3"
+        }
+      ]
+    },
+    {
+      "type": "links_erhverv",
+      "name": "Erhverv · knaplinks",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Disse links hører til det faste miljø. Tomme felter bevarer turens navigation eller den native kontaktformular. Knaptekst og visning redigeres i miljøets indholdsblok."
+        },
+        {
+          "type": "url",
+          "id": "menu_url",
+          "label": "Eget link fra miljøets menuknap"
+        },
+        {
+          "type": "url",
+          "id": "reading_nav_url",
+          "label": "Eget link fra miljøets læsenavigation"
+        },
+        {
+          "type": "url",
+          "id": "reading_url",
+          "label": "Eget link fra miljøets kontaktknap i læsevisning"
+        },
+        {
+          "type": "url",
+          "id": "overview_url",
+          "label": "Eget link fra miljøets oversigtsknap"
+        },
+        {
+          "type": "url",
+          "id": "action_url_0",
+          "label": "Eget link fra fortælling 1"
+        },
+        {
+          "type": "url",
+          "id": "action_url_1",
+          "label": "Eget link fra fortælling 2"
+        },
+        {
+          "type": "url",
+          "id": "action_url_2",
+          "label": "Eget link fra fortælling 3"
+        }
+      ]
+    },
+    {
+      "type": "links_foreninger",
+      "name": "Foreninger · knaplinks",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Disse links hører til det faste miljø. Tomme felter bevarer turens navigation eller den native kontaktformular. Knaptekst og visning redigeres i miljøets indholdsblok."
+        },
+        {
+          "type": "url",
+          "id": "menu_url",
+          "label": "Eget link fra miljøets menuknap"
+        },
+        {
+          "type": "url",
+          "id": "reading_nav_url",
+          "label": "Eget link fra miljøets læsenavigation"
+        },
+        {
+          "type": "url",
+          "id": "reading_url",
+          "label": "Eget link fra miljøets kontaktknap i læsevisning"
+        },
+        {
+          "type": "url",
+          "id": "overview_url",
+          "label": "Eget link fra miljøets oversigtsknap"
+        },
+        {
+          "type": "url",
+          "id": "action_url_0",
+          "label": "Eget link fra fortælling 1"
+        },
+        {
+          "type": "url",
+          "id": "action_url_1",
+          "label": "Eget link fra fortælling 2"
+        },
+        {
+          "type": "url",
+          "id": "action_url_2",
+          "label": "Eget link fra fortælling 3"
+        }
+      ]
+    },
+    {
+      "type": "links_service",
+      "name": "Service · knaplinks",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Disse links hører til det faste miljø. Tomme felter bevarer turens navigation eller den native kontaktformular. Knaptekst og visning redigeres i miljøets indholdsblok."
+        },
+        {
+          "type": "url",
+          "id": "menu_url",
+          "label": "Eget link fra miljøets menuknap"
+        },
+        {
+          "type": "url",
+          "id": "reading_nav_url",
+          "label": "Eget link fra miljøets læsenavigation"
+        },
+        {
+          "type": "url",
+          "id": "reading_url",
+          "label": "Eget link fra miljøets kontaktknap i læsevisning"
+        },
+        {
+          "type": "url",
+          "id": "overview_url",
+          "label": "Eget link fra miljøets oversigtsknap"
+        },
+        {
+          "type": "url",
+          "id": "action_url_0",
+          "label": "Eget link fra fortælling 1"
+        },
+        {
+          "type": "url",
+          "id": "action_url_1",
+          "label": "Eget link fra fortælling 2"
+        },
+        {
+          "type": "url",
+          "id": "action_url_2",
+          "label": "Eget link fra fortælling 3"
+        },
+        {
+          "type": "url",
+          "id": "action_url_3",
+          "label": "Eget link fra fortælling 4"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness univers",
+      "blocks": [
+        {
+          "type": "ui_navigation"
+        },
+        {
+          "type": "ui_reading"
+        },
+        {
+          "type": "ui_equipment"
+        },
+        {
+          "type": "ui_overview"
+        },
+        {
+          "type": "ui_accessibility"
+        },
+        {
+          "type": "environment_fitness"
+        },
+        {
+          "type": "environment_hoteller"
+        },
+        {
+          "type": "environment_erhverv"
+        },
+        {
+          "type": "environment_foreninger"
+        },
+        {
+          "type": "environment_service"
+        },
+        {
+          "type": "links_fitness"
+        },
+        {
+          "type": "links_hoteller"
+        },
+        {
+          "type": "links_erhverv"
+        },
+        {
+          "type": "links_foreninger"
+        },
+        {
+          "type": "links_service"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

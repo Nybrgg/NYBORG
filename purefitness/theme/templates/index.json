@@ -1,0 +1,364 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "pf-hero",
+      "settings": {
+        "image_alt": "Illustrativt Purefitness-campus i klar dagsbelysning med skarp betonarkitektur, glasfacader og synligt træningsudstyr",
+        "eyebrow": "Et univers af muligheder",
+        "heading_line_1": "Stærke rum.",
+        "heading_line_2": "Større muligheder.",
+        "description_line_1": "Træningsudstyr, indretning og service.",
+        "description_line_2": "Vi skaber rammerne for jeres ambitioner.",
+        "bottom_line_1": "Fra første idé.",
+        "bottom_line_2": "Til hverdagen, der følger.",
+        "environments": "Fitnesscentre · Hoteller · Erhverv · Foreninger"
+      },
+      "blocks": {
+        "universe": {
+          "type": "button",
+          "settings": {
+            "label": "Oplev universet",
+            "destination": "universe",
+            "style": "primary",
+            "icon": "move-up-right",
+            "icon_size": 19
+          }
+        },
+        "solutions": {
+          "type": "button",
+          "settings": {
+            "label": "Find jeres løsning",
+            "destination": "solutions",
+            "style": "secondary",
+            "icon": "arrow-down",
+            "icon_size": 15
+          }
+        }
+      },
+      "block_order": [
+        "universe",
+        "solutions"
+      ]
+    },
+    "intro": {
+      "type": "pf-intro",
+      "settings": {
+        "eyebrow": "Udstyr · Indretning · Service",
+        "heading": "Én partner til hele træningsmiljøet.",
+        "description_1": "Et godt træningsrum starter med at forstå dem, der skal bruge det. Hvem er rummet til, hvad skal det kunne, og hvordan skal det fungere i hverdagen?",
+        "description_2": "PureFitness hjælper med at samle udstyr, indretning og service i en løsning, der passer til jeres rammer og ambitioner. Her kan I udforske mulighederne og tage den første samtale om jeres projekt.",
+        "image_alt": "Illustrativt premium træningsmiljø med sort styrkeudstyr, træpaneler og store glaspartier",
+        "glass_blur": 26,
+        "glass_enabled": true,
+        "glass_flow_enabled": true,
+        "glass_flow_strength": 8,
+        "glass_opacity": 86
+      }
+    },
+    "solutions": {
+      "type": "pf-solutions",
+      "settings": {
+        "heading": "Hvilket rum skal vi skabe?",
+        "description": "Forskellige brugere stiller forskellige krav. Find det miljø, der passer til jer.",
+        "background_color": "#202722",
+        "fade_top": 80,
+        "fade_bottom": 80,
+        "fade_top_mobile": 56,
+        "fade_bottom_mobile": 56,
+        "glass_blur": 26,
+        "glass_enabled": true,
+        "glass_flow_enabled": true,
+        "glass_flow_strength": 8,
+        "glass_opacity": 86
+      },
+      "blocks": {
+        "1": {
+          "type": "environment",
+          "settings": {
+            "scene_id": "fitness",
+            "label": "Fitnesscentre",
+            "summary": "Plads til forskellige træningsformer, et naturligt flow og udstyr, der passer til medlemmernes behov. Se mulighederne for både nye centre og eksisterende faciliteter.",
+            "description": "Styrke, kondition og frie vægte. Vi hjælper med valg af udstyr, indretning og installation.",
+            "contact_label": "Tal om jeres løsning",
+            "universe_label": "Oplev miljøet"
+          }
+        },
+        "2": {
+          "type": "environment",
+          "settings": {
+            "scene_id": "hoteller",
+            "label": "Hoteller",
+            "summary": "Et træningsrum som en naturlig del af opholdet. Indretningen skal være indbydende, let at bruge og tilpasset den plads, hotellet har til rådighed.",
+            "description": "Materialer, plads og udstyr tænkes sammen med hotellets udtryk. En løsning, der passer til gæsternes behov.",
+            "contact_label": "Tal om jeres løsning",
+            "universe_label": "Oplev miljøet"
+          }
+        },
+        "3": {
+          "type": "environment",
+          "settings": {
+            "scene_id": "erhverv",
+            "label": "Erhverv",
+            "summary": "Træning tættere på arbejdsdagen. Et funktionelt rum kan give medarbejderne mulighed for bevægelse før, under eller efter arbejdet.",
+            "description": "Fra en mindre træningszone til et helt motionsrum. Vi tilpasser indretningen til jeres arbejdsplads.",
+            "contact_label": "Tal om jeres løsning",
+            "universe_label": "Oplev miljøet"
+          }
+        },
+        "4": {
+          "type": "environment",
+          "settings": {
+            "scene_id": "foreninger",
+            "label": "Foreninger",
+            "summary": "Fælles faciliteter til forskellige brugere og aktiviteter. Find en indretning og et udvalg af udstyr, der passer til foreningens hverdag.",
+            "description": "Fleksible arealer, der fungerer til fællestræning og individuelle programmer. Vi hjælper jer med at udnytte pladsen.",
+            "contact_label": "Tal om jeres løsning",
+            "universe_label": "Oplev miljøet"
+          }
+        }
+      },
+      "block_order": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    "process": {
+      "type": "pf-process",
+      "settings": {
+        "heading": "Fra første idé til hverdagen, der følger.",
+        "description": "Et tydeligt forløb gør det lettere at træffe de rigtige valg.\nVi tager udgangspunkt i jeres behov og de rammer,\nI allerede har.",
+        "glass_blur": 26,
+        "glass_enabled": true,
+        "glass_flow_enabled": true,
+        "glass_flow_strength": 8,
+        "glass_opacity": 86
+      },
+      "blocks": {
+        "1": {
+          "type": "step",
+          "settings": {
+            "title": "Behov og rammer",
+            "description": "Vi taler om brugerne, pladsen og jeres ønsker."
+          }
+        },
+        "2": {
+          "type": "step",
+          "settings": {
+            "title": "Rum og udstyr",
+            "description": "Vi undersøger indretning og relevante træningsmuligheder."
+          }
+        },
+        "3": {
+          "type": "step",
+          "settings": {
+            "title": "Levering og opsætning",
+            "description": "De praktiske detaljer afklares som en del af projektet."
+          }
+        },
+        "4": {
+          "type": "step",
+          "settings": {
+            "title": "Service i hverdagen",
+            "description": "Vi tager en samtale om vedligeholdelse og det videre behov."
+          }
+        }
+      },
+      "block_order": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    "faq": {
+      "type": "pf-faq",
+      "settings": {
+        "heading": "Godt at vide.",
+        "open_first": true,
+        "glass_blur": 26,
+        "glass_enabled": true,
+        "glass_flow_enabled": true,
+        "glass_flow_strength": 8,
+        "glass_opacity": 86
+      },
+      "blocks": {
+        "1": {
+          "type": "question",
+          "settings": {
+            "question": "Kan I hjælpe med et eksisterende træningsrum?",
+            "answer": "Fortæl os om det rum og det udstyr, I har i dag. Så kan vi tage en samtale om, hvad der kan bevares, og hvilke muligheder der er for at udvikle faciliteterne.",
+            "inquiry_kind": "none",
+            "action_label": "Kontakt PureFitness"
+          }
+        },
+        "2": {
+          "type": "question",
+          "settings": {
+            "question": "Hvordan vælger vi det rigtige udstyr?",
+            "answer": "Vi tager udgangspunkt i jeres brugere, lokaler og behov. Sammen ser vi på relevante muligheder inden for styrke, kondition og frie vægte.",
+            "inquiry_kind": "katalog",
+            "action_label": "Få et katalog"
+          }
+        },
+        "3": {
+          "type": "question",
+          "settings": {
+            "question": "Hvad omfatter service?",
+            "answer": "Vi tilbyder erhvervskunder service på træningsmaskiner efter aftale — også på udstyr, I allerede har. Tidspunkt og omfang aftales med jer. Eventuelle reparationer og reservedele afklares med jer.",
+            "inquiry_kind": "service",
+            "action_label": "Tal om service"
+          }
+        },
+        "4": {
+          "type": "question",
+          "settings": {
+            "question": "Hvad skal vi have klar til den første samtale?",
+            "answer": "Fortæl om jeres lokaler, brugere og ønsker. Oplys gerne, hvilket udstyr I allerede har, og hvad I ønsker at ændre.",
+            "inquiry_kind": "none",
+            "action_label": "Kontakt PureFitness"
+          }
+        }
+      },
+      "block_order": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    "contact-final": {
+      "type": "pf-contact-final",
+      "settings": {
+        "heading": "Fortæl os om jeres projekt.",
+        "description": "Har I et nyt træningsrum i tankerne, eller vil I udvikle det, I allerede har?\nFortæl os om jeres behov, så kan vi tage den første samtale.",
+        "glass_blur": 26,
+        "glass_enabled": true,
+        "glass_flow_enabled": true,
+        "glass_flow_strength": 8,
+        "glass_opacity": 86
+      },
+      "blocks": {
+        "contact": {
+          "type": "button",
+          "settings": {
+            "label": "Kontakt PureFitness",
+            "destination": "projekt",
+            "style": "primary",
+            "icon": "move-up-right",
+            "icon_size": 18
+          }
+        }
+      },
+      "block_order": [
+        "contact"
+      ]
+    },
+    "universe": {
+      "type": "pf-universe",
+      "settings": {
+        "hud_glass_blur": 20,
+        "menu_glass_blur": 30,
+        "drawer_glass_blur": 28
+      },
+      "blocks": {
+        "ui_navigation": {
+          "type": "ui_navigation",
+          "settings": {}
+        },
+        "ui_reading": {
+          "type": "ui_reading",
+          "settings": {}
+        },
+        "ui_equipment": {
+          "type": "ui_equipment",
+          "settings": {}
+        },
+        "ui_overview": {
+          "type": "ui_overview",
+          "settings": {}
+        },
+        "ui_accessibility": {
+          "type": "ui_accessibility",
+          "settings": {}
+        },
+        "environment_fitness": {
+          "type": "environment_fitness",
+          "settings": {}
+        },
+        "environment_hoteller": {
+          "type": "environment_hoteller",
+          "settings": {}
+        },
+        "environment_erhverv": {
+          "type": "environment_erhverv",
+          "settings": {}
+        },
+        "environment_foreninger": {
+          "type": "environment_foreninger",
+          "settings": {}
+        },
+        "environment_service": {
+          "type": "environment_service",
+          "settings": {}
+        },
+        "links_fitness": {
+          "type": "links_fitness",
+          "settings": {}
+        },
+        "links_hoteller": {
+          "type": "links_hoteller",
+          "settings": {}
+        },
+        "links_erhverv": {
+          "type": "links_erhverv",
+          "settings": {}
+        },
+        "links_foreninger": {
+          "type": "links_foreninger",
+          "settings": {}
+        },
+        "links_service": {
+          "type": "links_service",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "ui_navigation",
+        "ui_reading",
+        "ui_equipment",
+        "ui_overview",
+        "ui_accessibility",
+        "environment_fitness",
+        "environment_hoteller",
+        "environment_erhverv",
+        "environment_foreninger",
+        "environment_service",
+        "links_fitness",
+        "links_hoteller",
+        "links_erhverv",
+        "links_foreninger",
+        "links_service"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "intro",
+    "solutions",
+    "process",
+    "faq",
+    "contact-final",
+    "universe"
+  ]
+}

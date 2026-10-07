@@ -1,0 +1,264 @@
+{
+  "license_page": "https://polyhaven.com/license",
+  "assets": [
+    {
+      "filename": "concrete_wall_006_diff_1k.jpg",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_006/concrete_wall_006_diff_1k.jpg",
+      "asset_page": "https://polyhaven.com/a/concrete_wall_006",
+      "tile_width_m": 2,
+      "channel": "diff",
+      "bytes": 769415,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "concrete_wall_006_diff_1k.webp"
+    },
+    {
+      "filename": "concrete_wall_006_nor_gl_1k.jpg",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_006/concrete_wall_006_nor_gl_1k.jpg",
+      "asset_page": "https://polyhaven.com/a/concrete_wall_006",
+      "tile_width_m": 2,
+      "channel": "nor_gl",
+      "bytes": 1195078,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "concrete_wall_006_nor_gl_1k.webp"
+    },
+    {
+      "filename": "concrete_wall_006_rough_1k.jpg",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_006/concrete_wall_006_rough_1k.jpg",
+      "asset_page": "https://polyhaven.com/a/concrete_wall_006",
+      "tile_width_m": 2,
+      "channel": "rough",
+      "bytes": 255004,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "concrete_wall_006_rough_1k.webp"
+    },
+    {
+      "filename": "oak_veneer_01_diff_1k.jpg",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/oak_veneer_01/oak_veneer_01_diff_1k.jpg",
+      "asset_page": "https://polyhaven.com/a/oak_veneer_01",
+      "tile_width_m": 1.8,
+      "channel": "diff",
+      "bytes": 641756,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "oak_veneer_01_diff_1k.webp"
+    },
+    {
+      "filename": "oak_veneer_01_nor_gl_1k.jpg",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/oak_veneer_01/oak_veneer_01_nor_gl_1k.jpg",
+      "asset_page": "https://polyhaven.com/a/oak_veneer_01",
+      "tile_width_m": 1.8,
+      "channel": "nor_gl",
+      "bytes": 484844,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "oak_veneer_01_nor_gl_1k.webp"
+    },
+    {
+      "filename": "oak_veneer_01_rough_1k.jpg",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/oak_veneer_01/oak_veneer_01_rough_1k.jpg",
+      "asset_page": "https://polyhaven.com/a/oak_veneer_01",
+      "tile_width_m": 1.8,
+      "channel": "rough",
+      "bytes": 865194,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "oak_veneer_01_rough_1k.webp"
+    },
+    {
+      "filename": "asphalt_02_diff_1k.jpg",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_diff_1k.jpg",
+      "asset_page": "https://polyhaven.com/a/asphalt_02",
+      "tile_width_m": 3,
+      "channel": "diff",
+      "bytes": 731707,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "asphalt_02_diff_1k.webp"
+    },
+    {
+      "filename": "asphalt_02_nor_gl_1k.jpg",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_nor_gl_1k.jpg",
+      "asset_page": "https://polyhaven.com/a/asphalt_02",
+      "tile_width_m": 3,
+      "channel": "nor_gl",
+      "bytes": 1240122,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "asphalt_02_nor_gl_1k.webp"
+    },
+    {
+      "filename": "asphalt_02_rough_1k.jpg",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_rough_1k.jpg",
+      "asset_page": "https://polyhaven.com/a/asphalt_02",
+      "tile_width_m": 3,
+      "channel": "rough",
+      "bytes": 544032,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "asphalt_02_rough_1k.jpg"
+    },
+    {
+      "filename": "kloofendal_overcast_puresky_1k.hdr",
+      "source": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_overcast_puresky_1k.hdr",
+      "asset_page": "https://polyhaven.com/a/kloofendal_overcast_puresky",
+      "channel": "HDRI",
+      "bytes": 1174053,
+      "status": "downloaded",
+      "license": "CC0-1.0",
+      "served_file": "daylight.hdr"
+    },
+    {
+      "served_file": "rooitou-park.hdr",
+      "source": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/rooitou_park_1k.hdr",
+      "bytes": 1588504,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/rooitou_park"
+    },
+    {
+      "served_file": "rooitou-park.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/rooitou_park.jpg",
+      "bytes": 1946250,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/rooitou_park"
+    },
+    {
+      "served_file": "concrete_floor_02_diff_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_floor_02/concrete_floor_02_diff_1k.jpg",
+      "bytes": 473748,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/concrete_floor_02"
+    },
+    {
+      "served_file": "concrete_floor_02_nor_gl_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_floor_02/concrete_floor_02_nor_gl_1k.jpg",
+      "bytes": 181188,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/concrete_floor_02"
+    },
+    {
+      "served_file": "concrete_floor_02_rough_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_floor_02/concrete_floor_02_rough_1k.jpg",
+      "bytes": 157768,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/concrete_floor_02"
+    },
+    {
+      "served_file": "brown_leather_diff_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_albedo_1k.jpg",
+      "bytes": 228888,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/brown_leather"
+    },
+    {
+      "served_file": "brown_leather_nor_gl_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_nor_gl_1k.jpg",
+      "bytes": 383270,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/brown_leather"
+    },
+    {
+      "served_file": "brown_leather_rough_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_rough_1k.jpg",
+      "bytes": 467052,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/brown_leather"
+    },
+    {
+      "served_file": "rubber_tiles_diff_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rubber_tiles/rubber_tiles_diff_1k.jpg",
+      "bytes": 9450,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/rubber_tiles"
+    },
+    {
+      "served_file": "rubber_tiles_nor_gl_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rubber_tiles/rubber_tiles_nor_gl_1k.jpg",
+      "bytes": 55430,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/rubber_tiles"
+    },
+    {
+      "served_file": "rubber_tiles_rough_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rubber_tiles/rubber_tiles_rough_1k.jpg",
+      "bytes": 161494,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/rubber_tiles"
+    },
+    {
+      "served_file": "marble_01_diff_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/marble_01/marble_01_diff_1k.jpg",
+      "bytes": 90424,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/marble_01"
+    },
+    {
+      "served_file": "marble_01_nor_gl_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/marble_01/marble_01_nor_gl_1k.jpg",
+      "bytes": 15006,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/marble_01"
+    },
+    {
+      "served_file": "marble_01_rough_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/marble_01/marble_01_rough_1k.jpg",
+      "bytes": 19156,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/marble_01"
+    },
+    {
+      "served_file": "grass_ground_diff_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/grass_ground/grass_ground_diff_1k.jpg",
+      "bytes": 271038,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/grass_ground"
+    },
+    {
+      "served_file": "grass_ground_nor_gl_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/grass_ground/grass_ground_nor_gl_1k.jpg",
+      "bytes": 596298,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/grass_ground"
+    },
+    {
+      "served_file": "grass_ground_rough_1k.webp",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/grass_ground/grass_ground_rough_1k.jpg",
+      "bytes": 6164,
+      "license": "CC0-1.0",
+      "asset_page": "https://polyhaven.com/a/grass_ground"
+    },
+    {
+      "served_file": "sunset.hdr",
+      "source": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/rosendal_park_sunset_2k.hdr",
+      "asset_page": "https://polyhaven.com/a/rosendal_park_sunset",
+      "license": "CC0-1.0",
+      "bytes": 6581753
+    },
+    {
+      "served_file": "dark_marble_diff_1k.webp",
+      "source": "https://ambientcg.com/get?file=Marble016_1K-JPG.zip",
+      "asset_page": "https://ambientcg.com/a/Marble016",
+      "license": "CC0-1.0",
+      "license_page": "https://docs.ambientcg.com/license/",
+      "bytes": 369988
+    },
+    {
+      "served_file": "dark_marble_nor_gl_1k.webp",
+      "source": "https://ambientcg.com/get?file=Marble016_1K-JPG.zip",
+      "asset_page": "https://ambientcg.com/a/Marble016",
+      "license": "CC0-1.0",
+      "license_page": "https://docs.ambientcg.com/license/",
+      "bytes": 2696
+    },
+    {
+      "served_file": "dark_marble_rough_1k.webp",
+      "source": "https://ambientcg.com/get?file=Marble016_1K-JPG.zip",
+      "asset_page": "https://ambientcg.com/a/Marble016",
+      "license": "CC0-1.0",
+      "license_page": "https://docs.ambientcg.com/license/",
+      "bytes": 40262
+    }
+  ]
+}

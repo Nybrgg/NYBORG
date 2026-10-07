@@ -1,0 +1,79 @@
+<section class="private-strip page-width" aria-labelledby="ProjectTitle-{{ section.id }}">
+  <div>{% if section.settings.show_eyebrow %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}<h2 id="ProjectTitle-{{ section.id }}">{{ section.settings.heading | escape }}</h2><p>{{ section.settings.description | escape | newline_to_br }}</p></div>
+  {% if section.settings.show_button %}{% if section.settings.button_url != blank %}<a class="line-action" href="{{ section.settings.button_url | escape }}">{{ section.settings.button_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 21 %}</a>{% else %}<button type="button" class="line-action" data-pf-contact="{{ section.settings.inquiry_kind | escape }}">{{ section.settings.button_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 21 %}</button>{% endif %}{% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Purefitness · Projekt",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Overlinje",
+      "default": "Virksomheder & foreninger"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Vis overlinje",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Overskrift",
+      "default": "Jeres næste træningsmiljø."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Beskrivelse",
+      "default": "Fortæl os om jeres lokaler, brugere og ønsker. Vi hjælper med udstyr, indretning og service."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Vis kontaktknap",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Kontaktknappens tekst",
+      "default": "Tal om jeres projekt"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Kontaktknappens link (tom = formular)"
+    },
+    {
+      "type": "select",
+      "id": "inquiry_kind",
+      "label": "Kontaktknappens formular",
+      "options": [
+        {
+          "value": "projekt",
+          "label": "Projekt"
+        },
+        {
+          "value": "service",
+          "label": "Service"
+        },
+        {
+          "value": "katalog",
+          "label": "Katalog"
+        }
+      ],
+      "default": "projekt"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · Projekt"
+    }
+  ]
+}
+{% endschema %}

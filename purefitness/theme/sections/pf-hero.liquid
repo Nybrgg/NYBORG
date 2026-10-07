@@ -1,0 +1,471 @@
+{% liquid
+  assign universe_url = routes.root_url | append: '?view=univers'
+  if settings.universe_url_override != blank
+    assign universe_url = settings.universe_url_override
+  endif
+%}
+{% liquid
+  assign hero_has_heading = false
+  if section.settings.show_heading
+    if section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank
+      assign hero_has_heading = true
+    endif
+  endif
+%}
+{% if section.settings.show_section %}
+<section id="hero-{{ section.id }}" class="landing-hero pf-simple-hero pf-editable-section pf-editable-hero" data-pf-anchor="hero" {% if hero_has_heading %}aria-labelledby="hero-title-{{ section.id }}"{% endif %} style="--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;--pf-hero-position:{{ section.settings.text_position_desktop }}svh;--pf-hero-position-mobile:{{ section.settings.text_position_mobile }}svh;--pf-hero-position-mobile-short:{{ section.settings.text_position_mobile_short }}svh;--pf-image-x:{{ section.settings.image_position_x }}%;--pf-image-y:{{ section.settings.image_position_y }}%;--pf-image-x-mobile:{{ section.settings.image_position_x_mobile }}%;--pf-image-y-mobile:{{ section.settings.image_position_y_mobile }}%;">
+  {% if section.settings.show_image %}{% render 'pf-image', image: section.settings.image, mobile_image: section.settings.mobile_image, asset: 'premium-hero.webp', mobile_asset: 'premium-hero-mobile.webp', class: 'hero-architecture', alt: section.settings.image_alt, loading: 'eager', fetchpriority: 'high', sizes: '100vw', width: 1672, height: 941 %}{% endif %}
+  <div class="hero-content page-width">
+    {% if section.settings.show_eyebrow and section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+    {% if hero_has_heading %}<h1 id="hero-title-{{ section.id }}">{{ section.settings.heading_line_1 | escape }}{% if section.settings.heading_line_1 != blank and section.settings.heading_line_2 != blank %}<br>{% endif %}{% if section.settings.heading_line_2 != blank %}<span>{{ section.settings.heading_line_2 | escape }}</span>{% endif %}</h1>{% endif %}
+    {% if section.settings.show_description %}{% if section.settings.description_line_1 != blank or section.settings.description_line_2 != blank %}<p class="hero-description">{{ section.settings.description_line_1 | escape }}{% if section.settings.description_line_1 != blank and section.settings.description_line_2 != blank %}<br>{% endif %}{{ section.settings.description_line_2 | escape }}</p>{% endif %}{% endif %}
+    {% if section.settings.show_buttons and section.blocks.size > 0 %}<div class="hero-actions">{% for block in section.blocks %}
+  {% if block.settings.visible and block.settings.label != blank %}
+    {% liquid
+      assign action_url = block.settings.url
+      assign native_contact = false
+      if action_url == blank
+        case block.settings.destination
+          when 'projekt', 'katalog', 'service'
+            assign native_contact = true
+          when 'universe'
+            assign action_url = universe_url
+          when 'solutions'
+            assign action_url = '#loesninger'
+          when 'contact'
+            assign action_url = '#kontakt'
+        endcase
+      endif
+      assign action_class = 'primary-action'
+      if block.settings.style == 'secondary'
+        assign action_class = 'hero-secondary'
+      elsif block.settings.style == 'line'
+        assign action_class = 'line-action'
+      endif
+    %}
+    {% capture action_style %}{% if block.settings.background_color != blank %}--pf-button-bg:{{ block.settings.background_color }};{% endif %}{% if block.settings.text_color != blank %}--pf-button-text:{{ block.settings.text_color }};{% endif %}{% endcapture %}
+    {% if native_contact %}
+      <button type="button" class="{{ action_class }} pf-editor-action{% if block.settings.background_color != blank %} pf-custom-button-bg{% endif %}" data-pf-contact="{{ block.settings.destination | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}{% if block.settings.icon != 'none' %}{% render 'pf-icon', name: block.settings.icon, size: block.settings.icon_size %}{% endif %}</button>
+    {% elsif action_url != blank %}
+      <a class="{{ action_class }} pf-editor-action{% if block.settings.background_color != blank %} pf-custom-button-bg{% endif %}" href="{{ action_url | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}{% if block.settings.icon != 'none' %}{% render 'pf-icon', name: block.settings.icon, size: block.settings.icon_size %}{% endif %}</a>
+    {% endif %}
+  {% endif %}
+{% endfor %}</div>{% endif %}
+  </div>
+  {% if section.settings.show_bottom_text or section.settings.show_environments %}<div class="hero-bottom page-width">
+    {% if section.settings.show_bottom_text %}{% if section.settings.bottom_line_1 != blank or section.settings.bottom_line_2 != blank %}<p>{{ section.settings.bottom_line_1 | escape }} {{ section.settings.bottom_line_2 | escape }}</p>{% endif %}{% endif %}
+    {% if section.settings.show_environments and section.settings.environments != blank %}<p>{{ section.settings.environments | escape }}</p>{% endif %}
+  </div>{% endif %}
+</section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Purefitness · Hero",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Vis sektionen",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero-billede"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Hero-billede på mobil"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Billedbeskrivelse",
+      "default": "Illustrativt Purefitness-campus i klar dagsbelysning med skarp betonarkitektur, glasfacader og synligt træningsudstyr"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Overlinje",
+      "default": "Et univers af muligheder"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Overskrift, linje 1",
+      "default": "Stærke rum."
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Overskrift, linje 2",
+      "default": "Større muligheder."
+    },
+    {
+      "type": "text",
+      "id": "description_line_1",
+      "label": "Beskrivelse, linje 1",
+      "default": "Træningsudstyr, indretning og service."
+    },
+    {
+      "type": "text",
+      "id": "description_line_2",
+      "label": "Beskrivelse, linje 2",
+      "default": "Vi skaber rammerne for jeres ambitioner."
+    },
+    {
+      "type": "text",
+      "id": "bottom_line_1",
+      "label": "Bundtekst, første del",
+      "default": "Fra første idé."
+    },
+    {
+      "type": "text",
+      "id": "bottom_line_2",
+      "label": "Bundtekst, anden del",
+      "default": "Til hverdagen, der følger."
+    },
+    {
+      "type": "text",
+      "id": "environments",
+      "label": "Miljøer",
+      "default": "Fitnesscentre · Hoteller · Erhverv · Foreninger"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Vis hero-billedet",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Vis overlinjen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Vis overskriften",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Vis beskrivelsen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buttons",
+      "label": "Vis knapper",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_text",
+      "label": "Vis bundteksten",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_environments",
+      "label": "Vis målgrupper i bunden",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Farver og afstande"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Baggrund",
+      "default": "#202722"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Overskrifter og tekst",
+      "default": "#edf0e8"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Brødtekst",
+      "default": "#b2bbae"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent og knapper",
+      "default": "#d4ed72"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Afstand mellem knapper og bundtekst",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Afstand under bundteksten",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 27
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Afstand mellem knapper og bundtekst på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Afstand under bundteksten på mobil",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_position_desktop",
+      "label": "Tekstposition på desktop",
+      "min": 10,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "text_position_mobile",
+      "label": "Tekstposition på høj mobil",
+      "min": 10,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "text_position_mobile_short",
+      "label": "Tekstposition på lav mobil",
+      "min": 10,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "image_position_x",
+      "label": "Billedets vandrette fokus",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_position_y",
+      "label": "Billedets lodrette fokus",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_position_x_mobile",
+      "label": "Billedets vandrette fokus på mobil",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 61
+    },
+    {
+      "type": "range",
+      "id": "image_position_y_mobile",
+      "label": "Billedets lodrette fokus på mobil",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purefitness · Hero",
+      "blocks": [
+        {
+          "type": "button",
+          "settings": {
+            "label": "Oplev universet",
+            "destination": "universe",
+            "style": "primary",
+            "icon": "move-up-right",
+            "icon_size": 19
+          }
+        },
+        {
+          "type": "button",
+          "settings": {
+            "label": "Find jeres løsning",
+            "destination": "solutions",
+            "style": "secondary",
+            "icon": "arrow-down",
+            "icon_size": 15
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Knap eller link",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "visible",
+          "label": "Vis knappen",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Knaptekst",
+          "default": "Oplev universet"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Egen destination (har førsteprioritet)"
+        },
+        {
+          "type": "select",
+          "id": "destination",
+          "label": "Handling uden egen destination",
+          "options": [
+            {
+              "value": "universe",
+              "label": "3D-universet"
+            },
+            {
+              "value": "solutions",
+              "label": "Løsninger på forsiden"
+            },
+            {
+              "value": "contact",
+              "label": "Kontakt på forsiden"
+            },
+            {
+              "value": "projekt",
+              "label": "Projektformular"
+            },
+            {
+              "value": "katalog",
+              "label": "Katalogformular"
+            },
+            {
+              "value": "service",
+              "label": "Serviceformular"
+            }
+          ],
+          "default": "universe"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Udseende",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Fyldt knap"
+            },
+            {
+              "value": "secondary",
+              "label": "Understreget link"
+            },
+            {
+              "value": "line",
+              "label": "Enkelt tekstlink"
+            }
+          ],
+          "default": "primary"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Ikon",
+          "options": [
+            {
+              "value": "move-up-right",
+              "label": "Skrå pil"
+            },
+            {
+              "value": "arrow-up-right",
+              "label": "Pil op til højre"
+            },
+            {
+              "value": "arrow-down",
+              "label": "Pil ned"
+            },
+            {
+              "value": "arrow-right",
+              "label": "Pil mod højre"
+            },
+            {
+              "value": "none",
+              "label": "Intet ikon"
+            }
+          ],
+          "default": "move-up-right"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Egen knapbaggrund (valgfrit)"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Egen knaptekstfarve (valgfrit)"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Ikonstørrelse",
+          "min": 12,
+          "max": 28,
+          "step": 1,
+          "unit": "px",
+          "default": 19
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8
+}
+{% endschema %}

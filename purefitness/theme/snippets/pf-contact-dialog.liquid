@@ -1,0 +1,45 @@
+{% doc %}
+Renders an independently editable native Shopify contact drawer.
+@param {object} dialog_settings - Settings belonging to this contact section.
+@param {string} dialog_kind - Inquiry kind: projekt, service or katalog.
+@param {string} dialog_id - Unique Shopify section ID.
+@param {block[]} [dialog_blocks] - Optional additional contact fields.
+{% enddoc %}
+{% liquid
+  assign contact_form_id = 'pf-native-contact-' | append: dialog_id
+  assign contact_flow_enabled = false
+  if dialog_settings.glass_enabled and dialog_settings.glass_flow_enabled
+    assign contact_flow_enabled = true
+  endif
+%}
+<dialog class="pf-drawer experience-sheet contact-sheet" data-pf-contact-dialog="{{ dialog_kind | escape }}" data-pf-contact-section="{{ dialog_id | escape }}" data-pf-glass="{{ dialog_settings.glass_enabled }}" data-pf-glass-flow="{{ contact_flow_enabled }}" style="--pf-dialog-bg:{{ dialog_settings.dialog_background }};--pf-dialog-ink:{{ dialog_settings.dialog_text }};--pf-dialog-muted:{{ dialog_settings.dialog_muted }};--pf-dialog-button-bg:{{ dialog_settings.button_background }};--pf-dialog-button-ink:{{ dialog_settings.button_text }};--pf-glass-opacity:{{ dialog_settings.glass_opacity }}%;--pf-glass-blur:{{ dialog_settings.glass_blur }}px;--pf-flow-amplitude:{{ dialog_settings.glass_flow_strength }}px;--pf-flow-enabled:{% if contact_flow_enabled %}1{% else %}0{% endif %}" {% if request.design_mode %}data-pf-contact-editor{% endif %} aria-labelledby="pf-contact-title-{{ dialog_id }}" {% if dialog_settings.show_intro %}aria-describedby="pf-contact-intro-{{ dialog_id }}"{% endif %}>
+  <div class="sheet-top"><span>{% if dialog_settings.show_brand %}{{ dialog_settings.brand_text | escape }}{% endif %}</span><button type="button" class="sheet-close" data-pf-close aria-label="{{ dialog_settings.close_label | escape }}">{% render 'pf-icon', name: 'close', size: 24 %}</button></div>
+  <div class="sheet-body">
+    {% if dialog_settings.show_eyebrow %}<p class="panel-eyebrow">{{ dialog_settings.eyebrow | escape }}</p>{% endif %}
+    <h2 id="pf-contact-title-{{ dialog_id }}" class="panel-title" data-pf-contact-title>{{ dialog_settings.heading | escape }}</h2>
+    <p id="pf-contact-intro-{{ dialog_id }}" class="panel-intro" data-pf-contact-intro {% unless dialog_settings.show_intro %}hidden{% endunless %}>{{ dialog_settings.intro | escape | newline_to_br }}</p>
+    {% form 'contact', id: contact_form_id, class: 'inquiry-form', return_to: 'back' %}
+      {% if form.posted_successfully? %}<p class="pf-form-success" role="status" data-pf-contact-success>{{ dialog_settings.success_message | escape }}</p>{% endif %}
+      {% if form.errors %}<div class="pf-form-errors" role="alert" data-pf-contact-errors>{% if dialog_settings.error_heading != blank %}<p>{{ dialog_settings.error_heading | escape }}</p>{% endif %}{{ form.errors | default_errors }}</div>{% endif %}
+      <input type="hidden" name="contact[Henvendelse]" value="{{ dialog_settings.inquiry_subject | escape }}" data-pf-inquiry-kind="{{ dialog_kind | escape }}">
+      {% if dialog_settings.show_company %}<label for="pf-contact-company-{{ dialog_id }}">{{ dialog_settings.company_label | escape }}<input id="pf-contact-company-{{ dialog_id }}" style="--pf-field-bg:{{ dialog_settings.company_background }};--pf-field-ink:{{ dialog_settings.company_text }}" name="contact[Virksomhed]" autocomplete="organization" {% if dialog_settings.company_required %}required{% endif %} maxlength="140" placeholder="{{ dialog_settings.company_placeholder | escape }}" value="{{ form.Virksomhed | escape }}"></label>{% endif %}
+      <div class="inquiry-pair">
+        {% if dialog_settings.show_name %}<label for="pf-contact-name-{{ dialog_id }}">{{ dialog_settings.name_label | escape }}<input id="pf-contact-name-{{ dialog_id }}" style="--pf-field-bg:{{ dialog_settings.name_background }};--pf-field-ink:{{ dialog_settings.name_text }}" name="contact[name]" autocomplete="name" {% if dialog_settings.name_required %}required{% endif %} maxlength="100" placeholder="{{ dialog_settings.name_placeholder | escape }}" value="{{ form.name | default: customer.name | escape }}"></label>{% endif %}
+        <label for="pf-contact-email-{{ dialog_id }}">{{ dialog_settings.email_label | escape }}<input id="pf-contact-email-{{ dialog_id }}" style="--pf-field-bg:{{ dialog_settings.email_background }};--pf-field-ink:{{ dialog_settings.email_text }}" name="contact[email]" type="email" autocomplete="email" autocapitalize="off" required maxlength="180" placeholder="{{ dialog_settings.email_placeholder | escape }}" value="{{ form.email | default: customer.email | escape }}" {% if form.errors contains 'email' %}aria-invalid="true"{% endif %}></label>
+      </div>
+      {% if dialog_settings.show_phone %}<label for="pf-contact-phone-{{ dialog_id }}">{{ dialog_settings.phone_label | escape }}<input id="pf-contact-phone-{{ dialog_id }}" style="--pf-field-bg:{{ dialog_settings.phone_background }};--pf-field-ink:{{ dialog_settings.phone_text }}" name="contact[phone]" type="tel" autocomplete="tel" {% if dialog_settings.phone_required %}required{% endif %} placeholder="{{ dialog_settings.phone_placeholder | escape }}" value="{{ customer.phone | escape }}"></label>{% endif %}
+      <label for="pf-contact-body-{{ dialog_id }}"><span data-pf-message-label>{{ dialog_settings.message_label | escape }}</span><textarea id="pf-contact-body-{{ dialog_id }}" style="--pf-field-bg:{{ dialog_settings.message_background }};--pf-field-ink:{{ dialog_settings.message_text }}" name="contact[body]" rows="{{ dialog_settings.message_rows }}" {% if dialog_settings.message_required %}required{% endif %} maxlength="{{ dialog_settings.message_limit }}" placeholder="{{ dialog_settings.message_placeholder | escape }}">{{ form.body | escape }}</textarea></label>
+      {% for block in dialog_blocks %}
+        {% if block.settings.visible %}
+          {% assign field_key = block.settings.label | handleize | append: '-' | append: block.id %}
+          <label for="pf-contact-field-{{ dialog_id }}-{{ block.id }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}
+            {% if block.settings.field_type == 'textarea' %}<textarea id="pf-contact-field-{{ dialog_id }}-{{ block.id }}" style="--pf-field-bg:{{ block.settings.field_background }};--pf-field-ink:{{ block.settings.field_text }}" name="contact[{{ field_key }}]" rows="3" placeholder="{{ block.settings.placeholder | escape }}" {% if block.settings.required %}required{% endif %}></textarea>{% else %}<input id="pf-contact-field-{{ dialog_id }}-{{ block.id }}" style="--pf-field-bg:{{ block.settings.field_background }};--pf-field-ink:{{ block.settings.field_text }}" name="contact[{{ field_key }}]" type="{{ block.settings.field_type | escape }}" placeholder="{{ block.settings.placeholder | escape }}" {% if block.settings.required %}required{% endif %}>{% endif %}
+          </label>
+        {% endif %}
+      {% endfor %}
+      <button class="solid-action" type="submit">{{ dialog_settings.submit_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 18 %}</button>
+      {% if dialog_settings.show_note %}<p class="email-note">{{ dialog_settings.note | escape | newline_to_br }}</p>{% endif %}
+    {% endform %}
+    {% if dialog_settings.show_direct_contact and dialog_settings.direct_email != blank %}<a class="contact-direct" href="mailto:{{ dialog_settings.direct_email | escape }}">{% if dialog_settings.direct_label != blank %}{{ dialog_settings.direct_label | escape }}{% else %}{{ dialog_settings.direct_email | escape }}{% endif %}{% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</a>{% endif %}
+  </div>
+</dialog>
