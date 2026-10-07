@@ -3,8 +3,6 @@
   if settings.universe_url_override != blank
     assign universe_url = settings.universe_url_override
   endif
-%}
-{% liquid
   assign hero_has_heading = false
   if section.settings.show_heading
     if section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank
@@ -13,49 +11,26 @@
   endif
 %}
 {% if section.settings.show_section %}
-<section id="hero-{{ section.id }}" class="landing-hero pf-simple-hero pf-editable-section pf-editable-hero" data-pf-anchor="hero" {% if hero_has_heading %}aria-labelledby="hero-title-{{ section.id }}"{% endif %} style="--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;--pf-hero-position:{{ section.settings.text_position_desktop }}svh;--pf-hero-position-mobile:{{ section.settings.text_position_mobile }}svh;--pf-hero-position-mobile-short:{{ section.settings.text_position_mobile_short }}svh;--pf-image-x:{{ section.settings.image_position_x }}%;--pf-image-y:{{ section.settings.image_position_y }}%;--pf-image-x-mobile:{{ section.settings.image_position_x_mobile }}%;--pf-image-y-mobile:{{ section.settings.image_position_y_mobile }}%;">
-  {% if section.settings.show_image %}{% render 'pf-image', image: section.settings.image, mobile_image: section.settings.mobile_image, asset: 'premium-hero.webp', mobile_asset: 'premium-hero-mobile.webp', class: 'hero-architecture', alt: section.settings.image_alt, loading: 'eager', fetchpriority: 'high', sizes: '100vw', width: 1672, height: 941 %}{% endif %}
-  <div class="hero-content page-width">
-    {% if section.settings.show_eyebrow and section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
-    {% if hero_has_heading %}<h1 id="hero-title-{{ section.id }}">{{ section.settings.heading_line_1 | escape }}{% if section.settings.heading_line_1 != blank and section.settings.heading_line_2 != blank %}<br>{% endif %}{% if section.settings.heading_line_2 != blank %}<span>{{ section.settings.heading_line_2 | escape }}</span>{% endif %}</h1>{% endif %}
-    {% if section.settings.show_description %}{% if section.settings.description_line_1 != blank or section.settings.description_line_2 != blank %}<p class="hero-description">{{ section.settings.description_line_1 | escape }}{% if section.settings.description_line_1 != blank and section.settings.description_line_2 != blank %}<br>{% endif %}{{ section.settings.description_line_2 | escape }}</p>{% endif %}{% endif %}
-    {% if section.settings.show_buttons and section.blocks.size > 0 %}<div class="hero-actions">{% for block in section.blocks %}
-  {% if block.settings.visible and block.settings.label != blank %}
-    {% liquid
-      assign action_url = block.settings.url
-      assign native_contact = false
-      if action_url == blank
-        case block.settings.destination
-          when 'projekt', 'katalog', 'service'
-            assign native_contact = true
-          when 'universe'
-            assign action_url = universe_url
-          when 'solutions'
-            assign action_url = '#loesninger'
-          when 'contact'
-            assign action_url = '#kontakt'
-        endcase
-      endif
-      assign action_class = 'primary-action'
-      if block.settings.style == 'secondary'
-        assign action_class = 'hero-secondary'
-      elsif block.settings.style == 'line'
-        assign action_class = 'line-action'
-      endif
-    %}
-    {% capture action_style %}{% if block.settings.background_color != blank %}--pf-button-bg:{{ block.settings.background_color }};{% endif %}{% if block.settings.text_color != blank %}--pf-button-text:{{ block.settings.text_color }};{% endif %}{% endcapture %}
-    {% if native_contact %}
-      <button type="button" class="{{ action_class }} pf-editor-action{% if block.settings.background_color != blank %} pf-custom-button-bg{% endif %}" data-pf-contact="{{ block.settings.destination | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}{% if block.settings.icon != 'none' %}{% render 'pf-icon', name: block.settings.icon, size: block.settings.icon_size %}{% endif %}</button>
-    {% elsif action_url != blank %}
-      <a class="{{ action_class }} pf-editor-action{% if block.settings.background_color != blank %} pf-custom-button-bg{% endif %}" href="{{ action_url | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}{% if block.settings.icon != 'none' %}{% render 'pf-icon', name: block.settings.icon, size: block.settings.icon_size %}{% endif %}</a>
-    {% endif %}
+<section id="hero-{{ section.id }}" class="pf-hero landing-hero pf-simple-hero" data-pf-anchor="hero" {% if hero_has_heading %}aria-labelledby="hero-title-{{ section.id }}"{% endif %} style="--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;--pf-image-x:{{ section.settings.image_position_x }}%;--pf-image-y:{{ section.settings.image_position_y }}%;--pf-image-x-mobile:{{ section.settings.image_position_x_mobile }}%;--pf-image-y-mobile:{{ section.settings.image_position_y_mobile }}%;">
+  {% if section.settings.show_image %}
+    <div class="pf-hero__media" aria-hidden="{% if section.settings.image_alt == blank %}true{% else %}false{% endif %}">
+      {% render 'pf-image', image: section.settings.image, mobile_image: section.settings.mobile_image, asset: 'premium-hero.webp', mobile_asset: 'premium-hero-mobile.webp', class: 'pf-hero__image', alt: section.settings.image_alt, loading: 'eager', fetchpriority: 'high', sizes: '100vw', width: 1672, height: 941 %}
+    </div>
   {% endif %}
-{% endfor %}</div>{% endif %}
+  <div class="pf-hero__content pf-container">
+    <div class="pf-hero__copy" data-pf-reveal>
+      {% if section.settings.show_eyebrow and section.settings.eyebrow != blank %}<p class="pf-eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+      {% if hero_has_heading %}<h1 id="hero-title-{{ section.id }}" class="pf-hero__title">{% if section.settings.heading_line_1 != blank %}<span class="pf-hero__line">{{ section.settings.heading_line_1 | escape }}</span>{% endif %}{% if section.settings.heading_line_2 != blank %}<span class="pf-hero__line pf-hero__line--accent">{{ section.settings.heading_line_2 | escape }}</span>{% endif %}</h1>{% endif %}
+      {% if section.settings.show_description %}{% if section.settings.description_line_1 != blank or section.settings.description_line_2 != blank %}<p class="pf-hero__lead">{{ section.settings.description_line_1 | escape }} {{ section.settings.description_line_2 | escape }}</p>{% endif %}{% endif %}
+      {% if section.settings.show_buttons and section.blocks.size > 0 %}<div class="pf-actions">{% for block in section.blocks %}{% render 'pf-action-button', block: block, universe_url: universe_url %}{% endfor %}</div>{% endif %}
+    </div>
+    {% if section.settings.show_environments and section.settings.environments != blank %}
+      {% assign environments = section.settings.environments | split: '·' %}
+      <nav class="pf-hero__environments" aria-label="{{ section.settings.environments_label | default: 'Miljøer' | escape }}" data-pf-reveal>
+        {% for environment in environments %}<a href="#loesninger" data-pf-solution-target="{{ forloop.index0 }}">{{ environment | strip | escape }}</a>{% endfor %}
+      </nav>
+    {% endif %}
   </div>
-  {% if section.settings.show_bottom_text or section.settings.show_environments %}<div class="hero-bottom page-width">
-    {% if section.settings.show_bottom_text %}{% if section.settings.bottom_line_1 != blank or section.settings.bottom_line_2 != blank %}<p>{{ section.settings.bottom_line_1 | escape }} {{ section.settings.bottom_line_2 | escape }}</p>{% endif %}{% endif %}
-    {% if section.settings.show_environments and section.settings.environments != blank %}<p>{{ section.settings.environments | escape }}</p>{% endif %}
-  </div>{% endif %}
 </section>
 {% endif %}
 
@@ -131,7 +106,14 @@
       "type": "text",
       "id": "environments",
       "label": "Miljøer",
-      "default": "Fitnesscentre · Hoteller · Erhverv · Foreninger"
+      "default": "Fitnesscentre · Hoteller · Erhverv · Foreninger",
+      "info": "Adskil med ·. Vises som genveje nederst i heroen."
+    },
+    {
+      "type": "text",
+      "id": "environments_label",
+      "label": "Skjult navn på miljølisten (skærmlæsere)",
+      "default": "Miljøer"
     },
     {
       "type": "checkbox",
@@ -167,7 +149,8 @@
       "type": "checkbox",
       "id": "show_bottom_text",
       "label": "Vis bundteksten",
-      "default": true
+      "default": false,
+      "info": "Bruges ikke i det nye layout."
     },
     {
       "type": "checkbox",

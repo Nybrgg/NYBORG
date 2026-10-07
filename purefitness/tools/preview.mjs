@@ -87,7 +87,7 @@ engine.registerTag('form', class extends Tag {
   constructor(token, remain, liquid) {
     super(token, remain, liquid);
     this.args = token.args;
-    this.hash = new Hash(token.args.replace(/^\s*'[^']*'\s*,?/, '').replace(/^\s*[a-z_.]+\s*,?/, ''));
+    this.hash = new Hash(token.args.replace(/^\s*'[^']*'\s*,?/, '').replace(/^\s*[a-z_.]+\s*(,|$)(?!\s*:)/, ''));
     this.templates = [];
     const stream = liquid.parser.parseStream(remain).on('tag:endform', () => stream.stop()).on('template', tpl => this.templates.push(tpl)).on('end', () => { throw new Error('form not closed'); });
     stream.start();

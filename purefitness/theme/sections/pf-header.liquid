@@ -18,40 +18,55 @@
   if universe == blank
     assign universe = routes.root_url | append: '?view=univers'
   endif
+  assign show_cta = false
+  if section.settings.show_cta and section.settings.cta_label != blank
+    assign show_cta = true
+  endif
 %}
-<header class="landing-header{% if simplified_home %} pf-simple-header{% endif %}{% unless simplified_home %} is-scrolled{% endunless %}" data-pf-header data-pf-glass="{{ section.settings.header_glass_enabled }}" data-pf-glass-flow="{{ header_flow_enabled }}"{% unless simplified_home %} data-pf-solid{% endunless %} style="--pf-header-text:{{ section.settings.text_color }};--pf-header-background:{{ section.settings.background_color }};--pf-header-height:{{ section.settings.height_desktop }}px;--pf-header-mobile-height:{{ section.settings.height_mobile }}px;--pf-glass-opacity:{{ section.settings.header_glass_opacity }}%;--pf-glass-blur:{{ section.settings.header_glass_blur }}px;--pf-flow-amplitude:{{ section.settings.header_glass_flow_strength }}px;--pf-flow-enabled:{% if header_flow_enabled %}1{% else %}0{% endif %}">
-  <a class="brand" href="{{ home }}" aria-label="{{ section.settings.home_label | escape }}">{% if logo != blank %}{{ logo | image_url: width: 500 | image_tag: class: 'pf-logo', alt: brand }}{% else %}{{ brand | escape }}<span class="brand-dot" aria-hidden="true"></span>{% endif %}</a>
-  <nav class="landing-nav" aria-label="{{ section.settings.nav_label | escape }}">
-    {% if section.settings.menu != blank %}
-      {% for link in section.settings.menu.links %}{% assign lower_title = link.title | downcase %}{% unless lower_title contains 'webshop' %}<a href="{{ link.url }}">{{ link.title | escape }}</a>{% endunless %}{% endfor %}
-    {% else %}
-      {% for block in section.blocks %}
-        {% if block.settings.show_desktop %}
-          {% if block.settings.fallback == 'univers' %}{% assign default_url = universe %}{% elsif block.settings.fallback == 'home' %}{% assign default_url = routes.root_url %}{% else %}{% assign default_url = routes.root_url | append: '#' | append: block.settings.fallback %}{% endif %}
-          <a href="{{ block.settings.url | default: default_url }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-  </nav>
-  {% if section.settings.show_menu %}<div class="landing-header-actions"><button class="landing-menu" data-pf-menu-open aria-label="{{ section.settings.open_menu_label | escape }}" aria-expanded="false">{% render 'pf-icon', name: 'menu', size: 24 %}</button></div>{% endif %}
-</header>
-<dialog class="pf-drawer experience-sheet pf-menu-drawer" data-pf-menu data-pf-glass="{{ section.settings.menu_glass_enabled }}" data-pf-glass-flow="{{ menu_flow_enabled }}" aria-label="{{ section.settings.menu_heading | escape }}" style="--pf-menu-background:{{ section.settings.menu_background }};--pf-menu-text:{{ section.settings.menu_text }};--pf-glass-opacity:{{ section.settings.menu_glass_opacity }}%;--pf-glass-blur:{{ section.settings.menu_glass_blur }}px;--pf-flow-amplitude:{{ section.settings.menu_glass_flow_strength }}px;--pf-flow-enabled:{% if menu_flow_enabled %}1{% else %}0{% endif %}">
-  <div class="sheet-top"><span>{{ section.settings.menu_brand | escape }}</span><button class="sheet-close" data-pf-close aria-label="{{ section.settings.close_menu_label | escape }}">{% render 'pf-icon', name: 'close', size: 24 %}</button></div>
-  <div class="sheet-body"><h2 class="panel-title">{{ section.settings.menu_heading | escape }}</h2>
-    <nav class="landing-mobile-nav" aria-label="{{ section.settings.mobile_nav_label | escape }}">
-      {% if section.settings.mobile_menu != blank %}
-        {% for link in section.settings.mobile_menu.links %}{% assign lower_title = link.title | downcase %}{% unless lower_title contains 'webshop' %}<a href="{{ link.url }}">{{ link.title | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 22 %}</a>{% endunless %}{% endfor %}
+<header class="pf-header landing-header{% if simplified_home %} pf-header--overlay{% endif %}{% unless simplified_home %} is-scrolled{% endunless %}" data-pf-header data-pf-glass="{{ section.settings.header_glass_enabled }}" data-pf-glass-flow="{{ header_flow_enabled }}"{% unless simplified_home %} data-pf-solid{% endunless %} style="--pf-header-text:{{ section.settings.text_color }};--pf-header-background:{{ section.settings.background_color }};--pf-header-height:{{ section.settings.height_desktop }}px;--pf-header-mobile-height:{{ section.settings.height_mobile }}px;--pf-glass-opacity:{{ section.settings.header_glass_opacity }}%;--pf-glass-blur:{{ section.settings.header_glass_blur }}px;--pf-flow-amplitude:{{ section.settings.header_glass_flow_strength }}px;--pf-flow-enabled:{% if header_flow_enabled %}1{% else %}0{% endif %}">
+  <div class="pf-header__bar">
+    <a class="pf-brand brand" href="{{ home }}" aria-label="{{ section.settings.home_label | escape }}">{% if logo != blank %}{{ logo | image_url: width: 500 | image_tag: class: 'pf-logo', alt: brand }}{% else %}<span>{{ brand | escape }}</span><span class="brand-dot" aria-hidden="true"></span>{% endif %}</a>
+    <nav class="pf-header__nav landing-nav" aria-label="{{ section.settings.nav_label | escape }}">
+      {% if section.settings.menu != blank %}
+        {% for link in section.settings.menu.links %}{% assign lower_title = link.title | downcase %}{% unless lower_title contains 'webshop' %}<a href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>{% endunless %}{% endfor %}
       {% else %}
         {% for block in section.blocks %}
-          {% if block.settings.show_mobile %}
+          {% if block.settings.show_desktop %}
+            {% if show_cta and block.settings.fallback == 'kontakt' %}{% continue %}{% endif %}
             {% if block.settings.fallback == 'univers' %}{% assign default_url = universe %}{% elsif block.settings.fallback == 'home' %}{% assign default_url = routes.root_url %}{% else %}{% assign default_url = routes.root_url | append: '#' | append: block.settings.fallback %}{% endif %}
-            <a href="{{ block.settings.menu_url | default: default_url }}" {{ block.shopify_attributes }}>{{ block.settings.menu_label | escape }}{% render 'pf-icon', name: 'arrow-up-right', size: 22 %}</a>
+            <a href="{{ block.settings.url | default: default_url }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>
           {% endif %}
         {% endfor %}
       {% endif %}
     </nav>
+    <div class="pf-header__actions landing-header-actions">
+      {% if section.settings.show_universe_link %}<a class="pf-header__universe" href="{{ universe }}">{% render 'pf-icon', name: 'move-up-right', size: 16 %}<span>{{ section.settings.universe_label | escape }}</span></a>{% endif %}
+      {% if show_cta %}<button type="button" class="pf-button pf-button--primary pf-button--compact" data-pf-contact="{{ section.settings.cta_kind | default: 'projekt' }}"><span>{{ section.settings.cta_label | escape }}</span></button>{% endif %}
+      {% if section.settings.show_menu %}<button class="pf-header__menu landing-menu" data-pf-menu-open aria-label="{{ section.settings.open_menu_label | escape }}" aria-expanded="false">{% render 'pf-icon', name: 'menu', size: 22 %}</button>{% endif %}
+    </div>
+  </div>
+</header>
+<dialog class="pf-drawer pf-menu-drawer" data-pf-menu data-pf-glass="{{ section.settings.menu_glass_enabled }}" data-pf-glass-flow="{{ menu_flow_enabled }}" aria-label="{{ section.settings.menu_heading | escape }}" style="--pf-menu-background:{{ section.settings.menu_background }};--pf-menu-text:{{ section.settings.menu_text }};--pf-glass-opacity:{{ section.settings.menu_glass_opacity }}%;--pf-glass-blur:{{ section.settings.menu_glass_blur }}px;--pf-flow-amplitude:{{ section.settings.menu_glass_flow_strength }}px;--pf-flow-enabled:{% if menu_flow_enabled %}1{% else %}0{% endif %}">
+  <div class="sheet-top"><span>{{ section.settings.menu_brand | escape }}</span><button class="sheet-close" data-pf-close aria-label="{{ section.settings.close_menu_label | escape }}">{% render 'pf-icon', name: 'close', size: 22 %}</button></div>
+  <div class="sheet-body">
+    <h2 class="panel-title">{{ section.settings.menu_heading | escape }}</h2>
+    <nav class="pf-menu-list landing-mobile-nav" aria-label="{{ section.settings.mobile_nav_label | escape }}">
+      {% if section.settings.mobile_menu != blank %}
+        {% for link in section.settings.mobile_menu.links %}{% assign lower_title = link.title | downcase %}{% unless lower_title contains 'webshop' %}<a href="{{ link.url }}"><span>{{ link.title | escape }}</span>{% render 'pf-icon', name: 'arrow-up-right', size: 20 %}</a>{% endunless %}{% endfor %}
+      {% else %}
+        {% for block in section.blocks %}
+          {% if block.settings.show_mobile %}
+            {% if show_cta and block.settings.fallback == 'kontakt' %}{% continue %}{% endif %}
+            {% if block.settings.fallback == 'univers' %}{% assign default_url = universe %}{% elsif block.settings.fallback == 'home' %}{% assign default_url = routes.root_url %}{% else %}{% assign default_url = routes.root_url | append: '#' | append: block.settings.fallback %}{% endif %}
+            <a href="{{ block.settings.menu_url | default: default_url }}" {{ block.shopify_attributes }}><span>{{ block.settings.menu_label | escape }}</span>{% render 'pf-icon', name: 'arrow-up-right', size: 20 %}</a>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </nav>
+    {% if show_cta %}<button type="button" class="pf-button pf-button--primary pf-menu-cta" data-pf-contact="{{ section.settings.cta_kind | default: 'projekt' }}"><span>{{ section.settings.cta_label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'move-up-right', size: 18 %}</span></button>{% endif %}
   </div>
 </dialog>
+
 {% schema %}
 {
   "name": "Purefitness · Navigation",
@@ -98,6 +113,50 @@
       "id": "show_menu",
       "label": "Vis menuknap",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Vis kontaktknap i navigationen",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Tekst på kontaktknap",
+      "default": "Kontakt"
+    },
+    {
+      "type": "select",
+      "id": "cta_kind",
+      "label": "Kontaktknappen åbner",
+      "options": [
+        {
+          "value": "projekt",
+          "label": "Nyt projekt"
+        },
+        {
+          "value": "service",
+          "label": "Service"
+        },
+        {
+          "value": "katalog",
+          "label": "Katalog"
+        }
+      ],
+      "default": "projekt"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_universe_link",
+      "label": "Vis genvej til 3D-universet",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "universe_label",
+      "label": "Tekst på genvej til 3D-universet",
+      "default": "3D-univers"
     },
     {
       "type": "text",

@@ -170,7 +170,6 @@ export function business(b) {
   // Acoustic ceiling rafts and flush linear lights.
   for (let x = -7.5; x <= 7.5; x += 5) {
     b.box('acousticPanel', 4.2, 0.05, 11.5, x, 2.92, -7.2, 0, { cast: false });
-    b.box('felt', 4.22, 0.012, 11.52, x, 2.89, -7.2, 0, { cast: false });
   }
   for (const z of [-3, -7, -11]) lightRow(b, lights, { x0: -9.5, x1: 9.5, y: 3.08, z, segment: 2.4, gap: 0.6, emitter: 'ledCool', color: 0xf3f4ff, intensity: 6 });
   // Glass partition to the office corridor (right) with oak frame.

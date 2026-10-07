@@ -1,0 +1,36 @@
+{% doc %}
+Renders a configurable call-to-action block (hero and final contact sections).
+@param {block} block - Button block with label, url, destination, style, icon and colours.
+@param {string} universe_url - URL of the 3D universe.
+{% enddoc %}
+{%- if block.settings.visible and block.settings.label != blank -%}
+  {%- liquid
+    assign action_url = block.settings.url
+    assign native_contact = false
+    if action_url == blank
+      case block.settings.destination
+        when 'projekt', 'katalog', 'service'
+          assign native_contact = true
+        when 'universe'
+          assign action_url = universe_url
+        when 'solutions'
+          assign action_url = '#loesninger'
+        when 'contact'
+          assign action_url = '#kontakt'
+      endcase
+    endif
+    assign action_class = 'pf-button pf-button--primary'
+    if block.settings.style == 'secondary'
+      assign action_class = 'pf-button pf-button--glass'
+    elsif block.settings.style == 'line'
+      assign action_class = 'pf-link'
+    endif
+  -%}
+  {%- capture action_style -%}{% if block.settings.background_color != blank %}--pf-button-bg:{{ block.settings.background_color }};{% endif %}{% if block.settings.text_color != blank %}--pf-button-text:{{ block.settings.text_color }};{% endif %}{%- endcapture -%}
+  {%- capture action_icon -%}{% if block.settings.icon != 'none' %}<span class="pf-button__icon">{% render 'pf-icon', name: block.settings.icon, size: block.settings.icon_size %}</span>{% endif %}{%- endcapture -%}
+  {%- if native_contact -%}
+    <button type="button" class="{{ action_class }}" data-pf-contact="{{ block.settings.destination | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}><span>{{ block.settings.label | escape }}</span>{{ action_icon }}</button>
+  {%- elsif action_url != blank -%}
+    <a class="{{ action_class }}" href="{{ action_url | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}><span>{{ block.settings.label | escape }}</span>{{ action_icon }}</a>
+  {%- endif -%}
+{%- endif -%}

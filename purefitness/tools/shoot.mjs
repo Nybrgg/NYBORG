@@ -16,6 +16,12 @@ for (const vp of viewports) {
     await page.goto(base + route, { waitUntil: 'load' });
     await page.waitForTimeout(Number(process.env.WAIT || 800));
     if (scroll) { await page.evaluate(y => window.scrollTo(0, y), Number(scroll)); await page.waitForTimeout(Number(process.env.WAIT || 800)); }
+    if (process.env.FULL === '1') {
+      await page.evaluate(async () => {
+        for (let y = 0; y < document.documentElement.scrollHeight; y += 500) { window.scrollTo(0, y); await new Promise(r => setTimeout(r, 120)); }
+        window.scrollTo(0, 0); await new Promise(r => setTimeout(r, 900));
+      });
+    }
     const name = `${vp}${route.replace(/[^a-z0-9]+/gi, '_')}${scroll ? '_' + scroll : ''}.png`;
     await page.screenshot({ path: `${out}/${name}`, fullPage: process.env.FULL === '1' });
     console.log('saved', name);

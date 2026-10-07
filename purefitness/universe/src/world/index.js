@@ -386,7 +386,7 @@ export function createUniverse(host, journey, options) {
       velocity = next.velocity;
     }
     const moving = value !== target;
-    const keyed = route(value);
+    const keyed = (options.debug && window.__pfCamera) || route(value);
     position.set(keyed[0], keyed[1], keyed[2]);
     look.set(keyed[3], keyed[4], keyed[5]);
     camera.position.copy(position);

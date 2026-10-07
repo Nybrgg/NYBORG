@@ -5,43 +5,56 @@
   endif
 %}
 {% if section.settings.show_section %}
-{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
-<section id="loesninger-{{ section.id }}" class="pf-simple-section pf-simple-solutions page-width pf-editable-section" data-pf-anchor="loesninger" {% if section.settings.show_heading and section.settings.heading != blank %}aria-labelledby="solutions-title-{{ section.id }}"{% endif %} data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-base:{{ '#202722' | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-surface:{{ section.settings.background_color | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;--pf-solutions-fade-top:{{ section.settings.fade_top }}px;--pf-solutions-fade-bottom:{{ section.settings.fade_bottom }}px;--pf-solutions-fade-top-mobile:{{ section.settings.fade_top_mobile }}px;--pf-solutions-fade-bottom-mobile:{{ section.settings.fade_bottom_mobile }}px;">
+<section id="loesninger-{{ section.id }}" class="pf-section pf-solutions pf-simple-section pf-container" data-pf-anchor="loesninger" {% if section.settings.show_heading and section.settings.heading != blank %}aria-labelledby="solutions-title-{{ section.id }}"{% endif %} {% render 'pf-section-glass', s: section.settings %}>
   {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
-  {% if section.settings.show_heading and section.settings.heading != blank %}<h2 id="solutions-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{% endif %}
-  {% if section.settings.show_description and section.settings.description != blank %}<p class="pf-simple-section-lead">{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
-  {% if section.settings.show_rows %}<div class="pf-simple-solution-list">
-    {% assign visible_index = 0 %}
-    {% for block in section.blocks %}
-      {% if block.settings.visible and block.settings.label != blank %}
-        {% assign visible_index = visible_index | plus: 1 %}
-        {% assign row_universe_url = block.settings.universe_url %}
-        {% if row_universe_url == blank %}{% capture row_universe_url %}{{ universe_url }}#{{ block.settings.scene_id | handleize }}{% endcapture %}{% endif %}
-        <details class="pf-simple-disclosure pf-simple-solution{% if section.settings.show_numbers == false or block.settings.show_number == false %} pf-without-number{% endif %}{% if block.settings.show_summary == false or block.settings.summary == blank %} pf-without-summary{% endif %}" name="solutions-{{ section.id }}" {{ block.shopify_attributes }}>
-          <summary>
-            {% if section.settings.show_numbers and block.settings.show_number %}<span class="pf-simple-number">{% if block.settings.number != blank %}{{ block.settings.number | escape }}{% else %}{% if visible_index < 10 %}0{% endif %}{{ visible_index }}{% endif %}</span>{% endif %}
-            <span class="pf-simple-solution-title">{{ block.settings.label | escape }}</span>
-            {% if block.settings.show_summary and block.settings.summary != blank %}<span class="pf-simple-solution-summary">{{ block.settings.summary | escape | newline_to_br }}</span>{% endif %}
-            {% render 'pf-disclosure-icon' %}
-          </summary>
-          <div class="pf-simple-solution-more">
-            {% if block.settings.show_description and block.settings.description != blank %}<p>{{ block.settings.description | escape | newline_to_br }}</p>{% endif %}
-            {% capture contact_action %}{% if block.settings.show_contact and block.settings.contact_label != blank %}{% if block.settings.contact_url != blank %}<a class="line-action" href="{{ block.settings.contact_url | escape }}">{{ block.settings.contact_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</a>{% else %}<button type="button" class="line-action" data-pf-contact="{{ block.settings.contact_kind | escape }}">{{ block.settings.contact_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</button>{% endif %}{% endif %}{% endcapture %}
-            {% capture universe_action %}{% if block.settings.show_universe and block.settings.universe_label != blank %}<a class="line-action" href="{{ row_universe_url | escape }}">{{ block.settings.universe_label | escape }} {% render 'pf-icon', name: 'arrow-right', size: 17 %}</a>{% endif %}{% endcapture %}
-            {% if contact_action != blank or universe_action != blank %}<div class="pf-simple-solution-actions">{% if block.settings.action_order == 'universe_first' %}{{ universe_action }}{{ contact_action }}{% else %}{{ contact_action }}{{ universe_action }}{% endif %}</div>{% endif %}
-          </div>
-        </details>
-      {% endif %}
-    {% endfor %}
-  </div>{% endif %}
+  <div class="pf-section__head" data-pf-reveal>
+    {% if section.settings.show_heading and section.settings.heading != blank %}<h2 id="solutions-title-{{ section.id }}" class="pf-title">{{ section.settings.heading | escape }}</h2>{% endif %}
+    {% if section.settings.show_description and section.settings.description != blank %}<p class="pf-lead">{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
+  </div>
+  {% if section.settings.show_rows %}
+    <div class="pf-solutions__layout" data-pf-tabs data-pf-solutions data-pf-reveal>
+      <div class="pf-solutions__tabs" role="tablist" aria-orientation="vertical" aria-label="{{ section.settings.heading | escape }}">
+        {% assign visible_index = 0 %}
+        {% for block in section.blocks %}
+          {% if block.settings.visible and block.settings.label != blank %}
+            {% assign visible_index = visible_index | plus: 1 %}
+            <button type="button" class="pf-solutions__tab" role="tab" id="solution-tab-{{ block.id }}" aria-controls="solution-panel-{{ block.id }}" aria-selected="{% if visible_index == 1 %}true{% else %}false{% endif %}" tabindex="{% if visible_index == 1 %}0{% else %}-1{% endif %}" data-pf-tab {{ block.shopify_attributes }}>
+              {% if section.settings.show_numbers and block.settings.show_number %}<span class="pf-solutions__index" aria-hidden="true">{% if block.settings.number != blank %}{{ block.settings.number | escape }}{% else %}{% if visible_index < 10 %}0{% endif %}{{ visible_index }}{% endif %}</span>{% endif %}
+              <span class="pf-solutions__label">{{ block.settings.label | escape }}</span>
+              <span class="pf-solutions__chevron" aria-hidden="true">{% render 'pf-icon', name: 'arrow-right', size: 18 %}</span>
+            </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="pf-solutions__panels">
+        {% assign visible_index = 0 %}
+        {% for block in section.blocks %}
+          {% if block.settings.visible and block.settings.label != blank %}
+            {% assign visible_index = visible_index | plus: 1 %}
+            {% assign scene = block.settings.scene_id | handleize %}
+            {% assign row_universe_url = block.settings.universe_url %}
+            {% if row_universe_url == blank %}{% capture row_universe_url %}{{ universe_url }}#{{ scene }}{% endcapture %}{% endif %}
+            {% assign scene_asset = 'pf-env-' | append: scene | append: '.webp' %}
+            <div class="pf-solutions__panel" role="tabpanel" id="solution-panel-{{ block.id }}" aria-labelledby="solution-tab-{{ block.id }}" data-pf-panel {% unless visible_index == 1 %}hidden{% endunless %} {{ block.shopify_attributes }}>
+              <figure class="pf-solutions__media">
+                {% render 'pf-image', image: block.settings.image, asset: scene_asset, alt: block.settings.image_alt, loading: 'lazy', sizes: '(max-width:760px) 100vw, 62vw', width: 1600, height: 1000 %}
+              </figure>
+              <div class="pf-solutions__card pf-glass">
+                <h3 class="pf-solutions__title">{{ block.settings.label | escape }}</h3>
+                {% if block.settings.show_summary and block.settings.summary != blank %}<p class="pf-solutions__summary">{{ block.settings.summary | escape | newline_to_br }}</p>{% endif %}
+                {% if block.settings.show_description and block.settings.description != blank %}<p class="pf-solutions__detail">{{ block.settings.description | escape | newline_to_br }}</p>{% endif %}
+                {% capture contact_action %}{% if block.settings.show_contact and block.settings.contact_label != blank %}{% if block.settings.contact_url != blank %}<a class="pf-button pf-button--primary" href="{{ block.settings.contact_url | escape }}"><span>{{ block.settings.contact_label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</span></a>{% else %}<button type="button" class="pf-button pf-button--primary" data-pf-contact="{{ block.settings.contact_kind | escape }}"><span>{{ block.settings.contact_label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</span></button>{% endif %}{% endif %}{% endcapture %}
+                {% capture universe_action %}{% if block.settings.show_universe and block.settings.universe_label != blank %}<a class="pf-link" href="{{ row_universe_url | escape }}"><span>{{ block.settings.universe_label | escape }}</span>{% render 'pf-icon', name: 'arrow-right', size: 17 %}</a>{% endif %}{% endcapture %}
+                {% if contact_action != blank or universe_action != blank %}<div class="pf-actions pf-actions--compact">{% if block.settings.action_order == 'universe_first' %}{{ universe_action }}{{ contact_action }}{% else %}{{ contact_action }}{{ universe_action }}{% endif %}</div>{% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 </section>
 {% endif %}
-{% javascript %}
-  document.addEventListener('shopify:block:select', function(event) {
-    const disclosure = event.target.closest('.pf-simple-solutions .pf-simple-disclosure');
-    if (disclosure) disclosure.open = true;
-  });
-{% endjavascript %}
 
 {% schema %}
 {
@@ -125,7 +138,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 48
+      "default": 88
     },
     {
       "type": "range",
@@ -135,7 +148,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 48
+      "default": 88
     },
     {
       "type": "range",
@@ -145,7 +158,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 36
+      "default": 48
     },
     {
       "type": "range",
@@ -155,7 +168,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 36
+      "default": 48
     },
     {
       "type": "header",
@@ -323,6 +336,17 @@
           "id": "description",
           "label": "Flere oplysninger",
           "default": "Styrke, kondition og frie vægte. Vi hjælper med valg af udstyr, indretning og installation."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Billede",
+          "info": "Tomt felt bruger en visualisering fra 3D-universet."
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Billedbeskrivelse"
         },
         {
           "type": "select",

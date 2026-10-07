@@ -74,8 +74,8 @@
         tab.addEventListener('click', () => activate(tab));
         tab.addEventListener('keydown', event => {
           let next;
-          if (event.key === 'ArrowRight') next = tabs[(index + 1) % tabs.length];
-          if (event.key === 'ArrowLeft') next = tabs[(index - 1 + tabs.length) % tabs.length];
+          if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = tabs[(index + 1) % tabs.length];
+          if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = tabs[(index - 1 + tabs.length) % tabs.length];
           if (event.key === 'Home') next = tabs[0];
           if (event.key === 'End') next = tabs.at(-1);
           if (next) { event.preventDefault(); activate(next, true); }
@@ -88,16 +88,42 @@
       });
     });
   }
+  // Reveal sections as they enter the viewport (CSS handles reduced motion).
+  let revealObserver = null;
+  function initReveal(scope = document) {
+    const items = [...scope.querySelectorAll('[data-pf-reveal]:not(.is-revealed)')];
+    if (!items.length) return;
+    if (!('IntersectionObserver' in window)) { items.forEach(item => item.classList.add('is-revealed')); return; }
+    revealObserver ??= new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-revealed');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    items.forEach((item, index) => {
+      const siblings = item.parentElement ? [...item.parentElement.children].filter(child => child.hasAttribute('data-pf-reveal')) : [];
+      item.style.setProperty('--pf-reveal-index', String(Math.max(0, siblings.indexOf(item))));
+      revealObserver.observe(item);
+    });
+  }
+  // Hero shortcuts select the matching environment tab in the solutions section.
+  document.addEventListener('click', event => {
+    const link = event.target.closest('[data-pf-solution-target]');
+    if (!link) return;
+    const tabs = [...document.querySelectorAll('[data-pf-solutions] [data-pf-tab]')];
+    tabs[Number(link.dataset.pfSolutionTarget)]?.click();
+  });
   function updateHeader() {
     document.querySelectorAll('[data-pf-header]').forEach(header => {
       header.classList.toggle('is-scrolled', header.hasAttribute('data-pf-solid') || window.scrollY > 50);
       header.closest('.pf-inner-page')?.style.setProperty('--pf-header-offset', `${header.getBoundingClientRect().height}px`);
     });
   }
-  initDialogs(); initTabs(); updateHeader(); resolveAnchors();
+  initDialogs(); initTabs(); initReveal(); updateHeader(); resolveAnchors();
   window.addEventListener('scroll', updateHeader, { passive: true });
   window.addEventListener('resize', updateHeader, { passive: true });
-  document.addEventListener('shopify:section:load', event => { initDialogs(event.target); initTabs(event.target); updateHeader(); resolveAnchors(); });
+  document.addEventListener('shopify:section:load', event => { initDialogs(event.target); initTabs(event.target); initReveal(event.target); updateHeader(); resolveAnchors(); });
   document.addEventListener('shopify:section:reorder', resolveAnchors);
   document.addEventListener('shopify:section:unload', () => requestAnimationFrame(resolveAnchors));
   document.addEventListener('shopify:section:select', event => {

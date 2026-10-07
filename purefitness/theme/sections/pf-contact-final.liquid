@@ -5,43 +5,18 @@
   endif
 %}
 {% if section.settings.show_section %}
-{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
-<section id="kontakt-{{ section.id }}" class="pf-simple-section pf-simple-contact page-width pf-editable-section" data-pf-anchor="kontakt" {% if section.settings.show_heading and section.settings.heading != blank %}aria-labelledby="contact-title-{{ section.id }}"{% endif %} data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-surface:{{ section.settings.background_color | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;">
+<section id="kontakt-{{ section.id }}" class="pf-section pf-closing pf-simple-section pf-container" data-pf-anchor="kontakt" {% if section.settings.show_heading and section.settings.heading != blank %}aria-labelledby="contact-title-{{ section.id }}"{% endif %} {% render 'pf-section-glass', s: section.settings %}>
   {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
-  {% if section.settings.show_heading and section.settings.heading != blank %}<h2 id="contact-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{% endif %}
-  {% if section.settings.show_description and section.settings.description != blank %}<p>{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
-  {% if section.settings.show_buttons and section.blocks.size > 0 %}<div class="pf-editor-actions">{% for block in section.blocks %}
-  {% if block.settings.visible and block.settings.label != blank %}
-    {% liquid
-      assign action_url = block.settings.url
-      assign native_contact = false
-      if action_url == blank
-        case block.settings.destination
-          when 'projekt', 'katalog', 'service'
-            assign native_contact = true
-          when 'universe'
-            assign action_url = universe_url
-          when 'solutions'
-            assign action_url = '#loesninger'
-          when 'contact'
-            assign action_url = '#kontakt'
-        endcase
-      endif
-      assign action_class = 'primary-action'
-      if block.settings.style == 'secondary'
-        assign action_class = 'hero-secondary'
-      elsif block.settings.style == 'line'
-        assign action_class = 'line-action'
-      endif
-    %}
-    {% capture action_style %}{% if block.settings.background_color != blank %}--pf-button-bg:{{ block.settings.background_color }};{% endif %}{% if block.settings.text_color != blank %}--pf-button-text:{{ block.settings.text_color }};{% endif %}{% endcapture %}
-    {% if native_contact %}
-      <button type="button" class="{{ action_class }} pf-editor-action{% if block.settings.background_color != blank %} pf-custom-button-bg{% endif %}" data-pf-contact="{{ block.settings.destination | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}{% if block.settings.icon != 'none' %}{% render 'pf-icon', name: block.settings.icon, size: block.settings.icon_size %}{% endif %}</button>
-    {% elsif action_url != blank %}
-      <a class="{{ action_class }} pf-editor-action{% if block.settings.background_color != blank %} pf-custom-button-bg{% endif %}" href="{{ action_url | escape }}" style="{{ action_style }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}{% if block.settings.icon != 'none' %}{% render 'pf-icon', name: block.settings.icon, size: block.settings.icon_size %}{% endif %}</a>
-    {% endif %}
+  {% if section.settings.show_image != false %}
+    <div class="pf-closing__media" aria-hidden="true">
+      {% render 'pf-image', image: section.settings.image, asset: 'next-universe.webp', alt: '', loading: 'lazy', sizes: '100vw', width: 1440, height: 900 %}
+    </div>
   {% endif %}
-{% endfor %}</div>{% endif %}
+  <div class="pf-closing__card pf-glass" data-pf-reveal>
+    {% if section.settings.show_heading and section.settings.heading != blank %}<h2 id="contact-title-{{ section.id }}" class="pf-title">{{ section.settings.heading | escape }}</h2>{% endif %}
+    {% if section.settings.show_description and section.settings.description != blank %}<p class="pf-lead">{{ section.settings.description | escape | newline_to_br | replace: '<br />', ' ' | replace: '<br>', ' ' }}</p>{% endif %}
+    {% if section.settings.show_buttons and section.blocks.size > 0 %}<div class="pf-actions">{% for block in section.blocks %}{% render 'pf-action-button', block: block, universe_url: universe_url %}{% endfor %}</div>{% endif %}
+  </div>
 </section>
 {% endif %}
 
@@ -86,6 +61,18 @@
       "default": true
     },
     {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Vis baggrundsbillede",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Baggrundsbillede",
+      "info": "Tomt felt bruger en visualisering fra 3D-universet."
+    },
+    {
       "type": "header",
       "content": "Farver og afstande"
     },
@@ -121,7 +108,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 40
+      "default": 88
     },
     {
       "type": "range",
@@ -131,7 +118,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 32
+      "default": 88
     },
     {
       "type": "range",
@@ -141,7 +128,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 36
+      "default": 48
     },
     {
       "type": "range",
@@ -151,7 +138,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 28
+      "default": 48
     },
     {
       "type": "header",

@@ -1,0 +1,15 @@
+{% doc %}
+Shared attributes for glass panel sections: data flags read by pf-glass-flow.js
+and the CSS custom properties that carry the section's colour and spacing settings.
+@param {object} s - The section settings.
+{% enddoc %}
+{%- liquid
+  assign glass_alpha = s.glass_opacity | default: 86 | divided_by: 100.0
+  assign flow = false
+  if s.glass_enabled and s.glass_flow_enabled
+    assign flow = true
+  endif
+  assign bg = s.background_color | default: s.background | default: '#202722'
+  assign ink = s.text_color | default: '#edf0e8'
+-%}
+data-pf-section-glass data-pf-glass="{{ s.glass_enabled }}" data-pf-glass-flow="{{ flow }}" style="--pf-section-glass-surface:{{ bg | color_modify: 'alpha', glass_alpha }};--pf-section-glass-blur:{{ s.glass_blur | default: 26 }}px;--pf-flow-amplitude:{{ s.glass_flow_strength | default: 0 }}px;--pf-flow-enabled:{% if flow %}1{% else %}0{% endif %};--pf-section-bg:{{ bg }};--pf-section-text:{{ ink }};--pf-section-muted:{{ s.muted_color | default: '#b2bbae' }};--pf-accent:{{ s.accent_color | default: settings.color_accent }};--pf-section-line:{{ ink | color_modify: 'alpha', 0.14 }};--pf-section-divider:{{ ink | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ s.padding_top | default: 96 }}px;--pf-space-bottom:{{ s.padding_bottom | default: 96 }}px;--pf-space-top-mobile:{{ s.padding_top_mobile | default: 56 }}px;--pf-space-bottom-mobile:{{ s.padding_bottom_mobile | default: 56 }}px;"

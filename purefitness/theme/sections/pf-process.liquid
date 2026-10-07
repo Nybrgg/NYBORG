@@ -1,27 +1,28 @@
 {% if section.settings.show_section %}
-{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
-<section id="forloeb-{{ section.id }}" class="pf-simple-section pf-simple-process page-width pf-editable-section" data-pf-anchor="forloeb" {% if section.settings.show_heading and section.settings.heading != blank %}aria-labelledby="process-title-{{ section.id }}"{% endif %} data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-surface:{{ section.settings.background_color | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;">
+<section id="forloeb-{{ section.id }}" class="pf-section pf-process pf-simple-section pf-container" data-pf-anchor="forloeb" {% if section.settings.show_heading and section.settings.heading != blank %}aria-labelledby="process-title-{{ section.id }}"{% endif %} {% render 'pf-section-glass', s: section.settings %}>
   {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
-  {% if section.settings.show_heading and section.settings.heading != blank %}<h2 id="process-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{% endif %}
-  <div class="pf-simple-process-grid{% if section.settings.show_description == false or section.settings.description == blank %} pf-process-without-intro{% endif %}{% unless section.settings.show_steps %} pf-process-without-steps{% endunless %}">
-    {% if section.settings.show_description and section.settings.description != blank %}<p>{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
-    {% if section.settings.show_steps %}<ol>
+  <div class="pf-section__head" data-pf-reveal>
+    {% if section.settings.show_heading and section.settings.heading != blank %}<h2 id="process-title-{{ section.id }}" class="pf-title">{{ section.settings.heading | escape }}</h2>{% endif %}
+    {% if section.settings.show_description and section.settings.description != blank %}<p class="pf-lead">{{ section.settings.description | escape | newline_to_br | replace: '<br />', ' ' | replace: '<br>', ' ' }}</p>{% endif %}
+  </div>
+  {% if section.settings.show_steps %}
+    <ol class="pf-process__track" data-pf-reveal>
       {% assign visible_index = 0 %}
       {% for block in section.blocks %}
         {% if block.settings.visible %}
           {% assign visible_index = visible_index | plus: 1 %}
-          <li{% if section.settings.show_numbers == false or block.settings.show_number == false %} class="pf-without-number"{% endif %} {{ block.shopify_attributes }}>
-            {% if section.settings.show_numbers and block.settings.show_number %}<span class="pf-simple-number">{% if block.settings.number != blank %}{{ block.settings.number | escape }}{% else %}{% if visible_index < 10 %}0{% endif %}{{ visible_index }}{% endif %}</span>{% endif %}
-            <div>
+          <li class="pf-process__step" style="--pf-step:{{ visible_index }}" {{ block.shopify_attributes }}>
+            <span class="pf-process__node" aria-hidden="true">{% if section.settings.show_numbers and block.settings.show_number %}{% if block.settings.number != blank %}{{ block.settings.number | escape }}{% else %}{{ visible_index }}{% endif %}{% endif %}</span>
+            <div class="pf-process__body">
               {% if block.settings.show_title and block.settings.title != blank %}<h3>{{ block.settings.title | escape }}</h3>{% endif %}
               {% if block.settings.show_description and block.settings.description != blank %}<p>{{ block.settings.description | escape | newline_to_br }}</p>{% endif %}
-              {% if block.settings.show_action and block.settings.action_label != blank %}{% if block.settings.action_url != blank %}<a class="line-action" href="{{ block.settings.action_url | escape }}">{{ block.settings.action_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</a>{% elsif block.settings.action_kind != 'none' %}<button type="button" class="line-action" data-pf-contact="{{ block.settings.action_kind | escape }}">{{ block.settings.action_label | escape }} {% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</button>{% endif %}{% endif %}
+              {% if block.settings.show_action and block.settings.action_label != blank %}{% if block.settings.action_url != blank %}<a class="pf-link" href="{{ block.settings.action_url | escape }}"><span>{{ block.settings.action_label | escape }}</span>{% render 'pf-icon', name: 'arrow-up-right', size: 16 %}</a>{% elsif block.settings.action_kind != 'none' %}<button type="button" class="pf-link" data-pf-contact="{{ block.settings.action_kind | escape }}"><span>{{ block.settings.action_label | escape }}</span>{% render 'pf-icon', name: 'arrow-up-right', size: 16 %}</button>{% endif %}{% endif %}
             </div>
           </li>
         {% endif %}
       {% endfor %}
-    </ol>{% endif %}
-  </div>
+    </ol>
+  {% endif %}
 </section>
 {% endif %}
 
@@ -107,7 +108,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 48
+      "default": 88
     },
     {
       "type": "range",
@@ -117,7 +118,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 48
+      "default": 88
     },
     {
       "type": "range",
@@ -127,7 +128,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 36
+      "default": 48
     },
     {
       "type": "range",
@@ -137,7 +138,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 36
+      "default": 48
     },
     {
       "type": "header",

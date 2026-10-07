@@ -1,36 +1,40 @@
 {% if section.settings.show_section != false %}
-{% assign section_glass_alpha = section.settings.glass_opacity | divided_by: 100.0 %}
-<section id="intro-{{ section.id }}" data-pf-anchor="intro" class="pf-simple-section pf-simple-intro pf-editable-section page-width"{% if section.settings.show_heading != false and section.settings.heading != blank %} aria-labelledby="intro-title-{{ section.id }}"{% endif %} data-pf-section-glass data-pf-glass="{{ section.settings.glass_enabled }}" data-pf-glass-flow="{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}true{% else %}false{% endif %}" style="--pf-section-glass-surface:{{ section.settings.background_color | color_modify: 'alpha', section_glass_alpha }};--pf-section-glass-blur:{{ section.settings.glass_blur }}px;--pf-flow-amplitude:{{ section.settings.glass_flow_strength }}px;--pf-flow-enabled:{% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}1{% else %}0{% endif %};--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-section-line:{{ section.settings.text_color | color_modify: 'alpha', 0.15 }};--pf-section-divider:{{ section.settings.text_color | color_modify: 'alpha', 0.07 }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;">
+<section id="intro-{{ section.id }}" data-pf-anchor="intro" class="pf-section pf-intro pf-simple-section pf-container"{% if section.settings.show_heading != false and section.settings.heading != blank %} aria-labelledby="intro-title-{{ section.id }}"{% endif %} {% render 'pf-section-glass', s: section.settings %}>
   {% if section.settings.glass_enabled and section.settings.glass_flow_enabled %}<span class="pf-section-glass-wave" aria-hidden="true"></span>{% endif %}
-  <div class="pf-simple-intro-copy">
-    {% if section.settings.show_eyebrow != false and section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
-    {% if section.settings.show_heading != false and section.settings.heading != blank %}<h2 id="intro-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{% endif %}
-    {% if section.settings.show_description_1 != false and section.settings.description_1 != blank %}<p>{{ section.settings.description_1 | escape | newline_to_br }}</p>{% endif %}
-    {% if section.settings.show_description_2 != false and section.settings.description_2 != blank %}<p>{{ section.settings.description_2 | escape | newline_to_br }}</p>{% endif %}
+  <div class="pf-intro__copy" data-pf-reveal>
+    {% if section.settings.show_heading != false and section.settings.heading != blank %}<h2 id="intro-title-{{ section.id }}" class="pf-title">{{ section.settings.heading | escape }}</h2>{% endif %}
+    {% if section.settings.show_description_1 != false and section.settings.description_1 != blank %}<p class="pf-lead">{{ section.settings.description_1 | escape | newline_to_br }}</p>{% endif %}
+    {% if section.settings.show_description_2 != false and section.settings.description_2 != blank %}<p class="pf-body">{{ section.settings.description_2 | escape | newline_to_br }}</p>{% endif %}
     {% capture intro_actions %}
       {% for block in section.blocks %}
         {% if block.settings.visible != false and block.settings.label != blank %}
           {% liquid
-            assign action_class = 'primary-action'
+            assign action_class = 'pf-button pf-button--primary'
             if block.settings.style == 'link'
-              assign action_class = 'line-action'
+              assign action_class = 'pf-link'
             endif
           %}
           {% if block.settings.url != blank %}
-            <a class="{{ action_class }}" href="{{ block.settings.url | escape }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }} {% render 'pf-icon', name: 'move-up-right', size: 19 %}</a>
+            <a class="{{ action_class }}" href="{{ block.settings.url | escape }}" {{ block.shopify_attributes }}><span>{{ block.settings.label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'move-up-right', size: 18 %}</span></a>
           {% elsif block.settings.action_kind != 'link' %}
-            <button type="button" class="{{ action_class }}" data-pf-contact="{{ block.settings.action_kind | escape }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }} {% render 'pf-icon', name: 'move-up-right', size: 19 %}</button>
+            <button type="button" class="{{ action_class }}" data-pf-contact="{{ block.settings.action_kind | escape }}" {{ block.shopify_attributes }}><span>{{ block.settings.label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'move-up-right', size: 18 %}</span></button>
           {% endif %}
         {% endif %}
       {% endfor %}
     {% endcapture %}
     {% assign intro_actions = intro_actions | strip %}
-    {% if intro_actions != blank %}<div class="pf-editor-actions">{{ intro_actions }}</div>{% endif %}
+    {% if intro_actions != blank %}<div class="pf-actions">{{ intro_actions }}</div>{% endif %}
+    {% if section.settings.show_eyebrow != false and section.settings.eyebrow != blank %}
+      {% assign pillars = section.settings.eyebrow | split: '·' %}
+      <ul class="pf-intro__pillars" aria-label="{{ section.settings.eyebrow | escape }}">
+        {% for pillar in pillars %}<li>{{ pillar | strip | escape }}</li>{% endfor %}
+      </ul>
+    {% endif %}
   </div>
   {% if section.settings.show_image != false %}
-    <figure class="pf-blended-image" style="--pf-image-blend:{{ section.settings.image_blend }}%;">
+    <figure class="pf-intro__media pf-frame" data-pf-reveal style="--pf-image-blend:{{ section.settings.image_blend }}%;">
       {% if section.settings.image_url != blank %}<a href="{{ section.settings.image_url | escape }}">{% endif %}
-      {% render 'pf-image', image: section.settings.image, mobile_image: section.settings.mobile_image, asset: 'premium-interior.webp', alt: section.settings.image_alt, loading: 'lazy', sizes: '(max-width:760px) 100vw, 40vw', width: 1672, height: 941 %}
+      {% render 'pf-image', image: section.settings.image, mobile_image: section.settings.mobile_image, asset: 'premium-interior.webp', alt: section.settings.image_alt, loading: 'lazy', sizes: '(max-width:760px) 100vw, 55vw', width: 1672, height: 941 %}
       {% if section.settings.image_url != blank %}</a>{% endif %}
     </figure>
   {% endif %}
@@ -176,7 +180,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 60
+      "default": 88
     },
     {
       "type": "range",
@@ -186,7 +190,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 60
+      "default": 88
     },
     {
       "type": "range",
@@ -196,7 +200,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 40
+      "default": 48
     },
     {
       "type": "range",
@@ -206,7 +210,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 40
+      "default": 48
     },
     {
       "type": "header",

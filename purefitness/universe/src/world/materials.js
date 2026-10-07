@@ -32,7 +32,7 @@ const DEFINITIONS = {
   oak: { set: 'oak', color: 0xffffff, roughness: 1 },
   oakLight: { set: 'oak', color: 0xf3e6d2, roughness: 1 },
   walnut: { set: 'oak', color: 0x7b5a41, roughness: 1 },
-  oakFloor: { set: 'oak', physical: true, color: 0xe9d6bb, roughness: 0.85, clearcoat: 0.35, clearcoatRoughness: 0.3 },
+  oakFloor: { set: 'oak', physical: true, color: 0xe9d6bb, roughness: 0.85, clearcoat: 0.18, clearcoatRoughness: 0.45 },
   rubber: { set: 'rubber', color: 0xffffff, roughness: 1 },
   rubberGrey: { set: 'rubber', color: 0xb4b6b4, roughness: 1 },
   travertine: { set: 'travertine', color: 0xf2ebe0, roughness: 0.9 },
