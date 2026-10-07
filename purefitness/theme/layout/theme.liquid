@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="{{ settings.color_ink }}">
-  <title>{% if template.suffix == 'univers' %}{{ 'pf.universe_title' | t }}{% elsif template.suffix == 'contact' %}{{ 'pf.contact_title' | t }}{% elsif template.name == 'index' %}{{ settings.home_title | escape }}{% else %}{{ page_title | escape }}{% unless page_title contains shop.name %} — {{ shop.name | escape }}{% endunless %}{% endif %}</title>
+  <title>{% if template.suffix == 'univers' %}{{ 'pf.universe_title' | t }}{% elsif template.suffix == 'contact' %}{{ 'pf.contact_title' | t }}{% elsif template.name == 'index' %}{{ settings.home_title | escape }}{% else %}{{ page_title | escape }}{% unless page_title contains shop.name %} | {{ shop.name | escape }}{% endunless %}{% endif %}</title>
   {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% elsif template.name == 'index' %}<meta name="description" content="{{ settings.home_description | escape }}">{% endif %}
   <link rel="canonical" href="{{ canonical_url }}">
   <link rel="icon" type="image/svg+xml" href="{{ 'favicon.svg' | asset_url }}">

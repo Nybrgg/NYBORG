@@ -3,7 +3,7 @@
     "name": "theme_info",
     "theme_name": "PureFitness Universe",
     "theme_author": "PureFitness",
-    "theme_version": "1.9.0",
+    "theme_version": "2.0.0",
     "theme_documentation_url": "https://help.shopify.com/da/manual/online-store/themes",
     "theme_support_url": "https://purefitness.dk"
   },
@@ -58,7 +58,7 @@
         "type": "text",
         "id": "home_title",
         "label": "Sidetitel",
-        "default": "Purefitness — Stærke rum. Større muligheder."
+        "default": "Purefitness | Stærke rum. Større muligheder."
       },
       {
         "type": "textarea",

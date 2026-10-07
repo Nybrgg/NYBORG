@@ -1,6 +1,6 @@
 {
   "pf": {
-    "universe_title": "Purefitness — Oplev universet",
+    "universe_title": "Purefitness | Oplev universet",
     "contact_title": "Kontakt Purefitness",
     "skip": "Gå til indhold",
     "home_label": "Purefitness forside",
@@ -141,7 +141,7 @@
     "rail_label": "Gå direkte til et miljø",
     "go_environment": "Gå til {{ environment }}",
     "choose_environment": "Vælg et miljø",
-    "scroll_note": "Scroll frem — eller vælg et miljø ovenfor",
+    "scroll_note": "Scroll frem, eller vælg et miljø ovenfor",
     "hide_text": "Skjul tekst",
     "show_text": "Vis tekst",
     "read_without": "Læs uden animation",
@@ -169,7 +169,7 @@
     "reading_eyebrow": "UDSTYR · INDRETNING · SERVICE",
     "reading_title": "Rum til",
     "reading_accent": "mere bevægelse.",
-    "reading_intro": "Træningsmiljøer til virksomheder og foreninger. Fra den første idé til udstyret er installeret — og service bagefter.",
+    "reading_intro": "Træningsmiljøer til virksomheder og foreninger. Fra den første idé til udstyret er installeret, og service bagefter.",
     "failed_detail": "3D kunne ikke indlæses. Alle løsninger er tilgængelige her.",
     "retry_3d": "Prøv 3D igen",
     "experience_3d": "Oplev universet i 3D",

@@ -135,6 +135,7 @@ html.pf-universe-dialog-open { overflow: hidden; }
 .pf-universe-dialog .menu-shortcuts { display: grid; }
 .pf-universe-dialog .menu-shortcuts :is(button, a) { display: flex; align-items: center; justify-content: space-between; min-height: 52px; border-bottom: 1px solid rgb(238 241 234 / 0.12); color: inherit; font-weight: 600; }
 .pf-universe-dialog .menu-shortcuts :is(button, a):hover { color: var(--pf-accent, #d4ed72); }
+.pf-universe-dialog .menu-shortcuts .text-action { max-width: none; padding: 0; border-color: rgb(238 241 234 / 0.12); }
 .pf-universe-dialog .tour-settings { border-top: 1px solid rgb(238 241 234 / 0.12); padding-top: 6px; }
 .pf-universe-dialog .tour-settings summary { display: flex; align-items: center; justify-content: space-between; min-height: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; list-style: none; }
 .pf-universe-dialog .tour-settings summary::-webkit-details-marker { display: none; }

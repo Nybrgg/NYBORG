@@ -42,7 +42,7 @@
           <select id="Variant-{{ section.id }}" name="id" class="commerce-variant">
             {% for variant in product.variants %}
               <option value="{{ variant.id }}" data-price="{{ variant.price | money_with_currency | strip_html | escape }}" data-compare="{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money_with_currency | strip_html | escape }}{% endif %}" data-quantity-min="{{ variant.quantity_rule.min }}" data-quantity-step="{{ variant.quantity_rule.increment }}" data-quantity-max="{{ variant.quantity_rule.max }}" {% if variant.id == current_variant.id %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
-                {{ variant.title | escape }}{% if section.settings.show_price %} — {{ variant.price | money_with_currency | strip_html }}{% endif %}{% unless variant.available %} — {{ section.settings.sold_out_label | escape }}{% endunless %}
+                {{ variant.title | escape }}{% if section.settings.show_price %} · {{ variant.price | money_with_currency | strip_html }}{% endif %}{% unless variant.available %}, {{ section.settings.sold_out_label | escape }}{% endunless %}
               </option>
             {% endfor %}
           </select>

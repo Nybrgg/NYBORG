@@ -1,0 +1,18 @@
+import { chromium } from 'playwright';
+const [out] = process.argv.slice(2);
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+page.setDefaultTimeout(300000);
+page.on('pageerror', e => console.log('pageerror', e.message));
+page.on('console', m => { if (m.type() === 'error') console.log('console.error', m.text().slice(0, 200)); });
+await page.goto('http://localhost:4173/');
+await page.waitForTimeout(1000);
+await page.click('.pf-hero a[href*="view=univers"]');
+await page.waitForSelector('.experience.is-loaded', { timeout: 300000 });
+await page.waitForTimeout(3000);
+await page.screenshot({ path: out + '/embedded.png' });
+await page.click('.universe-home');
+await page.waitForTimeout(1500);
+console.log('back home:', await page.evaluate(() => [location.search, !document.querySelector('[data-pf-home-shell]').hidden, document.body.className]));
+await page.screenshot({ path: out + '/back.png' });
+await browser.close();

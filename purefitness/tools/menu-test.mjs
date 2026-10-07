@@ -1,0 +1,17 @@
+import { chromium } from 'playwright';
+const [out] = process.argv.slice(2);
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+page.setDefaultTimeout(300000);
+page.on('pageerror', e => console.log('pageerror', e.message));
+await page.goto('http://localhost:4173/?view=univers');
+await page.waitForSelector('.experience.is-loaded', { timeout: 300000 });
+await page.waitForTimeout(2000);
+await page.evaluate(() => document.querySelector('.menu-trigger').click());
+await page.waitForTimeout(2500);
+console.log('open', await page.evaluate(() => [...document.querySelectorAll('dialog')].map(d => d.className + ':' + d.open)));
+await page.screenshot({ path: out + '/menu.png' });
+await page.evaluate(() => { document.querySelector('dialog[open] [data-close]')?.click(); document.querySelector('.location-button').click(); });
+await page.waitForTimeout(2500);
+await page.screenshot({ path: out + '/about.png' });
+await browser.close();

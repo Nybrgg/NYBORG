@@ -35,7 +35,7 @@ const PROBE_INTENSITY = 0.6;
 // Light mode presets. Warm = golden hour (HDR sky), day = clear midday (analytic sky).
 const MODES = {
   warm: { sunColor: 0xffc08a, sunIntensity: 6, sunDir: [-0.62, 0.16, 0.77], envIntensity: 0.6, exposure: 0.92, insideBoost: 1.25, lamps: 1, windows: 1, fog: 0x8f7f78, fogDensity: 0.0042 },
-  day: { sunColor: 0xfff4e6, sunIntensity: 5.5, sunDir: [-0.45, 0.62, 0.64], envIntensity: 1, exposure: 0.72, insideBoost: 1.35, lamps: 0, windows: 0.25, fog: 0xbfc9d1, fogDensity: 0.0028 },
+  day: { sunColor: 0xfff4e6, sunIntensity: 7, sunDir: [-0.45, 0.62, 0.64], envIntensity: 0.42, exposure: 0.82, insideBoost: 1.35, lamps: 0, windows: 0.25, fog: 0xbfc9d1, fogDensity: 0.0028 },
 };
 
 const FinishShader = {
@@ -277,12 +277,20 @@ export function createUniverse(host, journey, options) {
       light.position.set(site.x + slot.position[0], slot.position[1], slot.position[2]);
       light.rotation.set(-Math.PI / 2, 0, 0);
     });
+    aimShadow(new THREE.Vector3(site.x, 0, -site.depth / 2 + 4), Math.max(site.width, site.depth) * 0.75 + 10);
+  }
+
+  // The sun's shadow frustum follows what the camera looks at, so both rooms
+  // and long street views get crisp shadows from one 2k map.
+  const shadowCentre = new THREE.Vector3(1e9, 0, 0);
+  const sunDirection = new THREE.Vector3();
+  function aimShadow(centre, span) {
     const preset = MODES[day ? 'day' : 'warm'];
-    const centre = new THREE.Vector3(site.x, 0, -site.depth / 2 + 4);
+    sunDirection.set(...preset.sunDir).normalize();
+    shadowCentre.copy(centre);
     sun.target.position.copy(centre);
-    sun.position.copy(centre).addScaledVector(new THREE.Vector3(...preset.sunDir).normalize(), 120);
+    sun.position.copy(centre).addScaledVector(sunDirection, 120);
     sun.target.updateMatrixWorld();
-    const span = Math.max(site.width, site.depth) * 0.75 + 10;
     Object.assign(sun.shadow.camera, { left: -span, right: span, top: span, bottom: -span });
     sun.shadow.camera.updateProjectionMatrix();
     renderer.shadowMap.needsUpdate = true;
@@ -398,6 +406,11 @@ export function createUniverse(host, journey, options) {
       lastSite = siteIndex;
       placeSiteLights(siteIndex);
     }
+    // Re-aim the shadow map at the area in front of the camera when it drifts.
+    const forward = look.clone().sub(position).setY(0).normalize();
+    const indoors = -position.z > 0.5 && Math.abs(position.x - site.x) < site.width / 2;
+    const focus = indoors ? new THREE.Vector3(site.x, 0, -site.depth / 2 + 4) : position.clone().addScaledVector(forward, 22).setY(0);
+    if (focus.distanceTo(shadowCentre) > (indoors ? 0.5 : 6)) aimShadow(focus, indoors ? Math.max(site.width, site.depth) * 0.75 + 10 : 38);
     sites.forEach((other, i) => { other.group.visible = Math.abs(i - siteIndex) <= 1 || Math.abs(position.x - other.x) < 110; });
     for (const s of sites) {
       for (const rig of s.room.doors) {
