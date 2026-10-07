@@ -27,7 +27,7 @@
   {% if template.suffix == 'univers' %}
     {{ content_for_layout }}
   {% else %}
-    <div class="landing{% unless template.name == 'index' and template.suffix == blank %} pf-inner-page{% endunless %}" data-pf-home-shell>
+    <div class="landing{% unless template.name == 'index' and template.suffix == blank %} pf-inner-page{% endunless %}{% if template.name == 'index' and template.suffix == blank and settings.stack_sections %} pf-stack-enabled{% endif %}" data-pf-home-shell style="--pf-stack-offset:{{ settings.stack_offset | default: 10 }}px">
       <a class="skip-link" href="#indhold">{{ settings.skip_label | escape }}</a>
       {% sections 'header-group' %}
       <div class="pf-glass-ambient" data-pf-glass-ambient aria-hidden="true"></div>

@@ -524,3 +524,14 @@ details[open] > summary .pf-simple-disclosure-vertical { opacity: 0; }
 }
 html[data-motion="reduced"] .pf-section-glass-wave { display: none !important; }
 .service-copy > :is(.primary-action, .line-action), .universe-invitation-content > :is(.primary-action, .line-action), .private-strip > :is(.primary-action, .line-action), .commerce-empty > * { justify-self: start; }
+
+/* ------------------------------------------------------------------ stacked sections (homepage)
+ * Each section wrapper is sticky; pf-theme.js sets its `top` so tall sections
+ * scroll to their end before pinning, and writes --pf-stack-cover (0..1) as the
+ * next section slides over it. */
+.pf-stack-enabled .pf-stack-item { position: sticky; z-index: calc(1 + var(--pf-stack-index, 0)); padding-block: clamp(5px, 0.7vw, 9px); }
+.pf-stack-enabled .pf-stack-item > .pf-section { margin-block: 0; box-shadow: 0 -24px 60px rgb(0 0 0 / 0.35); }
+.pf-stack-enabled .pf-stack-item > .pf-section::after { content: ""; position: absolute; inset: 0; z-index: 5; border-radius: inherit; background: rgb(6 9 7); opacity: calc(var(--pf-stack-cover, 0) * 0.55); pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .pf-stack-enabled .pf-stack-item > .pf-section { transform: scale(calc(1 - var(--pf-stack-cover, 0) * 0.05)); transform-origin: 50% 0; will-change: transform; }
+}

@@ -52,6 +52,28 @@
     ]
   },
   {
+    "name": "Scroll-effekter",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "stack_sections",
+        "label": "Stak forsidens sektioner ved scroll",
+        "info": "Sektionerne under heroen bliver liggende, og den næste glider ind over den forrige.",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "stack_offset",
+        "label": "Synlig kant af tidligere sektioner",
+        "min": 0,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      }
+    ]
+  },
+  {
     "name": "Forsidens søgemaskinetekst",
     "settings": [
       {

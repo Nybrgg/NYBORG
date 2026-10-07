@@ -114,17 +114,56 @@
     const tabs = [...document.querySelectorAll('[data-pf-solutions] [data-pf-tab]')];
     tabs[Number(link.dataset.pfSolutionTarget)]?.click();
   });
+  // Homepage sticky stack: sections under the hero pin below the header and the
+  // next one slides over the previous. Tall sections pin at their bottom edge.
+  const stack = { items: [], frame: 0 };
+  function layoutStack() {
+    const main = document.querySelector('.pf-stack-enabled main#indhold');
+    stack.items.forEach(item => { item.classList.remove('pf-stack-item'); item.style.removeProperty('top'); item.style.removeProperty('--pf-stack-cover'); });
+    stack.items = main ? [...main.children].filter(item => item.querySelector(':scope > .pf-section') && !item.hidden && item.getClientRects().length) : [];
+    if (!stack.items.length) return;
+    const shell = main.closest('.pf-stack-enabled');
+    const offset = parseFloat(getComputedStyle(shell).getPropertyValue('--pf-stack-offset')) || 0;
+    const bar = document.querySelector('.pf-header__bar');
+    const base = bar ? bar.getBoundingClientRect().bottom + 6 : 0;
+    stack.items.forEach((item, index) => {
+      item.classList.add('pf-stack-item');
+      item.style.setProperty('--pf-stack-index', String(index));
+      const top = Math.min(base + index * offset, window.innerHeight - item.offsetHeight);
+      item.style.top = `${Math.round(top)}px`;
+    });
+    updateStack();
+  }
+  function updateStack() {
+    stack.frame = 0;
+    stack.items.forEach((item, index) => {
+      const next = stack.items[index + 1];
+      let cover = 0;
+      if (next) {
+        const pinned = parseFloat(item.style.top) || 0;
+        cover = Math.min(1, Math.max(0, 1 - (next.getBoundingClientRect().top - pinned) / (window.innerHeight * 0.85)));
+      }
+      item.style.setProperty('--pf-stack-cover', cover.toFixed(3));
+    });
+  }
+  window.addEventListener('scroll', () => { if (stack.items.length && !stack.frame) stack.frame = requestAnimationFrame(updateStack); }, { passive: true });
+  if ('ResizeObserver' in window) {
+    const stackObserver = new ResizeObserver(() => requestAnimationFrame(layoutStack));
+    document.querySelectorAll('.pf-stack-enabled main#indhold > .shopify-section').forEach(section => stackObserver.observe(section));
+  }
+  window.addEventListener('resize', layoutStack, { passive: true });
+  window.addEventListener('load', layoutStack);
   function updateHeader() {
     document.querySelectorAll('[data-pf-header]').forEach(header => {
       header.classList.toggle('is-scrolled', header.hasAttribute('data-pf-solid') || window.scrollY > 50);
       header.closest('.pf-inner-page')?.style.setProperty('--pf-header-offset', `${header.getBoundingClientRect().height}px`);
     });
   }
-  initDialogs(); initTabs(); initReveal(); updateHeader(); resolveAnchors();
+  initDialogs(); initTabs(); initReveal(); updateHeader(); resolveAnchors(); layoutStack();
   window.addEventListener('scroll', updateHeader, { passive: true });
   window.addEventListener('resize', updateHeader, { passive: true });
-  document.addEventListener('shopify:section:load', event => { initDialogs(event.target); initTabs(event.target); initReveal(event.target); updateHeader(); resolveAnchors(); });
-  document.addEventListener('shopify:section:reorder', resolveAnchors);
+  document.addEventListener('shopify:section:load', event => { initDialogs(event.target); initTabs(event.target); initReveal(event.target); updateHeader(); resolveAnchors(); layoutStack(); });
+  document.addEventListener('shopify:section:reorder', () => { resolveAnchors(); layoutStack(); });
   document.addEventListener('shopify:section:unload', () => requestAnimationFrame(resolveAnchors));
   document.addEventListener('shopify:section:select', event => {
     const dialog = event.target.querySelector?.('[data-pf-contact-editor]');
