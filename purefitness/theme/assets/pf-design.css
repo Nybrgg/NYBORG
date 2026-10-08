@@ -564,3 +564,6 @@ html[data-motion="reduced"] .pf-section-glass-wave { display: none !important; }
   }
   .pf-glass-ambient::before { filter: blur(18px); }
 }
+
+/* Lock the page behind an open menu or contact drawer. */
+html:has(dialog.pf-drawer[open]) { overflow: hidden; }

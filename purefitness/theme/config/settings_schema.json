@@ -70,6 +70,32 @@
         "step": 2,
         "unit": "px",
         "default": 10
+      },
+      {
+        "type": "checkbox",
+        "id": "smooth_scroll",
+        "label": "Blød scroll på forsiden",
+        "info": "Gælder mus og touchpad. Telefoner og tablets bruger deres egen scroll.",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "scroll_speed",
+        "label": "Scrollhastighed",
+        "min": 40,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "default": 65
+      },
+      {
+        "type": "range",
+        "id": "scroll_smoothness",
+        "label": "Blødhed",
+        "min": 1,
+        "max": 10,
+        "step": 1,
+        "default": 6
       }
     ]
   },

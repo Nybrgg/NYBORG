@@ -27,7 +27,7 @@
   {% if template.suffix == 'univers' %}
     {{ content_for_layout }}
   {% else %}
-    <div class="landing{% unless template.name == 'index' and template.suffix == blank %} pf-inner-page{% endunless %}{% if template.name == 'index' and template.suffix == blank and settings.stack_sections %} pf-stack-enabled{% endif %}" data-pf-home-shell style="--pf-stack-offset:{{ settings.stack_offset | default: 10 }}px">
+    <div class="landing{% unless template.name == 'index' and template.suffix == blank %} pf-inner-page{% endunless %}{% if template.name == 'index' and template.suffix == blank and settings.stack_sections %} pf-stack-enabled{% endif %}" data-pf-home-shell{% if template.name == 'index' and template.suffix == blank and settings.smooth_scroll %} data-pf-smooth-scroll="{{ settings.scroll_speed | default: 65 }},{{ settings.scroll_smoothness | default: 6 }}"{% endif %} style="--pf-stack-offset:{{ settings.stack_offset | default: 10 }}px">
       <a class="skip-link" href="#indhold">{{ settings.skip_label | escape }}</a>
       {% sections 'header-group' %}
       <div class="pf-glass-ambient" data-pf-glass-ambient aria-hidden="true"></div>

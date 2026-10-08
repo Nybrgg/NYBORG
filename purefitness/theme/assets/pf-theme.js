@@ -155,6 +155,55 @@
   }
   window.addEventListener('resize', layoutStack, { passive: true });
   window.addEventListener('load', layoutStack);
+  // Gentle wheel scrolling on the homepage (mouse and touchpad only; touch keeps
+  // native momentum). Wheel deltas are scaled down and eased towards a target.
+  (() => {
+    const shell = document.querySelector('[data-pf-smooth-scroll]');
+    if (!shell || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const [speed, smoothness] = shell.dataset.pfSmoothScroll.split(',').map(Number);
+    const factor = (speed || 65) / 100;
+    const ease = 0.16 - Math.min(10, Math.max(1, smoothness || 6)) * 0.011; // 1 -> 0.149, 10 -> 0.05
+    let target = window.scrollY;
+    let current = window.scrollY;
+    let frame = 0;
+    let last = 0;
+    let animating = false;
+    const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight;
+    const blocked = event => {
+      if (event.ctrlKey || event.metaKey || event.defaultPrevented) return true;
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return true;
+      if (document.body.classList.contains('pf-universe-page') || document.querySelector('dialog[open]')) return true;
+      for (let node = event.target; node && node !== document.body && node.nodeType === 1; node = node.parentElement) {
+        const overflow = getComputedStyle(node).overflowY;
+        if ((overflow === 'auto' || overflow === 'scroll') && node.scrollHeight > node.clientHeight + 1) return true;
+      }
+      return false;
+    };
+    const step = time => {
+      const dt = last ? Math.min(64, time - last) : 16.7;
+      last = time;
+      current += (target - current) * (1 - Math.pow(1 - ease, dt / 16.7));
+      if (Math.abs(target - current) < 0.4) current = target;
+      window.scrollTo({ top: current, behavior: 'instant' });
+      if (current !== target) frame = requestAnimationFrame(step);
+      else { frame = 0; last = 0; animating = false; }
+    };
+    window.addEventListener('wheel', event => {
+      if (blocked(event)) return;
+      event.preventDefault();
+      if (!animating) target = current = window.scrollY;
+      const unit = event.deltaMode === 1 ? 36 : event.deltaMode === 2 ? window.innerHeight : 1;
+      target = Math.max(0, Math.min(maxScroll(), target + event.deltaY * unit * factor));
+      animating = true;
+      if (!frame) frame = requestAnimationFrame(step);
+    }, { passive: false });
+    // Keyboard, scrollbar or anchor jumps take over from an unfinished glide.
+    const stop = () => { if (frame) cancelAnimationFrame(frame); frame = 0; last = 0; animating = false; };
+    window.addEventListener('keydown', stop);
+    window.addEventListener('pointerdown', stop);
+    window.addEventListener('hashchange', stop);
+    document.addEventListener('click', event => { if (event.target.closest?.('a[href^="#"]')) stop(); });
+  })();
   function updateHeader() {
     document.querySelectorAll('[data-pf-header]').forEach(header => {
       header.classList.toggle('is-scrolled', header.hasAttribute('data-pf-solid') || window.scrollY > 50);
