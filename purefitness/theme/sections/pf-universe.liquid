@@ -96,7 +96,7 @@
   }
 {% endstyle %}
 
-<section id="pf-universe-{{ section.id }}" data-pf-universe data-section-id="{{ section.id }}"{% if pf_embedded %} data-pf-universe-embedded data-pf-universe-module="{{ 'pf-universe.js' | asset_url }}" data-pf-universe-styles="{{ 'pf-universe-dom.css' | asset_url }}" data-pf-universe-title="{{ 'pf.universe_title' | t | escape }}" hidden{% endif %}>
+<section id="pf-universe-{{ section.id }}" data-pf-universe data-section-id="{{ section.id }}"{% if pf_embedded %} data-pf-universe-embedded data-pf-universe-module="{{ 'pf-universe.js' | asset_url }}" data-pf-universe-styles="{{ 'pf-universe-dom.css' | asset_url }}" data-pf-universe-title="{% if settings.universe_title != blank %}{{ settings.universe_title | escape }}{% else %}{{ 'pf.universe_title' | t | escape }}{% endif %}" hidden{% endif %}>
   <script type="application/json" data-pf-universe-config>
   {
     "homeUrl": {{ pf_home_url | json }},
@@ -578,6 +578,40 @@
       "step": 2,
       "unit": "px",
       "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Skilte i 3D-universet"
+    },
+    {
+      "type": "text",
+      "id": "sign_brand",
+      "label": "Skilt ved indgangen",
+      "default": "PUREFITNESS"
+    },
+    {
+      "type": "text",
+      "id": "sign_brand_small",
+      "label": "Skilt i servicerummet",
+      "default": "purefitness"
+    },
+    {
+      "type": "text",
+      "id": "sign_service",
+      "label": "Serviceskilt",
+      "default": "SERVICE"
+    },
+    {
+      "type": "text",
+      "id": "sign_plate",
+      "label": "Tekst på vægtskiver",
+      "default": "PUREFITNESS"
+    },
+    {
+      "type": "text",
+      "id": "sign_plate_unit",
+      "label": "Enhed på vægtskiver",
+      "default": "KG"
     },
     {
       "type": "header",

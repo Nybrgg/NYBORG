@@ -113,6 +113,18 @@
         "id": "home_description",
         "label": "Beskrivelse",
         "default": "Purefitness skaber komplette træningsmiljøer for fitnesscentre, hoteller, virksomheder og foreninger. Udstyr, indretning, installation og service."
+      },
+      {
+        "type": "text",
+        "id": "universe_title",
+        "label": "Sidetitel: 3D-universet",
+        "default": "Purefitness | Oplev universet"
+      },
+      {
+        "type": "text",
+        "id": "contact_title",
+        "label": "Sidetitel: kontaktsiden",
+        "default": "Kontakt Purefitness"
       }
     ]
   },
