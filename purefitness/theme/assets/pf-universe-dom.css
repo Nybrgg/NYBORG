@@ -47,7 +47,7 @@ dialog.pf-universe-dialog.panel-menu { --pf-flow-enabled: var(--pf-universe-menu
 .pf-universe-page .universe-home:hover svg { transform: translateX(-3px); }
 
 /* Caption card */
-.pf-universe-page .journey-caption { position: fixed; left: clamp(12px, 2.4vw, 28px); bottom: calc(108px + env(safe-area-inset-bottom)); z-index: 9; width: min(440px, calc(100vw - 24px)); padding: 20px 22px 22px; border-radius: 20px; pointer-events: none; transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.pf-universe-page .journey-caption { position: fixed; left: clamp(12px, 2.4vw, 28px); bottom: calc(108px + env(safe-area-inset-bottom)); z-index: 9; width: min(440px, calc(100vw - 24px)); padding: 20px 22px 22px; border-radius: 20px; pointer-events: none; transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), translate 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
 .pf-universe-page .journey-caption[aria-hidden="true"] { opacity: 0; visibility: hidden; }
 .pf-universe-page .journey-caption:not(:has(.caption-copy h2)) { display: none; }
 .pf-universe-page .caption-copy h2 { font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem); font-weight: 500; line-height: 1.12; letter-spacing: -0.04em; margin: 0; text-wrap: balance; }
@@ -57,8 +57,9 @@ dialog.pf-universe-dialog.panel-menu { --pf-flow-enabled: var(--pf-universe-menu
 }
 @keyframes pf-caption-in { from { opacity: 0; transform: translateY(10px); } }
 
-/* While the scroll hint shows (first stop), lift the caption above it. */
-.pf-universe-page .experience.is-hero .journey-caption { bottom: calc(142px + env(safe-area-inset-bottom)); }
+/* While the scroll hint shows (first stop), the caption glides up above it.
+ * `translate` (not `bottom`) so the change animates on the compositor. */
+.pf-universe-page .experience.is-hero .journey-caption { translate: 0 -34px; }
 
 /* Location + next stop */
 .pf-universe-page .tour-hud { position: fixed; left: clamp(12px, 2.4vw, 28px); bottom: calc(26px + env(safe-area-inset-bottom)); z-index: 10; }
@@ -70,7 +71,7 @@ dialog.pf-universe-dialog.panel-menu { --pf-flow-enabled: var(--pf-universe-menu
 .pf-universe-page .tour-next { display: grid; place-items: center; width: 54px; border-left: 1px solid var(--hud-edge); color: #11160d; background: var(--accent); transition: filter 0.2s; }
 .pf-universe-page .tour-next:hover { filter: brightness(1.06); }
 .pf-universe-page .tour-next:disabled { opacity: 0.6; cursor: progress; }
-.pf-universe-page .tour-hint { display: flex; align-items: center; gap: 8px; margin: 12px 0 0 6px; font-size: 0.8rem; color: rgb(238 241 234 / 0.82); text-shadow: 0 1px 6px rgb(0 0 0 / 0.6); }
+.pf-universe-page .tour-hint { animation: pf-fade-hint 0.4s ease both; display: flex; align-items: center; gap: 8px; margin: 12px 0 0 6px; font-size: 0.8rem; color: rgb(238 241 234 / 0.82); text-shadow: 0 1px 6px rgb(0 0 0 / 0.6); }
 @media (prefers-reduced-motion: no-preference) { .pf-universe-page .tour-hint svg { animation: pf-nudge 1.8s ease-in-out infinite; } }
 @keyframes pf-nudge { 50% { transform: translateY(3px); } }
 
@@ -188,7 +189,7 @@ html.pf-universe-dialog-open { overflow: hidden; }
   .pf-universe-page .site-header { padding: 10px 12px; }
   .pf-universe-page .universe-home, .pf-universe-page .menu-trigger { min-height: 44px; }
   .pf-universe-page .journey-caption { bottom: calc(84px + env(safe-area-inset-bottom)); padding: 16px 18px 18px; border-radius: 18px; }
-  .pf-universe-page .experience.is-hero .journey-caption { bottom: calc(116px + env(safe-area-inset-bottom)); }
+  .pf-universe-page .experience.is-hero .journey-caption { translate: 0 -32px; }
   .pf-universe-page .caption-copy p { font-size: 0.88rem; }
   .pf-universe-page .tour-hud { left: 12px; right: 12px; bottom: calc(16px + env(safe-area-inset-bottom)); }
   .pf-universe-page .tour-location { min-height: 50px; }
@@ -209,3 +210,6 @@ html.pf-universe-dialog-open { overflow: hidden; }
   .pf-universe-page :is(.universe-home, .menu-trigger, .journey-caption, .tour-location), dialog.pf-universe-dialog { background: Canvas !important; border: 1px solid CanvasText; }
   .pf-universe-page .tour-next { background: ButtonFace; color: ButtonText; }
 }
+
+@keyframes pf-fade-hint { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pf-universe-page .journey-caption { transition: none; } .pf-universe-page .tour-hint { animation: none; } }
