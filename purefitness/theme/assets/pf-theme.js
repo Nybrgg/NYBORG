@@ -104,7 +104,9 @@
     items.forEach((item, index) => {
       const siblings = item.parentElement ? [...item.parentElement.children].filter(child => child.hasAttribute('data-pf-reveal')) : [];
       item.style.setProperty('--pf-reveal-index', String(Math.max(0, siblings.indexOf(item))));
-      revealObserver.observe(item);
+      // Anything already on screen at load (e.g. the hero) reveals straight away.
+      if (item.getBoundingClientRect().top < window.innerHeight) requestAnimationFrame(() => item.classList.add('is-revealed'));
+      else revealObserver.observe(item);
     });
   }
   // Hero shortcuts select the matching environment tab in the solutions section.

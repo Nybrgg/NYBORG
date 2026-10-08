@@ -43,8 +43,17 @@
                 <h3 class="pf-solutions__title">{{ block.settings.label | escape }}</h3>
                 {% if block.settings.show_summary and block.settings.summary != blank %}<p class="pf-solutions__summary">{{ block.settings.summary | escape | newline_to_br }}</p>{% endif %}
                 {% if block.settings.show_description and block.settings.description != blank %}<p class="pf-solutions__detail">{{ block.settings.description | escape | newline_to_br }}</p>{% endif %}
-                {% capture contact_action %}{% if block.settings.show_contact and block.settings.contact_label != blank %}{% if block.settings.contact_url != blank %}<a class="pf-button pf-button--primary" href="{{ block.settings.contact_url | escape }}"><span>{{ block.settings.contact_label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</span></a>{% else %}<button type="button" class="pf-button pf-button--primary" data-pf-contact="{{ block.settings.contact_kind | escape }}"><span>{{ block.settings.contact_label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</span></button>{% endif %}{% endif %}{% endcapture %}
-                {% capture universe_action %}{% if block.settings.show_universe and block.settings.universe_label != blank %}<a class="pf-link" href="{{ row_universe_url | escape }}"><span>{{ block.settings.universe_label | escape }}</span>{% render 'pf-icon', name: 'arrow-right', size: 17 %}</a>{% endif %}{% endcapture %}
+                {% liquid
+                  assign contact_class = 'pf-button pf-button--primary'
+                  if block.settings.contact_style == 'glass'
+                    assign contact_class = 'pf-button pf-button--glass'
+                  elsif block.settings.contact_style == 'link'
+                    assign contact_class = 'pf-link'
+                  endif
+                %}
+                {% capture contact_style %}{% if block.settings.contact_background != blank %}--pf-button-bg:{{ block.settings.contact_background }};{% endif %}{% if block.settings.contact_text != blank %}--pf-button-text:{{ block.settings.contact_text }};color:{{ block.settings.contact_text }};{% endif %}{% endcapture %}
+                {% capture contact_action %}{% if block.settings.show_contact and block.settings.contact_label != blank %}{% if block.settings.contact_url != blank %}<a class="{{ contact_class }}" href="{{ block.settings.contact_url | escape }}" style="{{ contact_style }}"><span>{{ block.settings.contact_label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</span></a>{% else %}<button type="button" class="{{ contact_class }}" data-pf-contact="{{ block.settings.contact_kind | escape }}" style="{{ contact_style }}"><span>{{ block.settings.contact_label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'arrow-up-right', size: 17 %}</span></button>{% endif %}{% endif %}{% endcapture %}
+                {% capture universe_action %}{% if block.settings.show_universe and block.settings.universe_label != blank %}<a class="pf-link" href="{{ row_universe_url | escape }}"{% if block.settings.universe_color != blank %} style="color:{{ block.settings.universe_color }}"{% endif %}><span>{{ block.settings.universe_label | escape }}</span>{% render 'pf-icon', name: 'arrow-right', size: 17 %}</a>{% endif %}{% endcapture %}
                 {% if contact_action != blank or universe_action != blank %}<div class="pf-actions pf-actions--compact">{% if block.settings.action_order == 'universe_first' %}{{ universe_action }}{{ contact_action }}{% else %}{{ contact_action }}{{ universe_action }}{% endif %}</div>{% endif %}
               </div>
             </div>
@@ -263,6 +272,42 @@
       "step": 1,
       "unit": "px",
       "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Typografi"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Overskriftens størrelse",
+      "min": 70,
+      "max": 140,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Overskriftens farve",
+      "info": "Tomt felt bruger sektionens tekstfarve."
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Brødtekstens størrelse",
+      "min": 85,
+      "max": 125,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Brødtekstens farve",
+      "info": "Tomt felt bruger sektionens dæmpede farve."
     }
   ],
   "presets": [
@@ -427,6 +472,37 @@
           "default": "projekt"
         },
         {
+          "type": "select",
+          "id": "contact_style",
+          "label": "Kontaktknap: stil",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Fyldt"
+            },
+            {
+              "value": "glass",
+              "label": "Glas"
+            },
+            {
+              "value": "link",
+              "label": "Tekstlink"
+            }
+          ],
+          "default": "primary"
+        },
+        {
+          "type": "color",
+          "id": "contact_background",
+          "label": "Kontaktknap: baggrund",
+          "info": "Tomt felt bruger accentfarven."
+        },
+        {
+          "type": "color",
+          "id": "contact_text",
+          "label": "Kontaktknap: tekst"
+        },
+        {
           "type": "checkbox",
           "id": "show_universe",
           "label": "Vis universknappen",
@@ -442,6 +518,11 @@
           "type": "url",
           "id": "universe_url",
           "label": "Universknappens egen destination"
+        },
+        {
+          "type": "color",
+          "id": "universe_color",
+          "label": "Link til universet: farve"
         },
         {
           "type": "select",

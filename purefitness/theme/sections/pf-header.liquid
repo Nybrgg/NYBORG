@@ -41,7 +41,7 @@
     </nav>
     <div class="pf-header__actions landing-header-actions">
       {% if section.settings.show_universe_link %}<a class="pf-header__universe" href="{{ universe }}">{% render 'pf-icon', name: 'move-up-right', size: 16 %}<span>{{ section.settings.universe_label | escape }}</span></a>{% endif %}
-      {% if show_cta %}<button type="button" class="pf-button pf-button--primary pf-button--compact" data-pf-contact="{{ section.settings.cta_kind | default: 'projekt' }}"><span>{{ section.settings.cta_label | escape }}</span></button>{% endif %}
+      {% if show_cta %}<button type="button" class="pf-button pf-button--primary pf-button--compact" data-pf-contact="{{ section.settings.cta_kind | default: 'projekt' }}" style="{% if section.settings.cta_background != blank %}--pf-button-bg:{{ section.settings.cta_background }};{% endif %}{% if section.settings.cta_text != blank %}--pf-button-text:{{ section.settings.cta_text }};{% endif %}"><span>{{ section.settings.cta_label | escape }}</span></button>{% endif %}
       {% if section.settings.show_menu %}<button class="pf-header__menu landing-menu" data-pf-menu-open aria-label="{{ section.settings.open_menu_label | escape }}" aria-expanded="false">{% render 'pf-icon', name: 'menu', size: 22 %}</button>{% endif %}
     </div>
   </div>
@@ -63,7 +63,7 @@
         {% endfor %}
       {% endif %}
     </nav>
-    {% if show_cta %}<button type="button" class="pf-button pf-button--primary pf-menu-cta" data-pf-contact="{{ section.settings.cta_kind | default: 'projekt' }}"><span>{{ section.settings.cta_label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'move-up-right', size: 18 %}</span></button>{% endif %}
+    {% if show_cta %}<button type="button" class="pf-button pf-button--primary pf-menu-cta" data-pf-contact="{{ section.settings.cta_kind | default: 'projekt' }}" style="{% if section.settings.cta_background != blank %}--pf-button-bg:{{ section.settings.cta_background }};{% endif %}{% if section.settings.cta_text != blank %}--pf-button-text:{{ section.settings.cta_text }};{% endif %}"><span>{{ section.settings.cta_label | escape }}</span><span class="pf-button__icon">{% render 'pf-icon', name: 'move-up-right', size: 18 %}</span></button>{% endif %}
   </div>
 </dialog>
 
@@ -145,6 +145,17 @@
         }
       ],
       "default": "projekt"
+    },
+    {
+      "type": "color",
+      "id": "cta_background",
+      "label": "Kontaktknap: baggrund",
+      "info": "Tomt felt bruger accentfarven."
+    },
+    {
+      "type": "color",
+      "id": "cta_text",
+      "label": "Kontaktknap: tekst"
     },
     {
       "type": "checkbox",

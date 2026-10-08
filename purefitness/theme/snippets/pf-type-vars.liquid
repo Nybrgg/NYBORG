@@ -1,0 +1,8 @@
+{% doc %}
+Typography overrides shared by sections: heading/body size (percent) and colour.
+@param {object} s - The section settings.
+{% enddoc %}
+{%- if s.heading_size -%}--pf-heading-scale:{{ s.heading_size | divided_by: 100.0 }};{%- endif -%}
+{%- if s.body_size -%}--pf-body-scale:{{ s.body_size | divided_by: 100.0 }};{%- endif -%}
+{%- if s.heading_color != blank -%}--pf-heading-color:{{ s.heading_color }};{%- endif -%}
+{%- if s.body_color != blank -%}--pf-body-color:{{ s.body_color }};{%- endif -%}

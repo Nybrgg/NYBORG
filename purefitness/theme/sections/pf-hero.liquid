@@ -11,7 +11,7 @@
   endif
 %}
 {% if section.settings.show_section %}
-<section id="hero-{{ section.id }}" class="pf-hero landing-hero pf-simple-hero" data-pf-anchor="hero" {% if hero_has_heading %}aria-labelledby="hero-title-{{ section.id }}"{% endif %} style="--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;--pf-image-x:{{ section.settings.image_position_x }}%;--pf-image-y:{{ section.settings.image_position_y }}%;--pf-image-x-mobile:{{ section.settings.image_position_x_mobile }}%;--pf-image-y-mobile:{{ section.settings.image_position_y_mobile }}%;">
+<section id="hero-{{ section.id }}" class="pf-hero landing-hero pf-simple-hero" data-pf-anchor="hero" {% if hero_has_heading %}aria-labelledby="hero-title-{{ section.id }}"{% endif %} style="--pf-section-bg:{{ section.settings.background_color }};--pf-section-text:{{ section.settings.text_color }};--pf-section-muted:{{ section.settings.muted_color }};--pf-accent:{{ section.settings.accent_color }};--pf-space-top:{{ section.settings.padding_top }}px;--pf-space-bottom:{{ section.settings.padding_bottom }}px;--pf-space-top-mobile:{{ section.settings.padding_top_mobile }}px;--pf-space-bottom-mobile:{{ section.settings.padding_bottom_mobile }}px;--pf-image-x:{{ section.settings.image_position_x }}%;--pf-image-y:{{ section.settings.image_position_y }}%;--pf-image-x-mobile:{{ section.settings.image_position_x_mobile }}%;--pf-image-y-mobile:{{ section.settings.image_position_y_mobile }}%;{% render 'pf-type-vars', s: section.settings %}">
   {% if section.settings.show_image %}
     <div class="pf-hero__media" aria-hidden="{% if section.settings.image_alt == blank %}true{% else %}false{% endif %}">
       {% render 'pf-image', image: section.settings.image, mobile_image: section.settings.mobile_image, asset: 'premium-hero.webp', mobile_asset: 'premium-hero-mobile.webp', class: 'pf-hero__image', alt: section.settings.image_alt, loading: 'eager', fetchpriority: 'high', sizes: '100vw', width: 1672, height: 941 %}
@@ -22,13 +22,20 @@
       {% if section.settings.show_eyebrow and section.settings.eyebrow != blank %}<p class="pf-eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
       {% if hero_has_heading %}<h1 id="hero-title-{{ section.id }}" class="pf-hero__title">{% if section.settings.heading_line_1 != blank %}<span class="pf-hero__line">{{ section.settings.heading_line_1 | escape }}</span>{% endif %}{% if section.settings.heading_line_2 != blank %}<span class="pf-hero__line pf-hero__line--accent">{{ section.settings.heading_line_2 | escape }}</span>{% endif %}</h1>{% endif %}
       {% if section.settings.show_description %}{% if section.settings.description_line_1 != blank or section.settings.description_line_2 != blank %}<p class="pf-hero__lead">{{ section.settings.description_line_1 | escape }} {{ section.settings.description_line_2 | escape }}</p>{% endif %}{% endif %}
-      {% if section.settings.show_buttons and section.blocks.size > 0 %}<div class="pf-actions">{% for block in section.blocks %}{% render 'pf-action-button', block: block, universe_url: universe_url %}{% endfor %}</div>{% endif %}
+      {% if section.settings.show_buttons and section.blocks.size > 0 %}<div class="pf-actions">{% for block in section.blocks %}{% if block.type == 'button' %}{% render 'pf-action-button', block: block, universe_url: universe_url %}{% endif %}{% endfor %}</div>{% endif %}
     </div>
-    {% if section.settings.show_environments and section.settings.environments != blank %}
-      {% assign environments = section.settings.environments | split: '·' %}
-      <nav class="pf-hero__environments" aria-label="{{ section.settings.environments_label | default: 'Miljøer' | escape }}" data-pf-reveal>
-        {% for environment in environments %}<a href="#loesninger" data-pf-solution-target="{{ forloop.index0 }}">{{ environment | strip | escape }}</a>{% endfor %}
-      </nav>
+    {% if section.settings.show_environments %}
+      {% assign shortcut_blocks = section.blocks | where: 'type', 'shortcut' %}
+      {% if shortcut_blocks.size > 0 or section.settings.environments != blank %}
+        <nav class="pf-hero__environments" aria-label="{{ section.settings.environments_label | default: 'Miljøer' | escape }}" data-pf-reveal>
+          {% if shortcut_blocks.size > 0 %}
+            {% for block in shortcut_blocks %}{% if block.settings.label != blank %}{% assign solution_index = block.settings.solution | minus: 1 %}<a href="{{ block.settings.url | default: '#loesninger' }}"{% if block.settings.url == blank %} data-pf-solution-target="{{ solution_index }}"{% endif %}{% if block.settings.text_color != blank %} style="color:{{ block.settings.text_color }}"{% endif %} {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>{% endif %}{% endfor %}
+          {% else %}
+            {% assign environments = section.settings.environments | split: '·' %}
+            {% for environment in environments %}<a href="#loesninger" data-pf-solution-target="{{ forloop.index0 }}">{{ environment | strip | escape }}</a>{% endfor %}
+          {% endif %}
+        </nav>
+      {% endif %}
     {% endif %}
   </div>
 </section>
@@ -107,7 +114,7 @@
       "id": "environments",
       "label": "Miljøer",
       "default": "Fitnesscentre · Hoteller · Erhverv · Foreninger",
-      "info": "Adskil med ·. Vises som genveje nederst i heroen."
+      "info": "Bruges kun, hvis der ikke er tilføjet blokke af typen Genvej til miljø. Adskil med ·."
     },
     {
       "type": "text",
@@ -295,6 +302,42 @@
       "step": 1,
       "unit": "%",
       "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Typografi"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Overskriftens størrelse",
+      "min": 70,
+      "max": 140,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Overskriftens farve",
+      "info": "Tomt felt bruger sektionens tekstfarve."
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Brødtekstens størrelse",
+      "min": 85,
+      "max": 125,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Brødtekstens farve",
+      "info": "Tomt felt bruger sektionens dæmpede farve."
     }
   ],
   "presets": [
@@ -445,6 +488,53 @@
           "step": 1,
           "unit": "px",
           "default": 19
+        }
+      ]
+    },
+    {
+      "type": "shortcut",
+      "name": "Genvej til miljø",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Tekst",
+          "default": "Fitnesscentre"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Eget link",
+          "info": "Tomt felt viser miljøet i løsningssektionen."
+        },
+        {
+          "type": "select",
+          "id": "solution",
+          "label": "Miljø i løsningssektionen",
+          "options": [
+            {
+              "value": "1",
+              "label": "Første"
+            },
+            {
+              "value": "2",
+              "label": "Andet"
+            },
+            {
+              "value": "3",
+              "label": "Tredje"
+            },
+            {
+              "value": "4",
+              "label": "Fjerde"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Tekstfarve"
         }
       ]
     }

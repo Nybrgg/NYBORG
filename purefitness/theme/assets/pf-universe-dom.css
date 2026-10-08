@@ -57,6 +57,9 @@ dialog.pf-universe-dialog.panel-menu { --pf-flow-enabled: var(--pf-universe-menu
 }
 @keyframes pf-caption-in { from { opacity: 0; transform: translateY(10px); } }
 
+/* While the scroll hint shows (first stop), lift the caption above it. */
+.pf-universe-page .experience.is-hero .journey-caption { bottom: calc(142px + env(safe-area-inset-bottom)); }
+
 /* Location + next stop */
 .pf-universe-page .tour-hud { position: fixed; left: clamp(12px, 2.4vw, 28px); bottom: calc(26px + env(safe-area-inset-bottom)); z-index: 10; }
 .pf-universe-page .tour-location { display: inline-flex; align-items: stretch; min-height: 54px; border-radius: 999px; overflow: hidden; }
@@ -185,6 +188,7 @@ html.pf-universe-dialog-open { overflow: hidden; }
   .pf-universe-page .site-header { padding: 10px 12px; }
   .pf-universe-page .universe-home, .pf-universe-page .menu-trigger { min-height: 44px; }
   .pf-universe-page .journey-caption { bottom: calc(84px + env(safe-area-inset-bottom)); padding: 16px 18px 18px; border-radius: 18px; }
+  .pf-universe-page .experience.is-hero .journey-caption { bottom: calc(116px + env(safe-area-inset-bottom)); }
   .pf-universe-page .caption-copy p { font-size: 0.88rem; }
   .pf-universe-page .tour-hud { left: 12px; right: 12px; bottom: calc(16px + env(safe-area-inset-bottom)); }
   .pf-universe-page .tour-location { min-height: 50px; }

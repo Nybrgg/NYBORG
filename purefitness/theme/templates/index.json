@@ -42,11 +42,47 @@
             "icon": "arrow-down",
             "icon_size": 15
           }
+        },
+        "shortcut_1": {
+          "type": "shortcut",
+          "settings": {
+            "label": "Fitnesscentre",
+            "url": "",
+            "solution": "1"
+          }
+        },
+        "shortcut_2": {
+          "type": "shortcut",
+          "settings": {
+            "label": "Hoteller",
+            "url": "",
+            "solution": "2"
+          }
+        },
+        "shortcut_3": {
+          "type": "shortcut",
+          "settings": {
+            "label": "Erhverv",
+            "url": "",
+            "solution": "3"
+          }
+        },
+        "shortcut_4": {
+          "type": "shortcut",
+          "settings": {
+            "label": "Foreninger",
+            "url": "",
+            "solution": "4"
+          }
         }
       },
       "block_order": [
         "universe",
-        "solutions"
+        "solutions",
+        "shortcut_1",
+        "shortcut_2",
+        "shortcut_3",
+        "shortcut_4"
       ]
     },
     "intro": {
@@ -62,7 +98,35 @@
         "glass_flow_enabled": true,
         "glass_flow_strength": 8,
         "glass_opacity": 86
-      }
+      },
+      "blocks": {
+        "pillar_1": {
+          "type": "pillar",
+          "settings": {
+            "label": "Udstyr",
+            "text": "Styrke, kondition og frie vægte."
+          }
+        },
+        "pillar_2": {
+          "type": "pillar",
+          "settings": {
+            "label": "Indretning",
+            "text": "Rum, flow og materialer."
+          }
+        },
+        "pillar_3": {
+          "type": "pillar",
+          "settings": {
+            "label": "Service",
+            "text": "Vedligeholdelse efter aftale."
+          }
+        }
+      },
+      "block_order": [
+        "pillar_1",
+        "pillar_2",
+        "pillar_3"
+      ]
     },
     "solutions": {
       "type": "pf-solutions",
