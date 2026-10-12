@@ -1,4 +1,4 @@
-# PureFitness Shopify-tema 2.0
+# PureFitness Shopify-tema 2.1
 
 - `theme/` er Shopify-temaet. Det er det, der uploades (zip indholdet af mappen).
 - Temaet bruger det oprindelige 3D-univers (`theme/assets/pf-world-6B2FQJYY.js` og `pf-world-K5HFMRHI.js`) med den nye brugerflade (`pf-universe-dom.css`).
@@ -26,3 +26,7 @@ cd tools && node preview.mjs 4173
 
 Teksturerne er CC0-scanninger fra Poly Haven (se `theme/assets/sources.json`), og himlen ved solnedgang er `sunset.hdr`.
 Billederne af miljøerne på forsiden (`pf-env-*.webp`) er renderet fra det oprindelige 3D-univers med `tools/old-stills.mjs`.
+
+## Bevægelse og materialer (2.1)
+
+Menu- og kontaktskufferne er fysiske "sheets" (`assets/pf-theme.js`): de glider ind på en kritisk dæmpet fjeder, følger fingeren 1:1 ved swipe, kastes lukket med fingerens fart (momentum-projektion), giver modstand mod venstre (rubber-band) og kan gribes igen midt i bevægelsen. Med "reducer bevægelse" bruges en kort fade i stedet. Test: `node tools/sheet-test.mjs`.

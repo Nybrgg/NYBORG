@@ -2,8 +2,143 @@
 (() => {
   const contactDialog = kind => document.querySelector(`[data-pf-contact-dialog="${kind}"]`) || document.querySelector('[data-pf-contact-dialog="projekt"]');
   const openers = new WeakMap();
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* Menu and contact drawers behave like physical sheets: they slide in on a
+   * critically damped spring, follow a swipe 1:1, are thrown shut with the
+   * finger's velocity and can be grabbed again while still moving. */
+  const sheets = new WeakMap();
+  const isSheet = dialog => dialog?.matches?.('[data-pf-menu], [data-pf-contact-dialog]');
+  function sheetState(dialog) {
+    let state = sheets.get(dialog);
+    if (!state) { state = { x: 0, v: 0, raf: 0, onRest: null }; sheets.set(dialog, state); }
+    return state;
+  }
+  function renderSheet(dialog, state) {
+    const width = dialog.offsetWidth || 1;
+    dialog.style.setProperty('--pf-sheet-x', `${state.x.toFixed(2)}px`);
+    dialog.style.setProperty('--pf-sheet-progress', Math.max(0, Math.min(1, 1 - state.x / width)).toFixed(3));
+  }
+  function stopSheet(state) { cancelAnimationFrame(state.raf); state.raf = 0; state.onRest = null; }
+  // damping 1 = no overshoot; response = seconds to (mostly) reach the target.
+  function springSheet(dialog, target, { velocity, damping = 1, response = 0.4, onRest } = {}) {
+    const state = sheetState(dialog);
+    stopSheet(state);
+    if (velocity !== undefined) state.v = velocity;
+    state.onRest = onRest || null;
+    const stiffness = (2 * Math.PI / response) ** 2;
+    const friction = 4 * Math.PI * damping / response;
+    let last = performance.now();
+    const step = now => {
+      // Real elapsed time (so slow frames don't slow the motion), integrated in small sub-steps.
+      const elapsed = Math.min(0.1, (now - last) / 1000);
+      const steps = Math.max(1, Math.ceil(elapsed / 0.004));
+      const dt = elapsed / steps;
+      last = now;
+      for (let i = 0; i < steps; i++) {
+        state.v += (-stiffness * (state.x - target) - friction * state.v) * dt;
+        state.x += state.v * dt;
+      }
+      if (Math.abs(state.x - target) < 0.5 && Math.abs(state.v) < 8) {
+        state.x = target; state.v = 0; state.raf = 0;
+        renderSheet(dialog, state);
+        const done = state.onRest; state.onRest = null; done?.();
+        return;
+      }
+      renderSheet(dialog, state);
+      state.raf = requestAnimationFrame(step);
+    };
+    state.raf = requestAnimationFrame(step);
+  }
+  function dismiss(dialog, restore = true, velocity = 0) {
+    if (!dialog?.open) return;
+    if (!isSheet(dialog)) { close(dialog, restore); return; }
+    dialog.dataset.pfClosing = 'true';
+    if (reducedMotion.matches) {
+      window.setTimeout(() => { if (dialog.dataset.pfClosing) close(dialog, restore); }, 180);
+      return;
+    }
+    springSheet(dialog, dialog.offsetWidth, { velocity, response: 0.32, onRest: () => close(dialog, restore) });
+  }
+  // Apple's scroll-deceleration projection: where a flick would come to rest.
+  const project = velocity => velocity / 1000 * 0.998 / (1 - 0.998);
+  const rubberband = (overshoot, size) => (overshoot * size * 0.55) / (size + 0.55 * overshoot);
+  function initSwipe(dialog) {
+    let drag = null;
+    let suppressClickUntil = 0;
+    const capture = id => { try { dialog.setPointerCapture(id); } catch { /* pointer already gone */ } };
+    // A swipe that ends over a link or button must not also activate it.
+    dialog.addEventListener('click', event => {
+      if (performance.now() < suppressClickUntil) { event.preventDefault(); event.stopPropagation(); }
+    }, { capture: true });
+    const release = cancelled => {
+      if (!drag) return;
+      const { active, history } = drag;
+      drag = null;
+      if (!active) return;
+      const state = sheetState(dialog);
+      const now = performance.now();
+      const recent = history.filter(point => now - point.t < 100);
+      const first = recent[0], lastPoint = recent[recent.length - 1];
+      const velocity = first && lastPoint && lastPoint.t > first.t ? (lastPoint.x - first.x) / ((lastPoint.t - first.t) / 1000) : 0;
+      if (!cancelled && state.x + project(velocity) > dialog.offsetWidth * 0.5) dismiss(dialog, true, velocity);
+      else springSheet(dialog, 0, { velocity, damping: 0.8, response: 0.3 });
+      suppressClickUntil = performance.now() + 350;
+    };
+    dialog.addEventListener('pointerdown', event => {
+      if (event.pointerType === 'mouse' || reducedMotion.matches || !event.isPrimary) return;
+      if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const state = sheetState(dialog);
+      drag = { id: event.pointerId, x0: event.clientX, y0: event.clientY, start: state.x, active: false, history: [] };
+      if (state.raf) {
+        // Grabbed mid-flight: stop where it is on screen and follow the finger from there.
+        stopSheet(state);
+        delete dialog.dataset.pfClosing;
+        drag.active = true;
+        capture(event.pointerId);
+      }
+    });
+    dialog.addEventListener('pointermove', event => {
+      if (!drag || event.pointerId !== drag.id) return;
+      const dx = event.clientX - drag.x0;
+      const dy = event.clientY - drag.y0;
+      if (!drag.active) {
+        if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { drag = null; return; }
+        if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+        drag.active = true;
+        drag.x0 = event.clientX;
+        capture(event.pointerId);
+        return;
+      }
+      const raw = drag.start + dx;
+      const state = sheetState(dialog);
+      state.x = raw < 0 ? -rubberband(-raw, 60) : raw;
+      state.v = 0;
+      drag.history.push({ x: state.x, t: performance.now() });
+      if (drag.history.length > 8) drag.history.shift();
+      renderSheet(dialog, state);
+    });
+    dialog.addEventListener('pointerup', event => { if (drag && event.pointerId === drag.id) release(false); });
+    dialog.addEventListener('pointercancel', event => { if (drag && event.pointerId === drag.id) release(true); });
+  }
+  function presentSheet(dialog) {
+    if (!isSheet(dialog)) return;
+    const state = sheetState(dialog);
+    delete dialog.dataset.pfClosing;
+    if (reducedMotion.matches) { stopSheet(state); state.x = 0; state.v = 0; renderSheet(dialog, state); return; }
+    if (!state.raf && state.x === 0) { state.x = dialog.offsetWidth; state.v = 0; renderSheet(dialog, state); }
+    springSheet(dialog, 0, { response: 0.42 });
+  }
+
   function close(dialog, restore = true) {
     if (!dialog?.open) return;
+    if (isSheet(dialog)) {
+      const state = sheetState(dialog);
+      stopSheet(state); state.x = 0; state.v = 0;
+      delete dialog.dataset.pfClosing;
+      dialog.style.removeProperty('--pf-sheet-x');
+      dialog.style.removeProperty('--pf-sheet-progress');
+    }
     dialog.close();
     document.querySelectorAll('[data-pf-menu-open]').forEach(button => button.setAttribute('aria-expanded', 'false'));
     if (restore) {
@@ -16,7 +151,8 @@
     if (!dialog) return;
     document.querySelectorAll('dialog[open]').forEach(other => { if (other !== dialog) close(other, false); });
     if (trigger) openers.set(dialog, trigger);
-    if (!dialog.open) dialog.showModal();
+    if (!dialog.open) { dialog.showModal(); presentSheet(dialog); }
+    else if (dialog.dataset.pfClosing) presentSheet(dialog);
     if (dialog.hasAttribute('data-pf-menu')) document.querySelectorAll('[data-pf-menu-open]').forEach(button => button.setAttribute('aria-expanded', 'true'));
   }
   function openContact(kind, trigger) {
@@ -43,7 +179,7 @@
     const menu = event.target.closest('[data-pf-menu-open]');
     if (menu) { open(document.querySelector('[data-pf-menu]'), menu); return; }
     const closer = event.target.closest('[data-pf-close]');
-    if (closer) { close(closer.closest('dialog')); return; }
+    if (closer) { dismiss(closer.closest('dialog')); return; }
     const menuLink = event.target.closest('[data-pf-menu] a');
     if (menuLink) close(menuLink.closest('dialog'), false);
   });
@@ -54,9 +190,10 @@
       dialog.addEventListener('click', event => {
         if (event.target !== dialog) return;
         const bounds = dialog.getBoundingClientRect();
-        if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) close(dialog);
+        if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dismiss(dialog);
       });
-      dialog.addEventListener('cancel', event => { event.preventDefault(); close(dialog); });
+      dialog.addEventListener('cancel', event => { event.preventDefault(); dismiss(dialog); });
+      if (isSheet(dialog)) initSwipe(dialog);
     });
   }
   function initTabs(scope = document) {

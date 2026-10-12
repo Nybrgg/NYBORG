@@ -169,7 +169,7 @@ main#indhold { display: block; }
 .pf-header__nav + .pf-header__actions { margin-left: 8px; }
 .pf-header__universe { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 999px; font-size: 0.9rem; font-weight: 500; }
 .pf-header__universe:hover { background: rgb(255 255 255 / 0.07); }
-.pf-header__menu { display: none; place-items: center; width: 44px; height: 44px; border-radius: 999px; background: rgb(255 255 255 / 0.08); border: 1px solid rgb(255 255 255 / 0.14); }
+.pf-header__menu { display: none; place-items: center; width: 44px; height: 44px; border-radius: 999px; background: rgb(255 255 255 / 0.08); border: 1px solid rgb(255 255 255 / 0.14); transition: transform 0.35s var(--pf-ease), background-color 0.2s; }
 .pf-header--overlay:not(.is-scrolled) .pf-header__bar { background: transparent; }
 .pf-header--overlay:not(.is-scrolled)::before { content: ""; position: absolute; inset: 0 0 -40px; z-index: -1; background: linear-gradient(180deg, rgb(6 10 8 / 0.55), transparent); pointer-events: none; }
 @media (max-width: 980px) {
@@ -194,9 +194,15 @@ main#indhold { display: block; }
 }
 .pf-drawer::backdrop { background: rgb(4 7 5 / 0.55); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
 .pf-drawer[open] { display: flex; flex-direction: column; }
-@media (prefers-reduced-motion: no-preference) {
-  .pf-drawer[open] { animation: pf-drawer-in 0.5s var(--pf-ease); }
-  .pf-drawer[open]::backdrop { animation: pf-fade-in 0.4s ease; }
+/* pf-theme.js drives --pf-sheet-x with a spring (and the finger while swiping);
+ * the scrim follows the sheet's progress so dimming tracks the motion. */
+.pf-drawer[data-pf-menu], .pf-drawer[data-pf-contact-dialog] { transform: translate3d(var(--pf-sheet-x, 0px), 0, 0); touch-action: pan-y; }
+.pf-drawer[data-pf-menu]::backdrop, .pf-drawer[data-pf-contact-dialog]::backdrop { opacity: var(--pf-sheet-progress, 1); }
+.pf-drawer[open]:not([data-pf-menu], [data-pf-contact-dialog]) { animation: pf-drawer-in 0.5s var(--pf-ease); }
+@media (prefers-reduced-motion: reduce) {
+  .pf-drawer[open] { animation: pf-fade-in 0.2s ease; transform: none; }
+  .pf-drawer[open]::backdrop { animation: pf-fade-in 0.2s ease; }
+  .pf-drawer[data-pf-closing], .pf-drawer[data-pf-closing]::backdrop { opacity: 0; transition: opacity 0.18s ease; }
 }
 @keyframes pf-drawer-in { from { transform: translateX(40px); opacity: 0; } }
 @keyframes pf-fade-in { from { opacity: 0; } }
@@ -208,7 +214,7 @@ main#indhold { display: block; }
 .pf-drawer .panel-title { font-size: clamp(1.8rem, 1.4rem + 1.4vw, 2.4rem); letter-spacing: -0.045em; margin-bottom: 14px; }
 .pf-drawer .panel-intro { color: var(--pf-dialog-muted, var(--pf-muted)); margin-bottom: 28px; }
 .pf-menu-list { display: grid; margin-top: 18px; border-top: 1px solid var(--pf-line); }
-.pf-menu-list a { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 2px; border-bottom: 1px solid var(--pf-line); font-size: 1.45rem; font-weight: 500; letter-spacing: -0.035em; transition: color 0.2s, padding 0.35s var(--pf-ease); }
+.pf-menu-list a { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 2px; border-bottom: 1px solid var(--pf-line); font-size: 1.45rem; font-weight: 500; letter-spacing: -0.035em; transition: color 0.2s, padding 0.35s var(--pf-ease), opacity 0.25s; }
 .pf-menu-list a:hover { color: var(--pf-accent); padding-left: 8px; }
 .pf-menu-cta { width: 100%; margin-top: 28px; justify-content: space-between; }
 
@@ -294,7 +300,7 @@ main#indhold { display: block; }
 /* ------------------------------------------------------------------ solutions */
 .pf-solutions__layout { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(28px, 4vw, 64px); align-items: start; }
 .pf-solutions__tabs { display: grid; border-top: 1px solid var(--pf-section-line, var(--pf-line)); }
-.pf-solutions__tab { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; width: 100%; padding: 24px 4px; border-bottom: 1px solid var(--pf-section-line, var(--pf-line)); text-align: left; color: var(--pf-section-muted, var(--pf-muted)); transition: color 0.25s; }
+.pf-solutions__tab { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; width: 100%; padding: 24px 4px; border-bottom: 1px solid var(--pf-section-line, var(--pf-line)); text-align: left; color: var(--pf-section-muted, var(--pf-muted)); transition: color 0.25s, transform 0.35s var(--pf-ease); }
 .pf-solutions__tab::after { content: ""; position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; background: var(--pf-accent); transform: scaleX(0); transform-origin: left; transition: transform 0.6s var(--pf-ease); }
 .pf-solutions__tab[aria-selected="true"] { color: var(--pf-section-text, var(--pf-text)); }
 .pf-solutions__tab[aria-selected="true"]::after { transform: scaleX(1); }
@@ -353,7 +359,7 @@ main#indhold { display: block; }
 .pf-faq__aside { position: sticky; top: 120px; display: grid; gap: 18px; }
 .pf-disclosure { border-bottom: 1px solid var(--pf-section-line, var(--pf-line)); }
 .pf-faq__list { border-top: 1px solid var(--pf-section-line, var(--pf-line)); }
-.pf-disclosure summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 2px; cursor: pointer; list-style: none; font-size: clamp(1.05rem, 1rem + 0.3vw, 1.22rem); font-weight: 500; letter-spacing: -0.02em; transition: color 0.2s; }
+.pf-disclosure summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 2px; cursor: pointer; list-style: none; font-size: clamp(1.05rem, 1rem + 0.3vw, 1.22rem); font-weight: 500; letter-spacing: -0.02em; transition: color 0.2s, transform 0.35s var(--pf-ease); }
 .pf-disclosure summary::-webkit-details-marker { display: none; }
 .pf-disclosure summary:hover { color: var(--pf-accent); }
 .pf-simple-disclosure-icon { flex: none; width: 34px; height: 34px; padding: 8px; border-radius: 999px; border: 1px solid var(--pf-section-line, var(--pf-line)); transition: transform 0.4s var(--pf-ease), background-color 0.2s, border-color 0.2s; }
@@ -363,6 +369,12 @@ details[open] > summary .pf-simple-disclosure-vertical { opacity: 0; }
 .pf-disclosure__body { display: grid; gap: 14px; justify-items: start; padding: 0 56px 26px 2px; color: var(--pf-body-color, var(--pf-section-muted, var(--pf-muted))); line-height: 1.7; font-size: calc(1rem * var(--pf-body-scale, 1)); }
 @media (prefers-reduced-motion: no-preference) {
   .pf-disclosure[open] .pf-disclosure__body { animation: pf-rise 0.5s var(--pf-ease); }
+  /* Where supported, the answer folds open and shut instead of jumping. */
+  @supports (interpolate-size: allow-keywords) {
+    .pf-disclosure { interpolate-size: allow-keywords; }
+    .pf-disclosure::details-content { block-size: 0; overflow: clip; transition: block-size 0.45s var(--pf-ease), content-visibility 0.45s allow-discrete; }
+    .pf-disclosure[open]::details-content { block-size: auto; }
+  }
 }
 @media (max-width: 900px) { .pf-faq { grid-template-columns: 1fr; } .pf-faq__aside { position: static; } .pf-disclosure__body { padding-right: 8px; } }
 
@@ -546,7 +558,7 @@ html[data-motion="reduced"] .pf-section-glass-wave { display: none !important; }
 .commerce-card-meta h2 a, .commerce-card h3 a { display: inline-flex; align-items: center; min-height: 44px; }
 .commerce-card-meta h2 a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 .commerce-sort { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.commerce-sort button { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--pf-line-strong); font-weight: 600; }
+.commerce-sort button { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--pf-line-strong); font-weight: 600; transition: transform 0.35s var(--pf-ease), background-color 0.2s; }
 .pf-footer__legal small, .reading-footer small { font-size: 0.8rem; line-height: 1.5; }
 @media (max-width: 760px) {
   .pf-footer__nav { gap: 0 22px; }
@@ -567,3 +579,32 @@ html[data-motion="reduced"] .pf-section-glass-wave { display: none !important; }
 
 /* Lock the page behind an open menu or contact drawer. */
 html:has(dialog.pf-drawer[open]) { overflow: hidden; }
+
+/* ------------------------------------------------------------------ press feedback
+ * Feedback lands on pointer-down, not on release: every tappable surface gives a
+ * quick, small press, and taps skip the browser's double-tap delay. */
+a, button, summary, [role="tab"], label { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+:is(.pf-solutions__tab, .pf-header__menu, .commerce-sort button, .pf-disclosure summary):active { transform: scale(0.97); transition-duration: 0.1s; }
+:is(.pf-menu-list a, .pf-hero__environments a, .pf-link, .pf-footer__nav a, .pf-brand):active { opacity: 0.6; transition-duration: 0.08s; }
+.pf-drawer .sheet-close:active { transform: scale(0.9); background: rgb(255 255 255 / 0.12); transition-duration: 0.1s; }
+.pf-button:active, .primary-action:active, .solid-action:active, .hero-secondary:active { transition-duration: 0.1s; }
+@media (prefers-reduced-motion: reduce) {
+  :is(.pf-solutions__tab, .pf-header__menu, .commerce-sort button, .pf-disclosure summary, .pf-drawer .sheet-close, .pf-button, .primary-action, .solid-action, .hero-secondary):active { transform: none; opacity: 0.75; }
+}
+
+/* ------------------------------------------------------------------ typography
+ * Tracking is size-specific: large display type is tightened in the rules above,
+ * small text gets a touch of positive tracking and loose leading for legibility. */
+html { font-optical-sizing: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+small, .pf-footer__legal small, .reading-footer small, .commerce-card-meta p { letter-spacing: 0.01em; }
+p, li, dd { text-wrap: pretty; }
+
+/* ------------------------------------------------------------------ increased contrast
+ * Glass turns near-solid with a defined edge; muted text moves closer to the ink. */
+@media (prefers-contrast: more) {
+  :root { --pf-muted: #d6dccf; --pf-section-muted: #d6dccf; --pf-line: rgb(255 255 255 / 0.4); --pf-glass-edge: rgb(255 255 255 / 0.6); }
+  [data-pf-section-glass]::before { background: var(--pf-section-bg, #181e1a) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; border: 1px solid rgb(255 255 255 / 0.55); }
+  .pf-glass, .pf-header.is-scrolled .pf-header__bar, .pf-drawer, .pf-button--glass, .hero-secondary { background: #141a16 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; border: 1px solid rgb(255 255 255 / 0.6) !important; }
+  .pf-section-glass-wave, .pf-glass-ambient::before { display: none !important; }
+  :focus-visible { outline-width: 3px !important; }
+}
