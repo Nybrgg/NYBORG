@@ -1,0 +1,54 @@
+<section class="nf-section nf-container nf-features" id="{{ section.settings.anchor | default: section.id | handleize }}" aria-labelledby="nf-title-{{ section.id }}">
+  {% render 'nf-section-head', s: section.settings, id: section.id, align: 'center' %}
+  <div class="nf-bento">
+    {%- for block in section.blocks -%}
+      <article class="nf-card nf-glass nf-card--{{ block.settings.size }}" data-nf-reveal data-nf-tilt {{ block.shopify_attributes }}>
+        <div class="nf-card__top">
+          <span class="nf-icon-tile">{% render 'nf-icon', name: block.settings.icon, size: 24 %}</span>
+          {%- if block.settings.badge != blank -%}<span class="nf-badge">{{ block.settings.badge | escape }}</span>{%- endif -%}
+        </div>
+        <h3 class="nf-card__title">{{ block.settings.title | escape }}</h3>
+        <div class="nf-card__text">{{ block.settings.text }}</div>
+        {%- if block.settings.points != blank -%}
+          <ul class="nf-ticks">
+            {%- assign points = block.settings.points | newline_to_br | split: '<br />' -%}
+            {%- for p in points -%}{%- assign p = p | strip -%}{%- if p != blank -%}<li>{% render 'nf-icon', name: 'check', size: 16 %}<span>{{ p | escape }}</span></li>{%- endif -%}{%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {%- if block.settings.link_label != blank -%}
+          <a class="nf-link" href="{{ block.settings.link_url | default: '#' | escape }}">{{ block.settings.link_label | escape }}{% render 'nf-icon', name: 'arrow', size: 16 %}</a>
+        {%- endif -%}
+      </article>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Funktioner",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anker-id", "default": "funktioner" },
+    { "type": "text", "id": "eyebrow", "label": "Lille overskrift", "default": "Alt samlet ét sted" },
+    { "type": "text", "id": "heading", "label": "Overskrift", "default": "Fire værktøjer. Ét studieliv." },
+    { "type": "richtext", "id": "intro", "label": "Intro", "default": "<p>Dashboardet er bevidst enkelt: AI-assistent, noter, quiz og profil – med medicinregneren som sit eget menupunkt.</p>" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Funktion",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Ikon", "default": "chat", "options": [{"value": "chat", "label": "Chat"}, {"value": "calculator", "label": "Regner"}, {"value": "note", "label": "Note"}, {"value": "quiz", "label": "Quiz"}, {"value": "user", "label": "Profil"}, {"value": "sparkle", "label": "Gnister"}, {"value": "shield", "label": "Skjold"}, {"value": "book", "label": "Bog"}, {"value": "phone", "label": "Telefon"}, {"value": "globe", "label": "Globus"}, {"value": "compare", "label": "Sammenlign"}, {"value": "graduation", "label": "Studiehue"}, {"value": "heart", "label": "Hjerte"}, {"value": "stethoscope", "label": "Stetoskop"}, {"value": "chart", "label": "Graf"}, {"value": "clock", "label": "Ur"}, {"value": "syringe", "label": "Sprøjte"}, {"value": "vial", "label": "Ampul"}, {"value": "drip", "label": "Drop"}, {"value": "flask", "label": "Kolbe"}, {"value": "scale", "label": "Vægt"}, {"value": "pump", "label": "Pumpe"}, {"value": "convert", "label": "Konvertér"}, {"value": "atom", "label": "Elektrolyt"}] },
+        { "type": "select", "id": "size", "label": "Størrelse", "default": "normal", "options": [ { "value": "normal", "label": "Normal" }, { "value": "wide", "label": "Bred" }, { "value": "tall", "label": "Høj" } ] },
+        { "type": "text", "id": "badge", "label": "Mærkat" },
+        { "type": "text", "id": "title", "label": "Titel", "default": "AI-studieassistent" },
+        { "type": "richtext", "id": "text", "label": "Tekst", "default": "<p>Chat på dansk om sygepleje, anatomi og farmakologi.</p>" },
+        { "type": "textarea", "id": "points", "label": "Punkter (ét pr. linje)" },
+        { "type": "text", "id": "link_label", "label": "Linktekst" },
+        { "type": "url", "id": "link_url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Funktioner", "blocks": [{ "type": "feature" }, { "type": "feature" }, { "type": "feature" }] }]
+}
+{% endschema %}

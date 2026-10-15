@@ -1,0 +1,52 @@
+<section class="nf-section nf-container nf-audience" id="{{ section.settings.anchor | default: section.id | handleize }}" aria-labelledby="nf-title-{{ section.id }}">
+  {% render 'nf-section-head', s: section.settings, id: section.id, align: 'center' %}
+  {%- if section.settings.show_semesters -%}
+    <div class="nf-semesters" data-nf-reveal aria-label="{{ section.settings.semesters_label | escape }}">
+      {%- for i in (1..7) -%}<span class="nf-semesters__step" style="--i: {{ forloop.index0 }}">{{ i }}.</span>{%- endfor -%}
+      <span class="nf-semesters__label">{{ section.settings.semesters_label | escape }}</span>
+    </div>
+  {%- endif -%}
+  <div class="nf-needs nf-glass" data-nf-reveal role="table" aria-labelledby="nf-title-{{ section.id }}">
+    <div class="nf-needs__row nf-needs__row--head" role="row">
+      <span role="columnheader">{{ section.settings.col_need | escape }}</span>
+      <span role="columnheader">{{ section.settings.col_value | escape }}</span>
+    </div>
+    {%- for block in section.blocks -%}
+      <div class="nf-needs__row" role="row" {{ block.shopify_attributes }}>
+        <span role="cell"><span class="nf-icon-tile nf-icon-tile--sm">{% render 'nf-icon', name: block.settings.icon, size: 18 %}</span><strong>{{ block.settings.need | escape }}</strong></span>
+        <span role="cell">{{ block.settings.value | escape }}</span>
+      </div>
+    {%- endfor -%}
+  </div>
+  {%- if section.settings.footnote != blank -%}<p class="nf-footnote" data-nf-reveal>{{ section.settings.footnote | escape }}</p>{%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Målgruppe og værdi",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anker-id", "default": "til-dig" },
+    { "type": "text", "id": "eyebrow", "label": "Lille overskrift", "default": "Til dig på sygeplejerskeuddannelsen" },
+    { "type": "text", "id": "heading", "label": "Overskrift", "default": "Bygget til det, du faktisk står med." },
+    { "type": "richtext", "id": "intro", "label": "Intro", "default": "<p>Fra første semester til klinisk praktik og eksamen – og som hurtig hjælp, når du er nyuddannet.</p>" },
+    { "type": "checkbox", "id": "show_semesters", "label": "Vis semesterbånd", "default": true },
+    { "type": "text", "id": "semesters_label", "label": "Semesterbånd – tekst", "default": "Tilpasset 1.–7. semester" },
+    { "type": "text", "id": "col_need", "label": "Kolonne 1", "default": "Dit behov" },
+    { "type": "text", "id": "col_value", "label": "Kolonne 2", "default": "Hvad NurseFlow giver" },
+    { "type": "text", "id": "footnote", "label": "Fodnote", "default": "Din profil gemmer universitet, campus, uddannelse og semester, så svar og eksempler passer til dig." }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Række",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Ikon", "default": "calculator", "options": [{"value": "chat", "label": "Chat"}, {"value": "calculator", "label": "Regner"}, {"value": "note", "label": "Note"}, {"value": "quiz", "label": "Quiz"}, {"value": "user", "label": "Profil"}, {"value": "sparkle", "label": "Gnister"}, {"value": "shield", "label": "Skjold"}, {"value": "book", "label": "Bog"}, {"value": "phone", "label": "Telefon"}, {"value": "globe", "label": "Globus"}, {"value": "compare", "label": "Sammenlign"}, {"value": "graduation", "label": "Studiehue"}, {"value": "heart", "label": "Hjerte"}, {"value": "stethoscope", "label": "Stetoskop"}, {"value": "chart", "label": "Graf"}, {"value": "clock", "label": "Ur"}, {"value": "syringe", "label": "Sprøjte"}, {"value": "vial", "label": "Ampul"}, {"value": "drip", "label": "Drop"}, {"value": "flask", "label": "Kolbe"}, {"value": "scale", "label": "Vægt"}, {"value": "pump", "label": "Pumpe"}, {"value": "convert", "label": "Konvertér"}, {"value": "atom", "label": "Elektrolyt"}] },
+        { "type": "text", "id": "need", "label": "Behov", "default": "Sikker medicinregning" },
+        { "type": "text", "id": "value", "label": "Værdi", "default": "Trinvis udregning med kontrol" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Målgruppe og værdi", "blocks": [{ "type": "row" }] }]
+}
+{% endschema %}

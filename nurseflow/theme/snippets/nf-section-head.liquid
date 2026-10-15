@@ -1,0 +1,8 @@
+{%- comment -%} Shared heading block for sections: s = section.settings, id = section.id {%- endcomment -%}
+{%- if s.eyebrow != blank or s.heading != blank or s.intro != blank -%}
+<header class="nf-section-head{% if align == 'center' %} nf-section-head--center{% endif %}" data-nf-reveal>
+  {%- if s.eyebrow != blank -%}<p class="nf-eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+  {%- if s.heading != blank -%}<h2 id="nf-title-{{ id }}" class="nf-title">{{ s.heading | escape }}</h2>{%- endif -%}
+  {%- if s.intro != blank -%}<div class="nf-intro">{{ s.intro }}</div>{%- endif -%}
+</header>
+{%- endif -%}

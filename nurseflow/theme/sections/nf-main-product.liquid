@@ -1,0 +1,37 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+<section class="nf-section nf-container nf-product">
+  <div class="nf-product__media nf-glass">
+    {%- if product.featured_media -%}
+      {{ product.featured_media | image_url: width: 1200 | image_tag: loading: 'eager', widths: '400, 600, 800, 1200', sizes: '(min-width: 990px) 50vw, 92vw' }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'nf-placeholder' }}
+    {%- endif -%}
+  </div>
+  <div class="nf-product__info nf-glass">
+    <h1 class="nf-title">{{ product.title | escape }}</h1>
+    <p class="nf-product__price">{{ current_variant.price | money }}</p>
+    {%- form 'product', product, class: 'nf-form' -%}
+      {%- unless product.has_only_default_variant -%}
+        <label class="nf-field"><span>{{ 'commerce.product.variant' | t }}</span>
+          <select name="id">
+            {%- for variant in product.variants -%}
+              <option value="{{ variant.id }}"{% if variant == current_variant %} selected{% endif %}{% unless variant.available %} disabled{% endunless %}>{{ variant.title | escape }} – {{ variant.price | money }}</option>
+            {%- endfor -%}
+          </select>
+        </label>
+      {%- else -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+      {%- endunless -%}
+      <label class="nf-field nf-field--short"><span>{{ 'commerce.product.quantity' | t }}</span><input type="number" name="quantity" value="1" min="1"></label>
+      <button type="submit" class="nf-btn nf-btn--primary"{% unless current_variant.available %} disabled{% endunless %}>
+        <span>{% if current_variant.available %}{{ 'commerce.product.add_to_cart' | t }}{% else %}{{ 'commerce.product.sold_out' | t }}{% endif %}</span>
+      </button>
+      {{ form | payment_button }}
+    {%- endform -%}
+    <div class="nf-rte">{{ product.description }}</div>
+  </div>
+</section>
+<script type="application/ld+json">{{ product | structured_data }}</script>
+{% schema %}
+{ "name": "Produkt", "tag": "div", "settings": [] }
+{% endschema %}

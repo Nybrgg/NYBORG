@@ -1,0 +1,79 @@
+{
+  "nf": {
+    "skip": "Gå til indhold",
+    "home": "Forside",
+    "open_menu": "Åbn menu",
+    "close_menu": "Luk menu",
+    "main_nav": "Hovednavigation",
+    "back_home": "Til forsiden",
+    "pagination": "Sidenavigation",
+    "previous": "Forrige",
+    "next": "Næste",
+    "read_more": "Læs mere",
+    "mascot_label": "NurseFlow-maskot. Kan trækkes rundt.",
+    "mascot_hide": "Skjul maskot",
+    "calc": {
+      "result": "Resultat",
+      "given": "Givet",
+      "formula": "Formel",
+      "calculation": "Beregning",
+      "check": "Kontrol",
+      "calculate": "Beregn",
+      "invalid": "Udfyld alle felter med tal større end 0.",
+      "categories": "Vælg beregningstype"
+    }
+  },
+  "commerce": {
+    "product": {
+      "sold_out": "Udsolgt",
+      "variant": "Vælg variant",
+      "quantity": "Antal",
+      "add_to_cart": "Læg i kurven",
+      "unavailable": "Ikke tilgængelig"
+    },
+    "cart": {
+      "title": "Kurv",
+      "empty": "Din kurv er tom.",
+      "continue": "Fortsæt",
+      "remove": "Fjern",
+      "update": "Opdater",
+      "checkout": "Til kassen",
+      "subtotal": "Subtotal",
+      "taxes": "Inkl. moms. Fragt beregnes ved kassen."
+    },
+    "collection": {
+      "empty": "Der er ingen produkter her endnu.",
+      "all": "Alle kollektioner"
+    },
+    "search": {
+      "title": "Søg",
+      "label": "Søg på siden",
+      "placeholder": "Hvad leder du efter?",
+      "submit": "Søg",
+      "results": "{{ count }} resultater for “{{ terms }}”",
+      "none": "Ingen resultater for “{{ terms }}”."
+    },
+    "blog": {
+      "empty": "Der er ingen indlæg endnu.",
+      "back": "Tilbage til bloggen",
+      "by": "Af {{ author }}"
+    },
+    "not_found": {
+      "title": "Siden findes ikke",
+      "text": "Linket virker ikke længere, eller siden er flyttet."
+    },
+    "password": {
+      "label": "Adgangskode",
+      "submit": "Gå ind",
+      "owner": "Er du butiksejer?",
+      "login": "Log ind her"
+    },
+    "contact": {
+      "name": "Navn",
+      "email": "E-mail",
+      "message": "Besked",
+      "send": "Send",
+      "success": "Tak! Vi vender tilbage hurtigst muligt."
+    }
+  }
+}

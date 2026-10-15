@@ -1,0 +1,414 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "nf-hero",
+      "settings": {
+        "secondary_url": "/#medicinregner"
+      },
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "value": "9",
+            "label": "beregningstyper"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "value": "2",
+            "label": "AI-modeller"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "1.–7.",
+            "label": "semester"
+          }
+        },
+        "stat_4": {
+          "type": "stat",
+          "settings": {
+            "value": "0 kr",
+            "label": "altid gratis"
+          }
+        }
+      },
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3",
+        "stat_4"
+      ]
+    },
+    "features": {
+      "type": "nf-features",
+      "settings": {},
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "icon": "chat",
+            "size": "wide",
+            "badge": "Dual-AI",
+            "title": "AI-studieassistent",
+            "text": "<p>Chat på dansk om sygepleje, anatomi, farmakologi og klinisk praksis. Få forklaringer tilpasset dit semester – og bed om opsummeringer, quizzer eller en studieplan.</p>",
+            "points": "Perplexity, GPT-4o eller begge side om side\nHjælp til SBAR- og SOAP-dokumentation\nABCDE, akut sygepleje og kliniske cases",
+            "link_label": "Se AI-assistenten",
+            "link_url": "/#ai-assistent"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "icon": "calculator",
+            "size": "tall",
+            "badge": "9 typer",
+            "title": "Medicinregner",
+            "text": "<p>Skriv frit – AI'en tolker opgaven og viser givne værdier, formel, beregning, resultat og kontrol.</p>",
+            "points": "Historik og eksport til noter\nQuiz-tilstand til øvelse\nPædiatriske advarsler",
+            "link_label": "Prøv regneren",
+            "link_url": "/#medicinregner"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "icon": "note",
+            "size": "normal",
+            "title": "Noter",
+            "text": "<p>Personlige noter med AI-opsummering. Find dem igen efter emne direkte fra chatten.</p>"
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "icon": "quiz",
+            "size": "normal",
+            "title": "Quiz",
+            "text": "<p>Quizzer genereret ud fra emner eller dine egne noter – med gennemsnitsscore på dashboardet.</p>"
+          }
+        },
+        "feature_5": {
+          "type": "feature",
+          "settings": {
+            "icon": "chart",
+            "size": "normal",
+            "title": "Fremdrift",
+            "text": "<p>Se studietimer, gennemførte quizzer og gennemsnitsscore samlet ét sted.</p>"
+          }
+        },
+        "feature_6": {
+          "type": "feature",
+          "settings": {
+            "icon": "user",
+            "size": "wide",
+            "title": "Profil",
+            "text": "<p>Universitet, campus, uddannelse og semester – så eksempler og svardybde passer til dig.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4",
+        "feature_5",
+        "feature_6"
+      ]
+    },
+    "calculator": {
+      "type": "nf-calculator",
+      "settings": {},
+      "blocks": {
+        "point_1": {
+          "type": "point",
+          "settings": {
+            "text": "Trinvis udregning: givet → formel → beregning → resultat → kontrol"
+          }
+        },
+        "point_2": {
+          "type": "point",
+          "settings": {
+            "text": "Komma som decimaltegn, som du kender det fra klinikken"
+          }
+        },
+        "point_3": {
+          "type": "point",
+          "settings": {
+            "text": "Advarsler ved urealistiske doser og pædiatriske patienter"
+          }
+        },
+        "point_4": {
+          "type": "point",
+          "settings": {
+            "text": "Gem i historik, eksportér til noter eller øv i quiz-tilstand"
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3",
+        "point_4"
+      ]
+    },
+    "ai": {
+      "type": "nf-ai",
+      "settings": {},
+      "blocks": {
+        "point_1": {
+          "type": "point",
+          "settings": {
+            "icon": "compare",
+            "title": "Sammenlign begge",
+            "text": "Se to svar side om side og vurdér selv."
+          }
+        },
+        "point_2": {
+          "type": "point",
+          "settings": {
+            "icon": "sparkle",
+            "title": "Automatisk fallback",
+            "text": "Ved fejl hos én udbyder skifter vi til den anden – med fejlbeskeder på dansk."
+          }
+        },
+        "point_3": {
+          "type": "point",
+          "settings": {
+            "icon": "graduation",
+            "title": "Tilpasset dit semester",
+            "text": "Svardybden følger dit niveau – fra 1. semester til eksamen."
+          }
+        },
+        "point_4": {
+          "type": "point",
+          "settings": {
+            "icon": "stethoscope",
+            "title": "Ved, hvornår lægen skal ind",
+            "text": "Assistenten markerer tydeligt, når noget kræver lægelig vurdering."
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3",
+        "point_4"
+      ]
+    },
+    "audience": {
+      "type": "nf-audience",
+      "settings": {},
+      "blocks": {
+        "row_1": {
+          "type": "row",
+          "settings": {
+            "icon": "calculator",
+            "need": "Sikker medicinregning",
+            "value": "Trinvis udregning: givne værdier, formel, beregning, resultat og kontrol"
+          }
+        },
+        "row_2": {
+          "type": "row",
+          "settings": {
+            "icon": "book",
+            "need": "Forståelse af fag og praksis",
+            "value": "AI-forklaringer på dansk, tilpasset semester og niveau"
+          }
+        },
+        "row_3": {
+          "type": "row",
+          "settings": {
+            "icon": "note",
+            "need": "Struktur i læsningen",
+            "value": "Noter, quiz og studieplan samlet ét sted"
+          }
+        },
+        "row_4": {
+          "type": "row",
+          "settings": {
+            "icon": "chat",
+            "need": "Klinisk kommunikation",
+            "value": "Hjælp til SBAR- og SOAP-dokumentation"
+          }
+        },
+        "row_5": {
+          "type": "row",
+          "settings": {
+            "icon": "shield",
+            "need": "Tillid til svarene",
+            "value": "Forankret i Sundhedsstyrelsen, WHO, NICE m.fl. – og tydelig henvisning til læge ved behov"
+          }
+        }
+      },
+      "block_order": [
+        "row_1",
+        "row_2",
+        "row_3",
+        "row_4",
+        "row_5"
+      ]
+    },
+    "steps": {
+      "type": "nf-steps",
+      "settings": {},
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "icon": "user",
+            "title": "Opret din profil",
+            "text": "Vælg universitet, campus og semester. Det tager under to minutter."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "icon": "chat",
+            "title": "Spørg, regn og skriv",
+            "text": "Brug AI-assistenten, medicinregneren og noterne – på web eller mobil."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "icon": "quiz",
+            "title": "Øv og følg din fremdrift",
+            "text": "Lav quizzer fra dine noter og se studietimer og score på dashboardet."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ]
+    },
+    "platforms": {
+      "type": "nf-platforms",
+      "settings": {},
+      "blocks": {
+        "platform_1": {
+          "type": "platform",
+          "settings": {
+            "icon": "globe",
+            "title": "Webapp",
+            "text": "Virker i alle moderne browsere",
+            "status": "Klar nu",
+            "status_live": true,
+            "use_app_url": true
+          }
+        },
+        "platform_2": {
+          "type": "platform",
+          "settings": {
+            "icon": "apple",
+            "title": "iOS",
+            "text": "iPhone-app bygget med Expo",
+            "status": "Kommer snart",
+            "status_live": false
+          }
+        },
+        "platform_3": {
+          "type": "platform",
+          "settings": {
+            "icon": "android",
+            "title": "Android",
+            "text": "Til Google Play",
+            "status": "Kommer snart",
+            "status_live": false
+          }
+        }
+      },
+      "block_order": [
+        "platform_1",
+        "platform_2",
+        "platform_3"
+      ]
+    },
+    "faq": {
+      "type": "nf-faq",
+      "settings": {},
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "Er NurseFlow gratis?",
+            "answer": "<p>Ja. Alle funktioner – også AI-assistenten og medicinregneren – er åbne for alle brugere uden betaling.</p>"
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "Kan jeg stole på medicinberegningerne?",
+            "answer": "<p>Regneren viser hele udregningen og kontrollerer, om resultatet er realistisk, så du kan følge og efterprøve hvert trin. Den er et lære- og øveværktøj: Følg altid ordinationen, lokale instrukser og dobbeltkontrol i klinikken.</p>"
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "Hvilke AI-modeller bruger I?",
+            "answer": "<p>Perplexity og OpenAI GPT-4o. Du vælger selv – eller ser begge svar side om side. Hvis den ene udbyder har problemer, skifter vi automatisk til den anden.</p>"
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "Er svarene tilpasset dansk sygepleje?",
+            "answer": "<p>Ja. Assistenten svarer på dansk og er forankret i Sundhedsstyrelsen, WHO, NICE og ICN. Svardybden tilpasses dit semester.</p>"
+          }
+        },
+        "question_5": {
+          "type": "question",
+          "settings": {
+            "question": "Erstatter NurseFlow min underviser eller lægen?",
+            "answer": "<p>Nej. NurseFlow er en studiemakker. Assistenten markerer tydeligt, når en situation kræver lægelig vurdering.</p>"
+          }
+        },
+        "question_6": {
+          "type": "question",
+          "settings": {
+            "question": "Hvad sker der med mine data?",
+            "answer": "<p>Dine samtaler, noter og beregninger gemmes på din profil, så de følger dig mellem web og app. Læs mere i vores <a href=\"/policies/privacy-policy\">privatlivspolitik</a>.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4",
+        "question_5",
+        "question_6"
+      ]
+    },
+    "cta": {
+      "type": "nf-cta",
+      "settings": {
+        "secondary_url": "/#funktioner"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "features",
+    "calculator",
+    "ai",
+    "audience",
+    "steps",
+    "platforms",
+    "faq",
+    "cta"
+  ]
+}

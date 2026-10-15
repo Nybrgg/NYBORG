@@ -1,0 +1,27 @@
+<div class="nf-mascot" data-nf-mascot
+  data-greeting="{{ settings.mascot_greeting | escape }}"
+  data-success="{{ settings.mascot_success | escape }}"
+  data-warning="{{ settings.mascot_warning | escape }}">
+  <div class="nf-mascot__bubble" role="status" aria-live="polite" data-nf-mascot-bubble></div>
+  <button type="button" class="nf-mascot__figure" data-nf-mascot-handle aria-label="{{ 'nf.mascot_label' | t }}">
+    <svg viewBox="0 0 96 120" width="84" height="105" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="nf-scrubs" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--nf-blue)"/><stop offset="1" stop-color="var(--nf-purple)"/></linearGradient>
+      </defs>
+      <ellipse cx="48" cy="116" rx="26" ry="3.5" fill="rgba(20,26,51,.12)"/>
+      <path d="M20 112c0-22 10-36 28-36s28 14 28 36Z" fill="url(#nf-scrubs)"/>
+      <path d="M40 77l8 10 8-10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+      <rect x="58" y="92" width="10" height="7" rx="2" fill="#fff" opacity=".85"/>
+      <g class="nf-mascot__arm"><path d="M74 90c6-4 10-12 11-20" fill="none" stroke="url(#nf-scrubs)" stroke-width="8" stroke-linecap="round"/><circle cx="85.5" cy="68" r="5" fill="#f4cdb1"/></g>
+      <path d="M22 92c-3 6-4 12-3 18" fill="none" stroke="url(#nf-scrubs)" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="48" cy="48" r="24" fill="#f4cdb1"/>
+      <path d="M24 48c0-15 10-25 24-25s24 10 24 25c-3-7-8-11-14-12-6 4-17 6-34 12Z" fill="#4a3428"/>
+      <path d="M30 27c2-9 9-14 18-14s16 5 18 14c-6-2-12-3-18-3s-12 1-18 3Z" fill="#fff" stroke="rgba(20,26,51,.12)"/>
+      <path d="M48 15.5v7M44.5 19h7" stroke="var(--nf-blue)" stroke-width="2.6" stroke-linecap="round"/>
+      <g class="nf-mascot__eyes" fill="#141a33"><ellipse cx="39.5" cy="50" rx="2.6" ry="3.2"/><ellipse cx="56.5" cy="50" rx="2.6" ry="3.2"/></g>
+      <circle cx="34" cy="57" r="3.6" fill="#f59fb0" opacity=".55"/><circle cx="62" cy="57" r="3.6" fill="#f59fb0" opacity=".55"/>
+      <path class="nf-mascot__mouth" d="M42 59c3.5 3.5 8.5 3.5 12 0" fill="none" stroke="#141a33" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <button type="button" class="nf-mascot__hide" data-nf-mascot-hide aria-label="{{ 'nf.mascot_hide' | t }}">{% render 'nf-icon', name: 'close', size: 12 %}</button>
+</div>

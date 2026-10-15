@@ -1,0 +1,9 @@
+<section class="nf-section nf-container nf-page">
+  <article class="nf-prose nf-glass">
+    <h1 class="nf-title">{{ page.title | escape }}</h1>
+    <div class="nf-rte">{{ page.content }}</div>
+  </article>
+</section>
+{% schema %}
+{ "name": "Side", "tag": "div", "settings": [] }
+{% endschema %}

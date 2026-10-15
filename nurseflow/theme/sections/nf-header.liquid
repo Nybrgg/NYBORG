@@ -1,0 +1,82 @@
+{%- liquid
+  assign brand = settings.brand_name | default: shop.name
+  assign menu = section.settings.menu
+-%}
+<header class="nf-header" data-nf-header>
+  <div class="nf-header__bar nf-glass">
+    <a class="nf-header__brand" href="{{ routes.root_url }}" style="--nf-logo-w: {{ settings.logo_width }}px" aria-label="{{ brand | escape }} – {{ 'nf.home' | t }}">
+      {%- if settings.logo -%}
+        {{ settings.logo | image_url: width: 480 | image_tag: alt: brand, class: 'nf-header__logo', loading: 'eager', widths: '160, 240, 320, 480', sizes: '240px' }}
+      {%- else -%}
+        <span class="nf-logo-mark" aria-hidden="true">{% render 'nf-icon', name: 'plus', size: 18 %}</span>
+        <span class="nf-header__name">{{ brand | escape }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="nf-header__nav" aria-label="{{ 'nf.main_nav' | t }}">
+      <ul>
+        {%- if menu != blank and menu.links.size > 0 -%}
+          {%- for link in menu.links -%}<li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>{%- endfor -%}
+        {%- else -%}
+          {%- for block in section.blocks -%}
+            {%- if block.settings.label != blank -%}<li {{ block.shopify_attributes }}><a href="{{ block.settings.url | default: '#' | escape }}">{{ block.settings.label | escape }}</a></li>{%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </ul>
+    </nav>
+
+    <div class="nf-header__actions">
+      {%- if section.settings.secondary_label != blank -%}
+        <a class="nf-header__login" href="{{ section.settings.secondary_url | default: settings.app_url | default: '#' | escape }}">{{ section.settings.secondary_label | escape }}</a>
+      {%- endif -%}
+      {% render 'nf-button', label: section.settings.cta_label, url: section.settings.cta_url, style: 'primary small' %}
+      <button type="button" class="nf-header__toggle" aria-expanded="false" aria-controls="nf-menu-{{ section.id }}" data-nf-menu-toggle data-label-open="{{ 'nf.open_menu' | t }}" data-label-close="{{ 'nf.close_menu' | t }}" aria-label="{{ 'nf.open_menu' | t }}">
+        <span class="nf-burger" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="nf-menu nf-glass" id="nf-menu-{{ section.id }}" data-nf-menu hidden>
+    <ul>
+      {%- if menu != blank and menu.links.size > 0 -%}
+        {%- for link in menu.links -%}<li><a href="{{ link.url }}" data-nf-menu-link>{{ link.title | escape }}</a></li>{%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.label != blank -%}<li><a href="{{ block.settings.url | default: '#' | escape }}" data-nf-menu-link>{{ block.settings.label | escape }}</a></li>{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+    <div class="nf-menu__cta">
+      {% render 'nf-button', label: section.settings.cta_label, url: section.settings.cta_url, style: 'primary', icon: 'arrow' %}
+      {%- if section.settings.secondary_label != blank -%}
+        {% render 'nf-button', label: section.settings.secondary_label, url: section.settings.secondary_url, style: 'ghost' %}
+      {%- endif -%}
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "nf-header-section",
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Shopify-menu (valgfrit)", "info": "Hvis valgt, bruges den i stedet for linkblokkene." },
+    { "type": "text", "id": "cta_label", "label": "Knaptekst", "default": "Kom i gang gratis" },
+    { "type": "url", "id": "cta_url", "label": "Knaplink", "info": "Tom = link til webappen (Temaindstillinger → Identitet)." },
+    { "type": "text", "id": "secondary_label", "label": "Sekundært link", "default": "Log ind" },
+    { "type": "url", "id": "secondary_url", "label": "Sekundært link – URL" }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Tekst", "default": "Funktioner" },
+        { "type": "url", "id": "url", "label": "Link", "info": "Brug fx /#funktioner for at hoppe til en sektion på forsiden." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Header" }]
+}
+{% endschema %}

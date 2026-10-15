@@ -1,0 +1,38 @@
+<section class="nf-section nf-container nf-faq" id="{{ section.settings.anchor | default: section.id | handleize }}" aria-labelledby="nf-title-{{ section.id }}">
+  <div class="nf-faq__grid">
+    {% render 'nf-section-head', s: section.settings, id: section.id %}
+    <div class="nf-faq__list" data-nf-reveal>
+      {%- for block in section.blocks -%}
+        <details class="nf-disclosure nf-glass" name="faq-{{ section.id }}"{% if forloop.first and section.settings.open_first %} open{% endif %} {{ block.shopify_attributes }}>
+          <summary><span>{{ block.settings.question | escape }}</span><span class="nf-disclosure__icon" aria-hidden="true">{% render 'nf-icon', name: 'plus', size: 18 %}</span></summary>
+          <div class="nf-disclosure__body">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anker-id", "default": "faq" },
+    { "type": "text", "id": "eyebrow", "label": "Lille overskrift", "default": "Godt at vide" },
+    { "type": "text", "id": "heading", "label": "Overskrift", "default": "Spørgsmål og svar" },
+    { "type": "richtext", "id": "intro", "label": "Intro" },
+    { "type": "checkbox", "id": "open_first", "label": "Åbn første spørgsmål", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Spørgsmål",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Spørgsmål", "default": "Er NurseFlow gratis?" },
+        { "type": "richtext", "id": "answer", "label": "Svar", "default": "<p>Ja. Alle funktioner er åbne for alle brugere.</p>" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "FAQ", "blocks": [{ "type": "question" }] }]
+}
+{% endschema %}

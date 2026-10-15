@@ -1,0 +1,12 @@
+<section class="nf-section nf-container nf-page">
+  <article class="nf-prose nf-glass">
+    <p class="nf-eyebrow">{{ article.published_at | date: '%d.%m.%Y' }}{% if article.author != blank %} · {{ 'commerce.blog.by' | t: author: article.author }}{% endif %}</p>
+    <h1 class="nf-title">{{ article.title | escape }}</h1>
+    {%- if article.image -%}<div class="nf-article__image">{{ article.image | image_url: width: 1400 | image_tag: loading: 'eager', widths: '600, 900, 1200, 1400', sizes: '(min-width: 990px) 760px, 92vw' }}</div>{%- endif -%}
+    <div class="nf-rte">{{ article.content }}</div>
+    <p><a class="nf-link" href="{{ blog.url }}">{{ 'commerce.blog.back' | t }}{% render 'nf-icon', name: 'arrow', size: 16 %}</a></p>
+  </article>
+</section>
+{% schema %}
+{ "name": "Blogindlæg", "tag": "div", "settings": [] }
+{% endschema %}

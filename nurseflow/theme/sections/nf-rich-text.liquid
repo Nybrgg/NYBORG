@@ -1,0 +1,24 @@
+<section class="nf-section nf-container nf-richtext" id="{{ section.settings.anchor | default: section.id | handleize }}">
+  <div class="nf-prose nf-glass{% if section.settings.center %} nf-prose--center{% endif %}" data-nf-reveal>
+    {%- if section.settings.eyebrow != blank -%}<p class="nf-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    {%- if section.settings.heading != blank -%}<h2 class="nf-title">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+    <div class="nf-rte">{{ section.settings.text }}</div>
+    {%- if section.settings.button_label != blank -%}<div class="nf-actions">{% render 'nf-button', label: section.settings.button_label, url: section.settings.button_url, style: 'primary', icon: 'arrow' %}</div>{%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Tekst",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anker-id" },
+    { "type": "text", "id": "eyebrow", "label": "Lille overskrift" },
+    { "type": "text", "id": "heading", "label": "Overskrift", "default": "Overskrift" },
+    { "type": "richtext", "id": "text", "label": "Tekst", "default": "<p>Skriv din tekst her.</p>" },
+    { "type": "text", "id": "button_label", "label": "Knaptekst" },
+    { "type": "url", "id": "button_url", "label": "Knaplink" },
+    { "type": "checkbox", "id": "center", "label": "Centrér", "default": true }
+  ],
+  "presets": [{ "name": "Tekst" }]
+}
+{% endschema %}

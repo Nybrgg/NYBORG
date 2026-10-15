@@ -1,0 +1,63 @@
+{%- assign brand = settings.brand_name | default: shop.name -%}
+<footer class="nf-footer nf-container">
+  <div class="nf-footer__panel nf-glass" style="--nf-footer-cols: {{ section.blocks.size | at_least: 1 }}">
+    <div class="nf-footer__brand">
+      <a class="nf-header__brand" href="{{ routes.root_url }}">
+        <span class="nf-logo-mark" aria-hidden="true">{% render 'nf-icon', name: 'plus', size: 18 %}</span>
+        <span class="nf-header__name">{{ brand | escape }}</span>
+      </a>
+      {%- if section.settings.tagline != blank -%}<p>{{ section.settings.tagline | escape }}</p>{%- endif -%}
+      <ul class="nf-social">
+        {%- if settings.social_instagram != blank -%}<li><a href="{{ settings.social_instagram }}" aria-label="Instagram">{% render 'nf-icon', name: 'instagram', size: 18 %}</a></li>{%- endif -%}
+        {%- if settings.social_tiktok != blank -%}<li><a href="{{ settings.social_tiktok }}" aria-label="TikTok">{% render 'nf-icon', name: 'tiktok', size: 18 %}</a></li>{%- endif -%}
+        {%- if settings.social_facebook != blank -%}<li><a href="{{ settings.social_facebook }}" aria-label="Facebook">{% render 'nf-icon', name: 'facebook', size: 18 %}</a></li>{%- endif -%}
+        {%- if settings.social_linkedin != blank -%}<li><a href="{{ settings.social_linkedin }}" aria-label="LinkedIn">{% render 'nf-icon', name: 'linkedin', size: 18 %}</a></li>{%- endif -%}
+      </ul>
+    </div>
+    {%- for block in section.blocks -%}
+      <nav class="nf-footer__col" aria-label="{{ block.settings.heading | escape }}" {{ block.shopify_attributes }}>
+        <h2>{{ block.settings.heading | escape }}</h2>
+        <ul>
+          {%- if block.settings.menu != blank and block.settings.menu.links.size > 0 -%}
+            {%- for link in block.settings.menu.links -%}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{%- endfor -%}
+          {%- else -%}
+            {%- assign lines = block.settings.links | newline_to_br | split: '<br />' -%}
+            {%- for line in lines -%}
+              {%- assign parts = line | strip | split: '|' -%}
+              {%- if parts[0] != blank -%}<li><a href="{{ parts[1] | strip | default: '#' | escape }}">{{ parts[0] | strip | escape }}</a></li>{%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </ul>
+      </nav>
+    {%- endfor -%}
+  </div>
+  <div class="nf-footer__base">
+    {%- if section.settings.disclaimer != blank -%}<p class="nf-footer__disclaimer">{{ section.settings.disclaimer | escape }}</p>{%- endif -%}
+    <p>© {{ 'now' | date: '%Y' }} {{ brand | escape }}{% if section.settings.copyright != blank %} · {{ section.settings.copyright | escape }}{% endif %}</p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "enabled_on": { "groups": ["footer"] },
+  "settings": [
+    { "type": "text", "id": "tagline", "label": "Kort beskrivelse", "default": "Gratis AI-studieplatform for danske sygeplejestuderende." },
+    { "type": "textarea", "id": "disclaimer", "label": "Ansvarsfraskrivelse", "default": "NurseFlow er et studieværktøj og erstatter ikke klinisk vurdering, ordination eller lokale instrukser. Kontakt altid læge ved tvivl." },
+    { "type": "text", "id": "copyright", "label": "Ekstra tekst", "default": "Lavet i Danmark" }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Linkkolonne",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Overskrift", "default": "Platform" },
+        { "type": "link_list", "id": "menu", "label": "Shopify-menu (valgfrit)" },
+        { "type": "textarea", "id": "links", "label": "Links (Tekst | URL, ét pr. linje)", "info": "Bruges, hvis der ikke er valgt en menu.", "default": "Funktioner | /#funktioner\nMedicinregner | /#medicinregner" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Footer" }]
+}
+{% endschema %}

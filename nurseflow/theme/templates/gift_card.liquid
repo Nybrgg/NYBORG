@@ -1,0 +1,24 @@
+{% layout none %}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ shop.name | escape }} – gavekort</title>
+  {% render 'nf-css-vars' %}
+  {{ 'nf-theme.css' | asset_url | stylesheet_tag }}
+  {{ content_for_header }}
+</head>
+<body>
+  <div class="nf-backdrop" aria-hidden="true"></div>
+  <main class="nf-section nf-container nf-page nf-page--center">
+    <div class="nf-prose nf-glass nf-prose--center">
+      <p class="nf-eyebrow">{{ shop.name | escape }}</p>
+      <h1 class="nf-title">{{ gift_card.balance | money }}</h1>
+      <p class="nf-chip">{{ gift_card.code | format_code }}</p>
+      {%- if gift_card.expired -%}<p class="nf-muted">Udløbet {{ gift_card.expires_on | date: '%d.%m.%Y' }}</p>{%- endif -%}
+      <div class="nf-actions"><a class="nf-btn nf-btn--primary" href="{{ shop.url }}"><span>{{ 'nf.back_home' | t }}</span></a></div>
+    </div>
+  </main>
+</body>
+</html>

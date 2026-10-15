@@ -1,0 +1,15 @@
+{
+  "name": "nurseflow-theme-tools",
+  "private": true,
+  "type": "module",
+  "description": "Local preview and Theme Check for the NurseFlow Shopify theme",
+  "scripts": {
+    "preview": "node preview.mjs 4173",
+    "check": "node check.mjs"
+  },
+  "devDependencies": {
+    "@shopify/theme-check-node": "^3.30.1",
+    "liquidjs": "^10.30.0",
+    "playwright": "1.56"
+  }
+}

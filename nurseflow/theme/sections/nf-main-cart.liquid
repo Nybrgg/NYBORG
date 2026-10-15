@@ -1,0 +1,32 @@
+<section class="nf-section nf-container nf-page">
+  <div class="nf-prose nf-glass">
+    <h1 class="nf-title">{{ 'commerce.cart.title' | t }}</h1>
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" class="nf-cart">
+        <ul class="nf-cart__items">
+          {%- for item in cart.items -%}
+            <li>
+              <a href="{{ item.url }}" class="nf-cart__title"><strong>{{ item.product.title | escape }}</strong>{% unless item.product.has_only_default_variant %}<span>{{ item.variant.title | escape }}</span>{% endunless %}</a>
+              <label class="nf-field nf-field--short"><span class="nf-visually-hidden">{{ 'commerce.product.quantity' | t }}</span><input type="number" name="updates[]" value="{{ item.quantity }}" min="0"></label>
+              <span>{{ item.final_line_price | money }}</span>
+              <a href="{{ item.url_to_remove }}" class="nf-link">{{ 'commerce.cart.remove' | t }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+        <p class="nf-cart__total"><span>{{ 'commerce.cart.subtotal' | t }}</span><strong>{{ cart.total_price | money }}</strong></p>
+        <p class="nf-muted">{{ 'commerce.cart.taxes' | t }}</p>
+        <div class="nf-actions">
+          <button type="submit" name="update" class="nf-btn nf-btn--ghost"><span>{{ 'commerce.cart.update' | t }}</span></button>
+          <button type="submit" name="checkout" class="nf-btn nf-btn--primary"><span>{{ 'commerce.cart.checkout' | t }}</span>{% render 'nf-icon', name: 'arrow', size: 18 %}</button>
+        </div>
+      </form>
+    {%- else -%}
+      <p>{{ 'commerce.cart.empty' | t }}</p>
+      {%- assign continue_label = 'commerce.cart.continue' | t -%}
+      <div class="nf-actions">{% render 'nf-button', label: continue_label, url: routes.root_url, style: 'primary', icon: 'arrow' %}</div>
+    {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{ "name": "Kurv", "tag": "div", "settings": [] }
+{% endschema %}

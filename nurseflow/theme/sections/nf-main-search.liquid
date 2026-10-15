@@ -1,0 +1,28 @@
+<section class="nf-section nf-container nf-page">
+  <div class="nf-prose nf-glass">
+    <h1 class="nf-title">{{ 'commerce.search.title' | t }}</h1>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="nf-search">
+      <label class="nf-visually-hidden" for="nf-search-input">{{ 'commerce.search.label' | t }}</label>
+      <input id="nf-search-input" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'commerce.search.placeholder' | t }}">
+      <button type="submit" class="nf-btn nf-btn--primary"><span>{{ 'commerce.search.submit' | t }}</span>{% render 'nf-icon', name: 'search', size: 18 %}</button>
+    </form>
+    {%- if search.performed -%}
+      {%- paginate search.results by 12 -%}
+        {%- if search.results_count > 0 -%}
+          <p class="nf-muted">{{ 'commerce.search.results' | t: count: search.results_count, terms: search.terms }}</p>
+          <ul class="nf-results">
+            {%- for item in search.results -%}
+              <li><a href="{{ item.url }}"><strong>{{ item.title | escape }}</strong>{% if item.content != blank %}<span>{{ item.content | strip_html | truncatewords: 24 }}</span>{% endif %}</a></li>
+            {%- endfor -%}
+          </ul>
+          {%- if paginate.pages > 1 -%}<nav class="nf-pagination" aria-label="{{ 'nf.pagination' | t }}">{{ paginate | default_pagination }}</nav>{%- endif -%}
+        {%- else -%}
+          <p>{{ 'commerce.search.none' | t: terms: search.terms }}</p>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{ "name": "Søgning", "tag": "div", "settings": [] }
+{% endschema %}

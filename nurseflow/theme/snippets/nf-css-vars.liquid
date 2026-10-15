@@ -1,0 +1,14 @@
+{%- style -%}
+  :root{
+    --nf-blue:{{ settings.color_blue }};
+    --nf-purple:{{ settings.color_purple }};
+    --nf-bg:{{ settings.color_background }};
+    --nf-ink:{{ settings.color_text }};
+    --nf-blue-rgb:{{ settings.color_blue.red }},{{ settings.color_blue.green }},{{ settings.color_blue.blue }};
+    --nf-purple-rgb:{{ settings.color_purple.red }},{{ settings.color_purple.green }},{{ settings.color_purple.blue }};
+    --nf-ink-rgb:{{ settings.color_text.red }},{{ settings.color_text.green }},{{ settings.color_text.blue }};
+    --nf-glass-blur:{{ settings.glass_blur }}px;
+    --nf-glass-alpha:{{ settings.glass_opacity | divided_by: 100.0 }};
+    --nf-radius:{{ settings.radius }}px;
+  }
+{%- endstyle -%}

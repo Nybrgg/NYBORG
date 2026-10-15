@@ -1,0 +1,19 @@
+{%- comment -%}
+  Usage: render 'nf-button', label: 'Kom i gang', url: '/x', style: 'primary', icon: 'arrow'
+  An empty url falls back to the global web app link.
+{%- endcomment -%}
+{%- liquid
+  assign href = url
+  if href == blank
+    assign href = settings.app_url
+  endif
+  if href == blank
+    assign href = '#'
+  endif
+  assign variants = style | default: 'primary' | split: ' '
+-%}
+{%- if label != blank -%}
+<a class="nf-btn{% for v in variants %} nf-btn--{{ v }}{% endfor %}" href="{{ href | escape }}"{% if attrs %} {{ attrs }}{% endif %}>
+  <span>{{ label | escape }}</span>{% if icon != blank %}{% render 'nf-icon', name: icon, size: 18 %}{% endif %}
+</a>
+{%- endif -%}

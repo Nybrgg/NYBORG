@@ -1,0 +1,12 @@
+<section class="nf-section nf-container nf-page nf-page--center">
+  <div class="nf-prose nf-glass nf-prose--center">
+    <p class="nf-eyebrow">404</p>
+    <h1 class="nf-title">{{ 'commerce.not_found.title' | t }}</h1>
+    <p>{{ 'commerce.not_found.text' | t }}</p>
+    {%- assign back_label = 'nf.back_home' | t -%}
+    <div class="nf-actions">{% render 'nf-button', label: back_label, url: routes.root_url, style: 'primary', icon: 'arrow' %}</div>
+  </div>
+</section>
+{% schema %}
+{ "name": "404", "tag": "div", "settings": [] }
+{% endschema %}

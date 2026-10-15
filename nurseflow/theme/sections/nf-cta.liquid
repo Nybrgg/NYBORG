@@ -1,0 +1,32 @@
+<section class="nf-section nf-container nf-cta" id="{{ section.settings.anchor | default: section.id | handleize }}" aria-labelledby="nf-title-{{ section.id }}">
+  <div class="nf-cta__panel" data-nf-reveal>
+    <span class="nf-cta__shine" aria-hidden="true"></span>
+    {%- if section.settings.eyebrow != blank -%}<p class="nf-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h2 id="nf-title-{{ section.id }}" class="nf-title">{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.text != blank -%}<div class="nf-intro">{{ section.settings.text }}</div>{%- endif -%}
+    <div class="nf-actions">
+      {% render 'nf-button', label: section.settings.primary_label, url: section.settings.primary_url, style: 'light', icon: 'arrow' %}
+      {%- if section.settings.secondary_label != blank -%}
+        {% render 'nf-button', label: section.settings.secondary_label, url: section.settings.secondary_url, style: 'outline-light' %}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Call to action",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anker-id", "default": "kom-i-gang" },
+    { "type": "text", "id": "eyebrow", "label": "Lille overskrift", "default": "100 % gratis" },
+    { "type": "text", "id": "heading", "label": "Overskrift", "default": "Gør næste vagt, eksamen og medicinregning lidt lettere." },
+    { "type": "richtext", "id": "text", "label": "Tekst", "default": "<p>Opret en profil på under to minutter. Ingen betalingskort.</p>" },
+    { "type": "text", "id": "primary_label", "label": "Primær knap", "default": "Opret gratis profil" },
+    { "type": "url", "id": "primary_url", "label": "Primær knap – link", "info": "Tom = link til webappen." },
+    { "type": "text", "id": "secondary_label", "label": "Sekundær knap", "default": "Se funktionerne" },
+    { "type": "url", "id": "secondary_url", "label": "Sekundær knap – link", "default": "/" }
+  ],
+  "presets": [{ "name": "Call to action" }]
+}
+{% endschema %}

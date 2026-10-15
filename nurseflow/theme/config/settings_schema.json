@@ -1,0 +1,53 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "NurseFlow",
+    "theme_author": "NurseFlow",
+    "theme_version": "1.0.0",
+    "theme_documentation_url": "https://help.shopify.com/da/manual/online-store/themes",
+    "theme_support_url": "https://help.shopify.com/da"
+  },
+  {
+    "name": "Identitet",
+    "settings": [
+      { "type": "text", "id": "brand_name", "label": "Navn", "default": "NurseFlow" },
+      { "type": "image_picker", "id": "logo", "label": "Logo (valgfrit)" },
+      { "type": "range", "id": "logo_width", "label": "Logobredde", "min": 60, "max": 240, "step": 4, "unit": "px", "default": 132 },
+      { "type": "image_picker", "id": "favicon", "label": "Favicon (valgfrit)" },
+      { "type": "url", "id": "app_url", "label": "Link til webappen", "info": "Bruges af knapper, der står til 'Webappen'." },
+      { "type": "text", "id": "home_title", "label": "Sidetitel på forsiden", "default": "NurseFlow | Gratis AI-studieplatform for sygeplejestuderende" },
+      { "type": "textarea", "id": "home_description", "label": "Metabeskrivelse på forsiden", "default": "AI-studieassistent, medicinregner med 9 beregningstyper, noter og quiz. På dansk, tilpasset dit semester og danske retningslinjer. Gratis på web, iOS og Android." }
+    ]
+  },
+  {
+    "name": "Farver og glas",
+    "settings": [
+      { "type": "color", "id": "color_blue", "label": "Blå", "default": "#3b82f6" },
+      { "type": "color", "id": "color_purple", "label": "Lilla", "default": "#8b5cf6" },
+      { "type": "color", "id": "color_background", "label": "Baggrund", "default": "#eef2ff" },
+      { "type": "color", "id": "color_text", "label": "Tekst", "default": "#141a33" },
+      { "type": "range", "id": "glass_blur", "label": "Glas: sløring", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 22 },
+      { "type": "range", "id": "glass_opacity", "label": "Glas: dækning", "min": 20, "max": 95, "step": 5, "unit": "%", "default": 55 },
+      { "type": "range", "id": "radius", "label": "Hjørneradius", "min": 8, "max": 36, "step": 2, "unit": "px", "default": 26 },
+      { "type": "checkbox", "id": "animated_background", "label": "Animeret gradientbaggrund", "default": true }
+    ]
+  },
+  {
+    "name": "Nurse-maskot",
+    "settings": [
+      { "type": "checkbox", "id": "mascot_enabled", "label": "Vis maskot på alle sider", "default": true },
+      { "type": "text", "id": "mascot_greeting", "label": "Første taleboble", "default": "Hej! Prøv medicinregneren – jeg tjekker med." },
+      { "type": "text", "id": "mascot_success", "label": "Taleboble ved korrekt beregning", "default": "Flot regnet! Husk altid dobbeltkontrol." },
+      { "type": "text", "id": "mascot_warning", "label": "Taleboble ved advarsel", "default": "Hov – tjek lige dine tal en ekstra gang." }
+    ]
+  },
+  {
+    "name": "Sociale medier",
+    "settings": [
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_tiktok", "label": "TikTok" },
+      { "type": "url", "id": "social_facebook", "label": "Facebook" },
+      { "type": "url", "id": "social_linkedin", "label": "LinkedIn" }
+    ]
+  }
+]

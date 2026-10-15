@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="{{ settings.color_background }}">
+  <title>{% if template.name == 'index' and settings.home_title != blank %}{{ settings.home_title | escape }}{% else %}{{ page_title | escape }}{% unless page_title contains shop.name %} | {{ shop.name | escape }}{% endunless %}{% endif %}</title>
+  {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% elsif template.name == 'index' and settings.home_description != blank %}<meta name="description" content="{{ settings.home_description | escape }}">{% endif %}
+  <link rel="canonical" href="{{ canonical_url }}">
+  {% if settings.favicon %}<link rel="icon" href="{{ settings.favicon | image_url: width: 64 }}">{% else %}<link rel="icon" type="image/svg+xml" href="{{ 'nf-favicon.svg' | asset_url }}">{% endif %}
+  {% render 'nf-css-vars' %}
+  {{ 'nf-theme.css' | asset_url | stylesheet_tag }}
+  <script>document.documentElement.classList.add('nf-js');</script>
+  {{ content_for_header }}
+  <script src="{{ 'nf-theme.js' | asset_url }}" defer></script>
+</head>
+<body class="nf-template-{{ template.name | handleize }}">
+  <a class="nf-skip" href="#indhold">{{ 'nf.skip' | t }}</a>
+  {% if settings.animated_background %}
+    <div class="nf-backdrop" aria-hidden="true"><span class="nf-blob nf-blob--a"></span><span class="nf-blob nf-blob--b"></span><span class="nf-blob nf-blob--c"></span></div>
+  {% else %}
+    <div class="nf-backdrop nf-backdrop--still" aria-hidden="true"></div>
+  {% endif %}
+  {% sections 'header-group' %}
+  <main id="indhold" tabindex="-1">{{ content_for_layout }}</main>
+  {% sections 'footer-group' %}
+  {% if settings.mascot_enabled %}{% render 'nf-mascot' %}{% endif %}
+</body>
+</html>
